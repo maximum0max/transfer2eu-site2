@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Transfer2EU mark">
+  <rect width="64" height="64" rx="14" fill="#EE2E3D"></rect>
+  
+  <path d="M16 24 A 14 12 0 0 1 44 24 L 18 48 L 50 48" stroke="#FFFFFF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M42 41 L50 48 L42 55" stroke="#FFFFFF" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 64" width="260" height="64" role="img" aria-label="Transfer2EU">
+  <g transform="translate(4,8)">
+    <rect width="48" height="48" rx="11" fill="#FFFFFF"></rect>
+    <path d="M12 18 A 10.5 9 0 0 1 33 18 L 13.5 36 L 37.5 36" stroke="#0B1E33" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    <path d="M31.5 30.75 L37.5 36 L31.5 41.25" stroke="#0B1E33" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+  <text x="64" y="40" font-family="Onest, Inter, system-ui, sans-serif" font-weight="700" font-size="28" letter-spacing="-0.02em" fill="#FFFFFF">Transfer<tspan fill="#EE2E3D">2</tspan>EU</text>
+</svg>

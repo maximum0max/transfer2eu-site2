@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+news-bot/.venv/
+news-bot/__pycache__/
+**/__pycache__/
+
+# Build output
+dist/
+
+# Secrets / local env
+.env
+news-bot/.env
+
+# OS / editor
+.DS_Store
+*.log

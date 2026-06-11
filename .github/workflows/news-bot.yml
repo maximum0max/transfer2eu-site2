@@ -1,0 +1,71 @@
+name: Publish Transfer2EU news
+
+# Runs every 2 days at 09:00 UTC. `*/2` steps the day-of-month (1,3,5,…), so the
+# gap resets at month boundaries but stays ~2 days — fine for a news cadence.
+# You can also trigger it manually from the Actions tab (workflow_dispatch).
+on:
+  schedule:
+    - cron: "0 9 */2 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # needed to commit the new posts + state back to the repo
+
+concurrency:
+  group: publish-transfer2eu-news
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: news-bot/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r news-bot/requirements.txt
+
+      - name: Run the news bot
+        working-directory: news-bot
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python main.py
+
+      - name: Commit new posts + state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add News.data.json news-bot/data/processed.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: publish news posts"
+          # Another commit may have landed during the run — rebase and retry.
+          for i in 1 2 3; do
+            if git pull --rebase origin "${GITHUB_REF_NAME}" && git push; then
+              echo "Pushed on attempt $i."
+              exit 0
+            fi
+            echo "Push attempt $i failed; refetch and retry."
+            sleep $((i * 5))
+          done
+          echo "Push failed after 3 attempts."
+          exit 1
+
+      # ── Deploying ────────────────────────────────────────────────────────
+      # The commit above is enough for Vercel / Netlify / Cloudflare Pages:
+      # they watch the repo and auto-rebuild on every push.
+      #
+      # If you host on GitHub Pages instead, the commit alone won't redeploy —
+      # add a build + deploy step here (npm ci && npm run build, then
+      # actions/deploy-pages). Tell me your host and I'll wire it in.

@@ -1,0 +1,316 @@
+/* ==========================================================================
+   Transfer2EU — Foundations
+   Colors · Type · Spacing · Radii · Shadows · Semantic tokens
+   ========================================================================== */
+
+/* ---- Fonts (Google Fonts CDN — swap to self-hosted when font files arrive) - */
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ====================================================================
+     COLOR — base palette
+     -------------------------------------------------------------------- */
+
+  /* Brand — sky-blue scale (5 steps, light → deep) */
+  --t2-blue-50:    #E5F4FF;   /* lightest, soft fill / badges */
+  --t2-blue-100:   #CDE8FF;   /* tint, hover backgrounds */
+  --t2-blue-200:   #A7D4FF;   /* accent fill, illustration */
+  --t2-blue-300:   #7FBEF2;   /* mid, secondary accents */
+  --t2-blue-500:   #4B89C8;   /* deepest, primary CTA */
+
+  /* Action aliases — kept under the legacy --t2-red names so existing
+     components (buttons, links, focus rings, badges) inherit automatically. */
+  --t2-red:        #4B89C8;   /* primary CTA, accent */
+  --t2-red-hover:  #3A72AD;
+  --t2-red-press:  #2A5A8F;
+  --t2-red-soft:   #E5F4FF;   /* badge bg, soft fill */
+
+  /* Ink (text + dark surfaces) */
+  --t2-ink:        #0F1216;   /* near-black, headlines */
+  --t2-ink-2:      #2B313A;   /* body */
+  --t2-ink-3:      #5A6471;   /* secondary text, captions */
+  --t2-ink-4:      #8C95A2;   /* tertiary, placeholder */
+  --t2-ink-5:      #B7BEC8;   /* disabled, very subtle */
+
+  /* Surfaces (light) */
+  --t2-bg:         #FFFFFF;
+  --t2-bg-2:       #F6F7F9;   /* page tint, section break */
+  --t2-bg-3:       #ECEFF3;   /* card subtle, divider fill */
+  --t2-line:       #E2E6EC;   /* default border */
+  --t2-line-2:     #CBD2DB;   /* stronger border */
+
+  /* Deep / on-photo */
+  --t2-deep:       #0B1E33;   /* deep navy used on photo overlays */
+  --t2-deep-2:     #112C4A;
+  --t2-overlay:    rgba(11,30,51,.55);    /* hero photo darken */
+  --t2-overlay-2:  rgba(11,30,51,.78);    /* deeper for legibility */
+
+  /* Accent (alternate brand option — calmer "EU blue") */
+  --t2-blue:       #1E5C8C;
+  --t2-blue-soft:  #E5EEF6;
+
+  /* Semantic */
+  --t2-success:    #1E8E5A;
+  --t2-success-soft:#E2F3EA;
+  --t2-warning:    #C77400;
+  --t2-warning-soft:#FBF1DF;
+  --t2-danger:     #C72A2A;
+  --t2-danger-soft:#F9E4E4;
+  --t2-info:       #2666C4;
+  --t2-info-soft:  #E5EEFB;
+
+  /* ====================================================================
+     TYPE
+     -------------------------------------------------------------------- */
+  --t2-font-display: 'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --t2-font-body:    'Inter', 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --t2-font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Type scale (modular ~1.20, optimized for RU readability) */
+  --t2-fs-xs:   12px;
+  --t2-fs-sm:   14px;
+  --t2-fs-base: 16px;
+  --t2-fs-md:   18px;
+  --t2-fs-lg:   20px;
+  --t2-fs-xl:   24px;
+  --t2-fs-2xl:  30px;
+  --t2-fs-3xl:  38px;
+  --t2-fs-4xl:  48px;
+  --t2-fs-5xl:  64px;
+  --t2-fs-6xl:  84px;
+
+  --t2-lh-tight: 1.08;
+  --t2-lh-snug:  1.22;
+  --t2-lh-base:  1.5;
+  --t2-lh-loose: 1.7;
+
+  --t2-fw-regular: 400;
+  --t2-fw-medium:  500;
+  --t2-fw-semi:    600;
+  --t2-fw-bold:    700;
+  --t2-fw-black:   800;
+
+  /* ====================================================================
+     SPACING (4-pt grid)
+     -------------------------------------------------------------------- */
+  --t2-s-1:  4px;
+  --t2-s-2:  8px;
+  --t2-s-3:  12px;
+  --t2-s-4:  16px;
+  --t2-s-5:  20px;
+  --t2-s-6:  24px;
+  --t2-s-8:  32px;
+  --t2-s-10: 40px;
+  --t2-s-12: 48px;
+  --t2-s-16: 64px;
+  --t2-s-20: 80px;
+  --t2-s-24: 96px;
+  --t2-s-32: 128px;
+
+  /* ====================================================================
+     RADII
+     -------------------------------------------------------------------- */
+  --t2-r-xs:  4px;
+  --t2-r-sm:  8px;
+  --t2-r-md:  12px;
+  --t2-r-lg:  16px;
+  --t2-r-xl:  20px;
+  --t2-r-2xl: 28px;
+  --t2-r-pill: 999px;
+
+  /* ====================================================================
+     SHADOWS — soft, layered. Used on white surfaces.
+     -------------------------------------------------------------------- */
+  --t2-sh-1: 0 1px 2px rgba(15,18,22,.04), 0 1px 1px rgba(15,18,22,.03);
+  --t2-sh-2: 0 4px 12px rgba(15,18,22,.06), 0 2px 4px rgba(15,18,22,.04);
+  --t2-sh-3: 0 12px 32px rgba(15,18,22,.08), 0 4px 10px rgba(15,18,22,.05);
+  --t2-sh-4: 0 24px 56px rgba(15,18,22,.12), 0 8px 18px rgba(15,18,22,.06);
+  --t2-sh-photo: 0 20px 60px rgba(11,30,51,.25);   /* lift over photography */
+  --t2-sh-focus: 0 0 0 4px rgba(238,46,61,.18);    /* :focus ring */
+
+  /* ====================================================================
+     MOTION
+     -------------------------------------------------------------------- */
+  --t2-ease-out:   cubic-bezier(.2,.7,.2,1);
+  --t2-ease-soft:  cubic-bezier(.4,0,.2,1);
+  --t2-ease-spring:cubic-bezier(.34,1.4,.5,1);
+  --t2-dur-fast:  120ms;
+  --t2-dur-base:  220ms;
+  --t2-dur-slow:  360ms;
+
+  /* ====================================================================
+     LAYOUT
+     -------------------------------------------------------------------- */
+  --t2-container: 1200px;
+  --t2-gutter:    24px;
+}
+
+/* ============================================================
+   SEMANTIC TYPE STYLES — apply via class on element.
+   ============================================================ */
+.t2-display {
+  font-family: var(--t2-font-display);
+  font-size: var(--t2-fs-6xl);
+  line-height: var(--t2-lh-tight);
+  font-weight: var(--t2-fw-bold);
+  letter-spacing: -0.025em;
+  color: var(--t2-ink);
+}
+.t2-h1 {
+  font-family: var(--t2-font-display);
+  font-size: var(--t2-fs-5xl);
+  line-height: var(--t2-lh-tight);
+  font-weight: var(--t2-fw-bold);
+  letter-spacing: -0.02em;
+  color: var(--t2-ink);
+}
+.t2-h2 {
+  font-family: var(--t2-font-display);
+  font-size: var(--t2-fs-4xl);
+  line-height: var(--t2-lh-snug);
+  font-weight: var(--t2-fw-bold);
+  letter-spacing: -0.018em;
+  color: var(--t2-ink);
+}
+.t2-h3 {
+  font-family: var(--t2-font-display);
+  font-size: var(--t2-fs-2xl);
+  line-height: var(--t2-lh-snug);
+  font-weight: var(--t2-fw-semi);
+  letter-spacing: -0.01em;
+  color: var(--t2-ink);
+}
+.t2-h4 {
+  font-family: var(--t2-font-display);
+  font-size: var(--t2-fs-xl);
+  line-height: var(--t2-lh-snug);
+  font-weight: var(--t2-fw-semi);
+  color: var(--t2-ink);
+}
+.t2-eyebrow {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-sm);
+  font-weight: var(--t2-fw-medium);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--t2-red);
+}
+.t2-lede {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-lg);
+  line-height: var(--t2-lh-base);
+  color: var(--t2-ink-2);
+  font-weight: var(--t2-fw-regular);
+}
+.t2-p {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-base);
+  line-height: var(--t2-lh-base);
+  color: var(--t2-ink-2);
+}
+.t2-small {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-sm);
+  line-height: var(--t2-lh-base);
+  color: var(--t2-ink-3);
+}
+.t2-caption {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-xs);
+  line-height: var(--t2-lh-base);
+  color: var(--t2-ink-3);
+  letter-spacing: .02em;
+}
+.t2-num {
+  font-family: var(--t2-font-display);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums;
+}
+.t2-mono {
+  font-family: var(--t2-font-mono);
+  font-size: var(--t2-fs-sm);
+  color: var(--t2-ink-2);
+}
+
+/* Reasonable defaults if applied at root */
+html, body {
+  font-family: var(--t2-font-body);
+  font-size: var(--t2-fs-base);
+  line-height: var(--t2-lh-base);
+  color: var(--t2-ink-2);
+  background: var(--t2-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   MOTION — keyframes, scroll-reveal, and one-shot utilities.
+   Used by <Reveal /> and inline `className`s across components.
+   ============================================================ */
+@keyframes t2-fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes t2-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes t2-drop-in {
+  from { opacity: 0; transform: translateY(-10px) scale(.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes t2-pop-in {
+  0%   { opacity: 0; transform: scale(.9); }
+  60%  { opacity: 1; transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+@keyframes t2-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-22px); }
+}
+@keyframes t2-float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(16px, 20px); }
+}
+@keyframes t2-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes t2-shimmer {
+  0%   { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+
+/* Scroll-reveal — starts hidden; <Reveal /> adds .is-in when in viewport. */
+.t2-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s var(--t2-ease-out), transform .7s var(--t2-ease-out);
+  will-change: opacity, transform;
+}
+.t2-reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* One-shot / looping utility animations */
+.t2-anim-drop  { animation: t2-drop-in .22s var(--t2-ease-out) both; }
+.t2-anim-fade  { animation: t2-fade-in .5s var(--t2-ease-out) both; }
+.t2-anim-up    { animation: t2-fade-up .6s var(--t2-ease-out) both; }
+.t2-anim-pop   { animation: t2-pop-in .44s var(--t2-ease-spring) both; }
+.t2-float      { animation: t2-float 9s ease-in-out infinite; }
+.t2-float-slow { animation: t2-float-slow 14s ease-in-out infinite; }
+.t2-bob        { animation: t2-bob 2.4s ease-in-out infinite; }
+
+/* Accessibility — fully respect a reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  .t2-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .t2-anim-drop, .t2-anim-fade, .t2-anim-up, .t2-anim-pop,
+  .t2-float, .t2-float-slow, .t2-bob { animation: none !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
