@@ -14,7 +14,7 @@ import os
 import re
 from typing import Any
 
-from openai import OpenAI
+from openai import AuthenticationError, OpenAI, PermissionDeniedError
 
 from config import OPENAI_MODEL
 
@@ -23,6 +23,16 @@ log = logging.getLogger(__name__)
 
 class ArticleSkipped(Exception):
     """Raised when the rewriter decides an article has no relevance to publish."""
+    pass
+
+
+class FatalConfigError(Exception):
+    """
+    Raised for problems that will affect EVERY article, not just this one —
+    a missing/invalid OPENAI_API_KEY, auth failure, etc. main.py aborts the
+    whole run on this WITHOUT marking articles processed, so a misconfigured
+    key never silently burns through the feed.
+    """
     pass
 
 
@@ -107,7 +117,13 @@ def rewrite_article(
     {"skip": true, "skip_reason": "..."} — in which case this raises
     ArticleSkipped and main.py marks the URL processed without publishing.
     """
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    api_key = (os.environ.get("OPENAI_API_KEY") or "").strip()
+    if not api_key:
+        raise FatalConfigError(
+            "OPENAI_API_KEY is not set (or empty). In GitHub Actions, check that the "
+            "repo secret is named exactly OPENAI_API_KEY with no trailing spaces."
+        )
+    client = OpenAI(api_key=api_key)
 
     brief = CATEGORY_BRIEFS.get(category, "")
     user_message = (
@@ -120,16 +136,20 @@ def rewrite_article(
     )
 
     log.info("Calling OpenAI for rewrite...")
-    response = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_message},
-        ],
-        response_format={"type": "json_object"},
-        temperature=0.7,
-        max_tokens=3500,
-    )
+    try:
+        response = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_message},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0.7,
+            max_tokens=3500,
+        )
+    except (AuthenticationError, PermissionDeniedError) as e:
+        # Bad/expired key or no access to the model — affects every article.
+        raise FatalConfigError(f"OpenAI rejected the API key: {e}") from e
 
     raw = response.choices[0].message.content
     if not raw:

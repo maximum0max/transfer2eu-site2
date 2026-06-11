@@ -21,7 +21,7 @@ load_dotenv()
 from config import FEEDS_BY_CATEGORY, MAX_POSTS_PER_CATEGORY
 from feeds import get_new_articles, load_processed, load_recent_sources, mark_processed
 from publisher import publish_post
-from rewriter import ArticleSkipped, rewrite_article
+from rewriter import ArticleSkipped, FatalConfigError, rewrite_article
 
 logging.basicConfig(
     level=logging.INFO,
@@ -70,6 +70,14 @@ def run() -> int:
                     url=url,
                     category=category,
                 )
+            except FatalConfigError as e:
+                # Affects every article — abort WITHOUT marking anything processed,
+                # so the feed isn't silently burned by a misconfigured key.
+                log.error("=" * 60)
+                log.error(f"FATAL: {e}")
+                log.error("Aborting run. No articles were marked processed.")
+                log.error("=" * 60)
+                return 1
             except ArticleSkipped as e:
                 log.info(f"Skipped (not relevant): {e}")
                 mark_processed(url)  # never re-evaluate an irrelevant article
