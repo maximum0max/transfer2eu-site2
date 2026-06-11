@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { id: 'home',     label: 'Главная' },
   { id: 'routes',   label: 'Маршруты' },
   { id: 'price',    label: 'Цены' },
+  { id: 'news',     label: 'Новости' },
   { id: 'drivers',  label: 'Водителям' },
   { id: 'contacts', label: 'Контакты' },
 ];
@@ -82,7 +83,9 @@ function Header({ onNav, view }) {
 
         <nav style={navWrap} className="t2-nav-desktop">
           {NAV_ITEMS.map(it => {
-            const active = view === it.id || (it.id === 'routes' && view === 'route');
+            const active = view === it.id
+              || (it.id === 'routes' && view === 'route')
+              || (it.id === 'news' && view === 'news-post');
             return (
               <a key={it.id} onClick={() => onNav(it.id)} style={navLink(active)}>
                 {it.label}
@@ -105,7 +108,9 @@ function Header({ onNav, view }) {
       {open && (
         <div style={sheet}>
           {NAV_ITEMS.map(it => {
-            const active = view === it.id || (it.id === 'routes' && view === 'route');
+            const active = view === it.id
+              || (it.id === 'routes' && view === 'route')
+              || (it.id === 'news' && view === 'news-post');
             return (
               <a key={it.id} onClick={() => { onNav(it.id); setOpen(false); }} style={sheetLink(active)}>
                 {it.label}
