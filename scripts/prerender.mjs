@@ -16,7 +16,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist');
-const SITE = 'https://transfer2eu.com';
+const SITE = 'https://www.transfer2eu.com';
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

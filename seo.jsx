@@ -7,7 +7,7 @@ import { findRoute } from './BrandData.jsx';
 import { NEWS_POSTS } from './News.data.jsx';
 import { pathOf } from './router.jsx';
 
-const SITE = 'https://transfer2eu.com';
+const SITE = 'https://www.transfer2eu.com';
 const SUFFIX = ' · Transfer2EU';
 
 const STATIC_SEO = {
