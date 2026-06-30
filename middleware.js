@@ -9,11 +9,21 @@
 //
 // The real pages (home, /marshruty, /price, /kontakty, /voditelyam, /novosti,
 // /novosti/<slug>, and the /<routeSlug> pages) are NOT matched here, so they
-// fall through to the SPA.
+// fall through to the SPA. Route slugs are inlined (not imported) to keep the
+// edge bundle self-contained and impossible to break at build time. Keep this
+// list in sync with ROUTE_GROUPS in BrandData.jsx.
 
-import { ALL_ROUTES } from './BrandData.jsx';
-
-const ROUTE_SLUGS = new Set(ALL_ROUTES.map((r) => r.slug));
+const ROUTE_SLUGS = new Set([
+  'taxi-aeroport-alicante', 'gran-alacant', 'san-juan-playa', 'santa-pola',
+  'la-marina', 'los-balcones', 'el-campello', 'villajoyosa', 'la-nucia',
+  'finestrat', 'taksi-alikante-benidorm', 'taksi-iz-alikante-v-kalpe', 'albir',
+  'altea', 'playa-flamenca', 'quesada', 'guardamar', 'la-zenia', 'punta-prima',
+  'transfer-alicante-torrevieja', 'cabo-roig', 'campoverde', 'orihuela',
+  'mil-palmeras', 'pilar-de-la-horadada', 'san-pedro', 'taxi-alicante-murcia',
+  'san-javier', 'los-alcazares', 'cartagena', 'taksi-alikante-la-manga', 'alcoy',
+  'moraira', 'denia', 'javea', 'oliva', 'gandia', 'taxi-alicante-valencia',
+  'madrid', 'barcelona', 'malaga',
+]);
 
 export const config = {
   matcher: '/((?!assets|fonts|uploads|_vercel|api|favicon|robots.txt|sitemap.xml).*)',

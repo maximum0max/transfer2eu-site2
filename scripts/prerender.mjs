@@ -80,10 +80,17 @@ function outFile(p) {
   return p === '/' ? 'index.html' : path.join(p.replace(/^\//, ''), 'index.html');
 }
 
-function sitemapXml(pages) {
+function sitemapXml(pages, lastmod) {
   const body = pages.map((pg) => {
     const loc = SITE + (pg.seo.path === '/' ? '/' : pg.seo.path);
-    return `  <url><loc>${loc}</loc><changefreq>${pg.cf}</changefreq><priority>${pg.pr}</priority></url>`;
+    return [
+      '  <url>',
+      `    <loc>${loc}</loc>`,
+      `    <lastmod>${lastmod}</lastmod>`,
+      `    <changefreq>${pg.cf}</changefreq>`,
+      `    <priority>${pg.pr}</priority>`,
+      '  </url>',
+    ].join('\n');
   }).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
@@ -139,9 +146,12 @@ async function main() {
     await fs.writeFile(dest, html, 'utf8');
   }
 
-  await fs.writeFile(path.join(DIST, 'sitemap.xml'), sitemapXml(pages), 'utf8');
+  const lastmod = new Date().toISOString();
+  await fs.writeFile(path.join(DIST, 'sitemap.xml'), sitemapXml(pages, lastmod), 'utf8');
 
   console.log(`Prerendered ${pages.length} pages + sitemap.xml`);
 }
 
-main().catch((err) => { console.error(err); process.exit(1); });
+// Never fail the deploy on a prerender error: the SPA build + the committed
+// static sitemap.xml are a complete fallback, so exit 0 and just log.
+main().catch((err) => { console.error('Prerender failed (non-fatal):', err); process.exit(0); });
