@@ -29,6 +29,7 @@ const STATIC_PATH = {
   contacts: '/kontakty',
   drivers: '/voditelyam',
   news: '/novosti',
+  anketa: '/anketa',
 };
 
 export function pathOf(view, slug) {
@@ -49,6 +50,7 @@ export function parsePath(pathname) {
   if (p === '/kontakty') return { view: 'contacts' };
   if (p === '/voditelyam') return { view: 'drivers' };
   if (p === '/novosti') return { view: 'news' };
+  if (p === '/anketa') return { view: 'anketa' }; // unlisted Google Form page
 
   if (p.startsWith('/novosti/')) {
     const slug = p.slice('/novosti/'.length);

@@ -54,6 +54,14 @@ export function getSeo(view, routeSlug, postSlug) {
       path: pathOf('news-post', post.slug),
     };
   }
+  // Unlisted embedded-form page — keep it out of search indexes.
+  if (view === 'anketa') return {
+    title: 'Анкета' + SUFFIX,
+    description: 'Форма для заполнения.',
+    path: '/anketa',
+    noindex: true,
+  };
+
   const s = STATIC_SEO[view];
   if (s) return { ...s, path: pathOf(view) };
 

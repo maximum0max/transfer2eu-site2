@@ -15,6 +15,7 @@ import DriversPage from './Drivers.jsx'
 import RoutePage from './RoutePage.jsx'
 import NewsList from './NewsList.jsx'
 import NewsPost from './NewsPost.jsx'
+import Anketa from './Anketa.jsx'
 import Reveal from './Reveal.jsx'
 import { parsePath, navigate, navigatePath, subscribe } from './router.jsx'
 import { getSeo, applyHead } from './seo.jsx'
@@ -91,6 +92,9 @@ export default function App() {
       });
     }
   };
+
+  // Unlisted form page: render only the embedded form — no header/footer/chrome.
+  if (view === 'anketa') return <Anketa />;
 
   return (
     <div data-screen-label={view} onClick={onRootClick}>
