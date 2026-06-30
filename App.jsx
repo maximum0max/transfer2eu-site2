@@ -39,33 +39,6 @@ export default function App() {
   // Per-page <head>: title, description, canonical, Open Graph.
   useEffect(() => { applyHead(getSeo(view, routeSlug, postSlug)); }, [view, routeSlug, postSlug]);
 
-  // Deep-link anchors (e.g. the legacy /#registro link tourists are sent to
-  // reach the booking form). The router replaces #root on mount and otherwise
-  // forces scroll-to-top, so the browser's native hash jump never lands — we
-  // resolve the hash ourselves once the target view has rendered.
-  useEffect(() => {
-    const id = decodeURIComponent((window.location.hash || '').replace(/^#/, ''));
-    if (!id) return;
-    let frames = 0;
-    const jump = () => {
-      const el = document.getElementById(id);
-      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-      if (frames++ < 30) requestAnimationFrame(jump); // wait for the view to paint
-    };
-    requestAnimationFrame(jump);
-  }, [view, routeSlug, postSlug]);
-
-  // Honour later hash changes (anchor links, back/forward to a #target).
-  useEffect(() => {
-    const onHash = () => {
-      const id = decodeURIComponent((window.location.hash || '').replace(/^#/, ''));
-      const el = id && document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, []);
-
   // Same callback signatures the components already use — only the implementation
   // changed (they now push a real URL instead of flipping local state).
   const onNav = (v) => navigate(v);
@@ -83,14 +56,6 @@ export default function App() {
     if (a.target === '_blank') return;
     e.preventDefault();
     navigatePath(href);
-    // pushState doesn't fire hashchange, so scroll to the #anchor ourselves.
-    const hashId = href.includes('#') ? decodeURIComponent(href.slice(href.indexOf('#') + 1)) : '';
-    if (hashId) {
-      requestAnimationFrame(() => {
-        const el = document.getElementById(hashId);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
   };
 
   // Unlisted form page: render only the embedded form — no header/footer/chrome.

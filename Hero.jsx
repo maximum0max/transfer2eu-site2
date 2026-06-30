@@ -59,10 +59,8 @@ function Hero({ onBook }) {
             </div>
           </div>
 
-          {/* RIGHT — booking form. id="registro" is the legacy deep-link target
-              (tourists are sent /#registro to reach this form); scrollMarginTop
-              clears the sticky header when the page is opened at that anchor. */}
-          <div id="registro" style={{ animationDelay: '.16s', scrollMarginTop: 84 }} className="t2-anim-up">
+          {/* RIGHT — booking form */}
+          <div style={{ animationDelay: '.16s' }} className="t2-anim-up">
             <BookingForm />
           </div>
         </div>
