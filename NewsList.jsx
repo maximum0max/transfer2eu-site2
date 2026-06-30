@@ -2,6 +2,7 @@ import React from 'react'
 import PageHero from './PageHero.jsx'
 import CTABanner from './CTABanner.jsx'
 import { NEWS_POSTS } from './News.data.jsx'
+import { pathOf } from './router.jsx'
 // News list — marketing-style layout. Currently empty state; renders posts
 // from window.NEWS_POSTS when populated.
 
@@ -34,7 +35,7 @@ function NewsList({ onOpenPost, onNav }) {
           ) : (
             <div style={grid}>
               {posts.map(p => (
-                <a key={p.slug} style={card}
+                <a key={p.slug} style={card} href={pathOf('news-post', p.slug)}
                    onClick={() => onOpenPost(p.slug)}
                    onMouseEnter={lift} onMouseLeave={drop}>
                   <div style={meta}>{p.date}</div>

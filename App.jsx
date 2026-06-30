@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { findRoute } from './BrandData.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import Hero from './Hero.jsx'
@@ -17,39 +16,49 @@ import RoutePage from './RoutePage.jsx'
 import NewsList from './NewsList.jsx'
 import NewsPost from './NewsPost.jsx'
 import Reveal from './Reveal.jsx'
-
-// Per-view document.title — improves UX and is read by some AI crawlers.
-const TITLES = {
-  'home':      'Трансфер из аэропорта Аликанте (ALC) от 25€ · Transfer2EU',
-  'routes':    'Маршруты трансфера из Аликанте — 40+ направлений · Transfer2EU',
-  'price':     'Цены на трансфер из аэропорта Аликанте — фикс-цена · Transfer2EU',
-  'contacts':  'Контакты Transfer2EU — WhatsApp, телефон, e-mail',
-  'drivers':   'Водителям — присоединяйтесь к команде · Transfer2EU',
-  'route':     'Трансфер Аликанте · Transfer2EU',
-  'news':      'Полезное — новости и гайды · Transfer2EU',
-  'news-post': 'Материал · Transfer2EU',
-};
+import { parsePath, navigate, navigatePath, subscribe } from './router.jsx'
+import { getSeo, applyHead } from './seo.jsx'
 
 export default function App() {
-  const [view, setView]           = useState('home');
-  const [routeSlug, setRouteSlug] = useState(null);
-  const [postSlug, setPostSlug]   = useState(null);
+  // Current location is derived from the URL, not from a click handler. This is
+  // what gives every view its own address (bookmarkable, shareable, indexable).
+  const [route, setRoute] = useState(() => parsePath(window.location.pathname));
 
   useEffect(() => {
-    let title = TITLES[view] || TITLES.home;
-    if (view === 'route') {
-      const r = findRoute(routeSlug);
-      if (r) title = `Трансфер Аликанте → ${r.ru} от ${r.price}€ · Transfer2EU`;
-    }
-    document.title = title;
-  }, [view, routeSlug]);
+    const sync = () => setRoute(parsePath(window.location.pathname));
+    const unsub = subscribe(sync);          // programmatic navigate()
+    window.addEventListener('popstate', sync); // browser back/forward
+    return () => { unsub(); window.removeEventListener('popstate', sync); };
+  }, []);
 
-  const onNav = (v) => { setView(v); window.scrollTo(0, 0); };
-  const onSelectRoute = (slug) => { setRouteSlug(slug); setView('route'); window.scrollTo(0, 0); };
-  const onOpenPost    = (slug) => { setPostSlug(slug); setView('news-post'); window.scrollTo(0, 0); };
+  const { view } = route;
+  const routeSlug = route.routeSlug || null;
+  const postSlug = route.postSlug || null;
+
+  // Per-page <head>: title, description, canonical, Open Graph.
+  useEffect(() => { applyHead(getSeo(view, routeSlug, postSlug)); }, [view, routeSlug, postSlug]);
+
+  // Same callback signatures the components already use — only the implementation
+  // changed (they now push a real URL instead of flipping local state).
+  const onNav = (v) => navigate(v);
+  const onSelectRoute = (slug) => navigate('route', slug);
+  const onOpenPost = (slug) => navigate('news-post', slug);
+
+  // Intercept clicks on internal <a href="/..."> so they navigate via the router
+  // (no full reload) while remaining real, crawlable links in the HTML.
+  const onRootClick = (e) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || href[0] !== '/') return;        // only same-site absolute paths
+    if (a.target === '_blank') return;
+    e.preventDefault();
+    navigatePath(href);
+  };
 
   return (
-    <div data-screen-label={view}>
+    <div data-screen-label={view} onClick={onRootClick}>
       <Header view={view} onNav={onNav} />
       <main>
         {view === 'home' && (
@@ -70,8 +79,26 @@ export default function App() {
         {view === 'route'     && <RoutePage slug={routeSlug} onNav={onNav} onSelectRoute={onSelectRoute} />}
         {view === 'news'      && <NewsList onOpenPost={onOpenPost} onNav={onNav} />}
         {view === 'news-post' && <NewsPost slug={postSlug} onNav={onNav} />}
+        {view === 'notfound'  && <NotFound />}
       </main>
       <Footer onNav={onNav} onSelectRoute={onSelectRoute} />
     </div>
+  );
+}
+
+function NotFound() {
+  return (
+    <section style={{ padding: '96px 24px', textAlign: 'center', background: '#fff' }}>
+      <div style={{ fontSize: 48, marginBottom: 8 }}>🧭</div>
+      <h1 style={{ fontFamily: "'Onest',sans-serif", fontSize: 30, color: 'var(--t2-ink)', margin: '0 0 8px' }}>
+        Страница не найдена
+      </h1>
+      <p style={{ color: 'var(--t2-ink-3)', margin: '0 0 24px' }}>
+        Возможно, ссылка устарела. Вернитесь на главную или к списку маршрутов.
+      </p>
+      <a href="/" style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 12, background: 'var(--t2-red)', color: '#fff', textDecoration: 'none', fontFamily: "'Inter',system-ui", fontWeight: 700 }}>
+        На главную
+      </a>
+    </section>
   );
 }

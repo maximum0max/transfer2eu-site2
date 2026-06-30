@@ -1,5 +1,6 @@
 import React from 'react'
 import { BRAND, POPULAR, waLink } from './BrandData.jsx'
+import { pathOf } from './router.jsx'
 // Footer v2 — light 3-column layout: brand on the left, nav columns in the
 // middle, contact card on the right. Replaces the dark SEO-link footer.
 
@@ -49,7 +50,7 @@ function Footer({ onNav, onSelectRoute }) {
       <div style={inner}>
         <div style={grid} className="t2-footer-grid">
           <div>
-            <a onClick={() => onNav('home')} style={logo}>
+            <a href="/" onClick={() => onNav('home')} style={logo}>
               <div style={logoMark}>T2</div>
               <div>
                 <div style={wordmark}>Transfer2EU</div>
@@ -61,17 +62,17 @@ function Footer({ onNav, onSelectRoute }) {
 
           <div>
             <div style={colTitle}>Сайт</div>
-            <a style={colLink} onClick={() => onNav('home')}>Главная</a>
-            <a style={colLink} onClick={() => onNav('routes')}>Маршруты</a>
-            <a style={colLink} onClick={() => onNav('price')}>Цены</a>
-            <a style={colLink} onClick={() => onNav('drivers')}>Водителям</a>
-            <a style={colLink} onClick={() => onNav('contacts')}>Контакты</a>
+            <a style={colLink} href={pathOf('home')} onClick={() => onNav('home')}>Главная</a>
+            <a style={colLink} href={pathOf('routes')} onClick={() => onNav('routes')}>Маршруты</a>
+            <a style={colLink} href={pathOf('price')} onClick={() => onNav('price')}>Цены</a>
+            <a style={colLink} href={pathOf('drivers')} onClick={() => onNav('drivers')}>Водителям</a>
+            <a style={colLink} href={pathOf('contacts')} onClick={() => onNav('contacts')}>Контакты</a>
           </div>
 
           <div>
             <div style={colTitle}>Популярные маршруты</div>
             {popular.map(r => (
-              <a key={r.slug} style={colRouteLink} onClick={() => onSelectRoute && onSelectRoute(r.slug)}>
+              <a key={r.slug} style={colRouteLink} href={pathOf('route', r.slug)} onClick={() => onSelectRoute && onSelectRoute(r.slug)}>
                 <span>Аликанте → {r.ru}</span>
                 <span style={routeAmount}>{r.price}€</span>
               </a>
@@ -107,9 +108,9 @@ function Footer({ onNav, onSelectRoute }) {
         <div style={bottom}>
           <div>{BRAND.copy || '© 2026 Transfer2EU'}</div>
           <div style={bottomLinks}>
-            <a style={bottomLink} onClick={() => onNav('contacts')}>Контакты</a>
-            <a style={bottomLink} onClick={() => onNav('drivers')}>Партнёрам</a>
-            <a style={bottomLink} onClick={() => onNav('routes')}>Все направления</a>
+            <a style={bottomLink} href={pathOf('contacts')} onClick={() => onNav('contacts')}>Контакты</a>
+            <a style={bottomLink} href={pathOf('drivers')} onClick={() => onNav('drivers')}>Партнёрам</a>
+            <a style={bottomLink} href={pathOf('routes')} onClick={() => onNav('routes')}>Все направления</a>
           </div>
         </div>
       </div>

@@ -11,4 +11,9 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+# Yandex (primary audience is RU-speaking): declare canonical mirror and tell
+# it to ignore the legacy ?amp duplicate parameter.
+Host: https://transfer2eu.com
+Clean-param: amp
+
 Sitemap: https://transfer2eu.com/sitemap.xml

@@ -1,5 +1,6 @@
 import React from 'react'
 import { waLink } from './BrandData.jsx'
+import { pathOf } from './router.jsx'
 // Header v2 — thin red accent line + clean white nav. Logo with mini icon,
 // nav as bare links (no pill background until hover/active), green WA CTA.
 // Mobile: hamburger collapses nav into a dropdown sheet.
@@ -73,7 +74,7 @@ function Header({ onNav, view }) {
     <header style={wrap}>
       <div style={stripe} />
       <div style={row}>
-        <a onClick={() => { onNav('home'); setOpen(false); }} style={logo}>
+        <a href="/" onClick={() => { onNav('home'); setOpen(false); }} style={logo}>
           <div style={logoMark}>T2</div>
           <div>
             <div style={wordmark}>Transfer2EU</div>
@@ -87,7 +88,7 @@ function Header({ onNav, view }) {
               || (it.id === 'routes' && view === 'route')
               || (it.id === 'news' && view === 'news-post');
             return (
-              <a key={it.id} onClick={() => onNav(it.id)} style={navLink(active)}>
+              <a key={it.id} href={pathOf(it.id)} onClick={() => onNav(it.id)} style={navLink(active)}>
                 {it.label}
                 <span style={navUnderline(active)} />
               </a>
@@ -112,7 +113,7 @@ function Header({ onNav, view }) {
               || (it.id === 'routes' && view === 'route')
               || (it.id === 'news' && view === 'news-post');
             return (
-              <a key={it.id} onClick={() => { onNav(it.id); setOpen(false); }} style={sheetLink(active)}>
+              <a key={it.id} href={pathOf(it.id)} onClick={() => { onNav(it.id); setOpen(false); }} style={sheetLink(active)}>
                 {it.label}
               </a>
             );
