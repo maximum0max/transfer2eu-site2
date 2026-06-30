@@ -70,11 +70,14 @@ export default function middleware(request) {
   // Permanently removed legacy URLs.
   if (GONE.some((re) => re.test(p))) return gone();
 
-  // Canonicalise host + drop the legacy ?amp param (one 301 hop).
-  let changed = false;
-  if (url.hostname === 'www.transfer2eu.com') { url.hostname = 'transfer2eu.com'; changed = true; }
-  if (url.searchParams.has('amp')) { url.searchParams.delete('amp'); changed = true; }
-  if (changed) return Response.redirect(url.toString(), 301);
+  // Drop the legacy ?amp duplicate param. NOTE: host (www <-> apex)
+  // canonicalization is intentionally NOT done here — Vercel's primary-domain
+  // setting owns that. Redirecting host in middleware too creates an infinite
+  // loop whenever the platform redirects the opposite direction.
+  if (url.searchParams.has('amp')) {
+    url.searchParams.delete('amp');
+    return Response.redirect(url.toString(), 301);
+  }
 
   // Everything else continues to the SPA.
 }
