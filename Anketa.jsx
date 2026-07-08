@@ -7,7 +7,7 @@ import { LANGS, UI, FIELDS, COUNTRIES } from './Anketa.data.jsx'
 //
 // SETUP: paste the Apps Script web-app URL (its /exec address) into ENDPOINT.
 // Until then the form validates and previews but submission is disabled.
-const ENDPOINT = ''; // e.g. 'https://script.google.com/macros/s/AKfy.../exec'
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzslItzW6x4fWDZZjvB31m1Yaqfib03RPnb8rL--24ZBZCLxqUhTkPlLfsp7j2vcVVr/exec';
 
 const blank = () => FIELDS.reduce((o, f) => { o[f.key] = ''; return o; }, {});
 
