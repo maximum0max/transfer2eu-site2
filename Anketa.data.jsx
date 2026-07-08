@@ -7,9 +7,10 @@
 // language-independent: choice fields store a fixed value, country fields store
 // the English country name. Only the on-screen label changes with language.
 
+// English first — it's the form's primary language.
 export const LANGS = [
-  { code: 'ru', label: 'Русский' },
   { code: 'en', label: 'English' },
+  { code: 'ru', label: 'Русский' },
   { code: 'es', label: 'Español' },
 ];
 
