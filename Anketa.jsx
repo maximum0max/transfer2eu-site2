@@ -12,16 +12,24 @@ import React from 'react'
 const FORM_IDS = {
   ru: '1evibPRhpRyV626byAl4EIgCHZI0mK1E0TxLhxcJA_dw',
   en: '1evibPRhpRyV626byAl4EIgCHZI0mK1E0TxLhxcJA_dw',
+  es: '1evibPRhpRyV626byAl4EIgCHZI0mK1E0TxLhxcJA_dw',
 };
+
+const LANGS = [
+  { code: 'ru', label: 'Русский' },
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+];
 
 const srcFor = (lang) =>
   `https://docs.google.com/forms/d/${FORM_IDS[lang]}/viewform?embedded=true&hl=${lang}`;
 
 export default function Anketa() {
   const { useState } = React;
-  const [lang, setLang] = useState(
-    () => (new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'ru'),
-  );
+  const [lang, setLang] = useState(() => {
+    const q = new URLSearchParams(window.location.search).get('lang');
+    return FORM_IDS[q] ? q : 'ru';
+  });
 
   const choose = (l) => {
     setLang(l);
@@ -46,8 +54,11 @@ export default function Anketa() {
   return (
     <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', background: '#fff' }}>
       <div style={bar}>
-        <button type="button" onClick={() => choose('ru')} style={btn(lang === 'ru')}>Русский</button>
-        <button type="button" onClick={() => choose('en')} style={btn(lang === 'en')}>English</button>
+        {LANGS.map((l) => (
+          <button key={l.code} type="button" onClick={() => choose(l.code)} style={btn(lang === l.code)}>
+            {l.label}
+          </button>
+        ))}
       </div>
       <iframe
         key={lang}                 /* remount so the form reloads in the chosen language */
@@ -56,7 +67,7 @@ export default function Anketa() {
         loading="eager"
         style={{ flex: 1, width: '100%', border: 0, background: '#fff' }}
       >
-        {lang === 'en' ? 'Loading form…' : 'Загрузка формы…'}
+        Loading…
       </iframe>
     </div>
   );
