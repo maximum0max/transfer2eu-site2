@@ -41,7 +41,7 @@ export const ROUTE_GROUPS = [
       { slug: 'la-nucia',                   city: 'La Nucia',    ru: 'Ла-Нусия',    price: 45, emoji: '🏡', time: 45 },
       { slug: 'finestrat',                  city: 'Finestrat',   ru: 'Финестрат',   price: 60, emoji: '🏔', time: 45 },
       { slug: 'taksi-alikante-benidorm',    city: 'Benidorm',    ru: 'Бенидорм',    price: 60, emoji: '🏖', time: 50 },
-      { slug: 'taksi-iz-alikante-v-kalpe',  city: 'Calpe',       ru: 'Кальпе',      price: 60, emoji: '⛰', time: 60 },
+      { slug: 'taksi-iz-alikante-v-kalpe',  city: 'Calpe',       ru: 'Кальпе',      price: 80, emoji: '⛰', time: 60 },
       { slug: 'albir',                      city: 'Albir',       ru: 'Альбир',      price: 65, emoji: '🌅', time: 60 },
       { slug: 'altea',                      city: 'Altea',       ru: 'Альтеа',      price: 65, emoji: '⛵', time: 65 },
     ],
