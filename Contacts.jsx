@@ -64,7 +64,7 @@ function ContactsPage({ onNav }) {
 
       <div style={block}>
         <div style={blockInner}>
-          <h2 style={blockH2}>Часы работы</h2>
+          <h2 style={blockH2}>Время приема заявок</h2>
           <div style={hoursBox}>
             {HOURS.map((h, i) => (
               <div key={i} style={{ ...hourRow, ...(i === HOURS.length - 1 ? { borderBottom: 0 } : null) }}>
