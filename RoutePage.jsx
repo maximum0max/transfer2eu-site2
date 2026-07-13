@@ -44,13 +44,16 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
 
 /* ============ 1. Photo-bg hero ============ */
 function RouteHero({ r }) {
+  // No overflow:hidden here — the stat card below deliberately hangs 36px past
+  // the section (marginBottom: -36), and clipping the section cut the card's
+  // labels off. Only the photo layer needs clipping, so it does its own.
   const wrap = {
-    position: 'relative', overflow: 'hidden', minHeight: 460,
+    position: 'relative', minHeight: 460,
     background: r.gradient || 'linear-gradient(135deg, var(--t2-deep), #0b1e33)',
     color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
     paddingTop: 80,
   };
-  const photo = { position: 'absolute', inset: 0, zIndex: 0 };
+  const photo = { position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' };
   const photoImg = { width: '100%', height: '100%', objectFit: 'cover' };
   const overlay = {
     position: 'absolute', inset: 0,
