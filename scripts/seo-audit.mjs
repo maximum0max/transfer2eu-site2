@@ -15,10 +15,23 @@ const warns = [];
 const fail = (url, msg) => fails.push(`${url} — ${msg}`);
 const warn = (url, msg) => warns.push(`${url} — ${msg}`);
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// The audit fires a few hundred requests; a transient connect timeout is a flaky
+// audit, not a site defect, so retry before believing it.
 const get = async (url, redirect = 'manual') => {
-  const res = await fetch(url, { redirect, headers: { 'user-agent': 'seo-audit' } });
-  const body = res.status < 400 || res.status === 404 ? await res.text() : '';
-  return { status: res.status, location: res.headers.get('location'), body };
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(url, { redirect, headers: { 'user-agent': 'seo-audit' } });
+      const body = res.status < 400 || res.status === 404 ? await res.text() : '';
+      return { status: res.status, location: res.headers.get('location'), body };
+    } catch (e) {
+      lastErr = e;
+      await sleep(1000 * (attempt + 1));
+    }
+  }
+  throw new Error(`${url}: ${lastErr.message}`);
 };
 
 const tag = (html, re) => { const m = html.match(re); return m ? m[1].trim() : null; };
