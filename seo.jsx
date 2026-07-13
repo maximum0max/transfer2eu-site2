@@ -13,15 +13,15 @@ const SUFFIX = ' · Transfer2EU';
 const STATIC_SEO = {
   home: {
     title: 'Трансфер из аэропорта Аликанте (ALC) от 25€' + SUFFIX,
-    description: 'Частный трансфер из аэропорта Аликанте (ALC) в Бенидорм 60€, Кальпе 80€, Торревьеху 60€, Валенсию 150€ и 40+ городов Costa Blanca. Фиксированная цена, русскоязычный водитель, встреча с табличкой, работаем 24/7.',
+    description: 'Трансфер из аэропорта Аликанте (ALC): Бенидорм 60€, Кальпе 80€, Валенсия 150€ и 40+ городов Costa Blanca. Фикс-цена, русскоязычный водитель, 24/7.',
   },
   routes: {
     title: 'Маршруты трансфера из Аликанте — 40+ направлений' + SUFFIX,
-    description: 'Все направления трансфера из аэропорта Аликанте (ALC): Costa Blanca, Мурсия и Валенсия — 40+ маршрутов с фиксированной ценой за автомобиль. Бенидорм, Кальпе, Торревьеха, Дения, Валенсия и другие.',
+    description: 'Все направления трансфера из аэропорта Аликанте (ALC): 40+ маршрутов по Costa Blanca, Мурсии и Валенсии с фиксированной ценой за автомобиль.',
   },
   price: {
     title: 'Цены на трансфер из аэропорта Аликанте — фикс-цена' + SUFFIX,
-    description: 'Актуальные цены на трансфер из аэропорта Аликанте: фиксированная стоимость за автомобиль. Бенидорм 60€, Кальпе 80€, Торревьеха 60€, Мурсия 75€, Валенсия 150€ и 40+ направлений.',
+    description: 'Цены на трансфер из аэропорта Аликанте — фикс-цена за авто: Бенидорм 60€, Кальпе 80€, Торревьеха 60€, Мурсия 75€, Валенсия 150€ и 40+ направлений.',
   },
   contacts: {
     title: 'Контакты Transfer2EU — WhatsApp, телефон, e-mail',
@@ -37,19 +37,24 @@ const STATIC_SEO = {
   },
 };
 
+// Google truncates the snippet around 160 chars and the title around 60, so the
+// generated ones stay inside that budget: everything that matters (city, price,
+// duration) has to survive the cut.
+const withSuffix = (t) => (t.length + SUFFIX.length <= 60 ? t + SUFFIX : t);
+
 export function getSeo(view, routeSlug, postSlug) {
   if (view === 'route') {
     const r = findRoute(routeSlug);
     if (r) return {
-      title: `Трансфер Аликанте → ${r.ru} от ${r.price}€` + SUFFIX,
-      description: `Частный трансфер из аэропорта Аликанте (ALC) в ${r.ru} — фиксированная цена ${r.price}€ за автомобиль, ~${r.time} мин в пути. Русскоязычный водитель, встреча с табличкой, бесплатное детское кресло, оплата онлайн или наличными.`,
+      title: withSuffix(`Трансфер Аликанте → ${r.ru} от ${r.price}€`),
+      description: `Трансфер из аэропорта Аликанте (ALC) в ${r.ru} — фикс-цена ${r.price}€ за авто, ~${r.time} мин в пути. Русскоязычный водитель, встреча с табличкой, 24/7.`,
       path: pathOf('route', r.slug),
     };
   }
   if (view === 'news-post') {
     const post = (NEWS_POSTS || []).find((p) => p.slug === postSlug);
     if (post) return {
-      title: post.title + SUFFIX,
+      title: withSuffix(post.title),
       description: post.excerpt || 'Материал Transfer2EU — новости и гайды о жизни в Испании и трансферах по Costa Blanca.',
       path: pathOf('news-post', post.slug),
     };
