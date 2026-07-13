@@ -67,19 +67,30 @@
 }
 </script>
 
-<!-- JSON-LD: TaxiService (LocalBusiness subtype) -->
+<!-- JSON-LD: TaxiService, also typed LocalBusiness (the business has a real
+     Alicante base, and LocalBusiness is what Google reads for local results).
+     No aggregateRating here: Google ignores self-published ratings and issues
+     manual actions for unverifiable ones. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "TaxiService",
+  "@type": ["TaxiService", "LocalBusiness"],
   "@id": "https://www.transfer2eu.com/#taxiservice",
   "name": "Transfer2EU — трансфер из аэропорта Аликанте",
   "provider": { "@id": "https://www.transfer2eu.com/#org" },
+  "parentOrganization": { "@id": "https://www.transfer2eu.com/#org" },
   "url": "https://www.transfer2eu.com/",
+  "image": "https://www.transfer2eu.com/assets/og-image.jpg",
   "telephone": "+34651011911",
   "priceRange": "25€ — 310€",
   "currenciesAccepted": "EUR",
   "paymentAccepted": "Cash, Credit Card",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Alicante",
+    "addressRegion": "Comunidad Valenciana",
+    "addressCountry": "ES"
+  },
   "areaServed": {
     "@type": "AdministrativeArea",
     "name": "Costa Blanca, Comunidad Valenciana, Spain"
@@ -95,13 +106,6 @@
       { "@type": "Offer", "name": "Аликанте ALC → Мурсия",     "price": "75",  "priceCurrency": "EUR" },
       { "@type": "Offer", "name": "Аликанте ALC → Валенсия",   "price": "150", "priceCurrency": "EUR" }
     ]
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "127",
-    "bestRating": "5",
-    "worstRating": "1"
   }
 }
 </script>
@@ -123,7 +127,7 @@
     { "@type": "Question", "name": "Можно ли отменить бронь?",
       "acceptedAnswer": { "@type": "Answer", "text": "Бесплатная отмена за 24 часа. Позже — удерживается 50%, в день поездки — 100%." } },
     { "@type": "Question", "name": "Сколько пассажиров помещается?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Указанные цены — за седан, до 4 пассажиров. Для компании 5–8 человек подаём минивэн: это отдельный тариф." } }
+      "acceptedAnswer": { "@type": "Answer", "text": "Указанные цены — за седан, до 4 пассажиров. Для компании 5–8 человек подаём минивэн: это отдельный тариф, цену уточним в WhatsApp." } }
   ]
 }
 </script>

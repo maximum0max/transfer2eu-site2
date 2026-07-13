@@ -28,6 +28,8 @@ const STATIC_H1 = {
   contacts: 'Контакты Transfer2EU',
   drivers:  'Водителям — присоединяйтесь к команде',
   news:     'Новости и гайды',
+  anketa:   'Анкета',
+  notfound: 'Страница не найдена',
 };
 
 const SHELL = 'max-width:820px;margin:0 auto;padding:48px 24px;font-family:\'Inter\',system-ui;color:var(--t2-ink,#0F1216)';
@@ -57,8 +59,21 @@ function staticBody(view, seo) {
   return `<main style="${SHELL}"><h1>${esc(STATIC_H1[view] || 'Transfer2EU')}</h1><p>${esc(seo.description)}</p></main>`;
 }
 
+// The FAQ section is only rendered on the home view (App.jsx), so the FAQPage
+// block that index.html ships with must not travel to the other pages: Google
+// requires FAQ markup to match FAQ content that is actually visible on the URL.
+function stripFaqLd(html) {
+  return html.replace(
+    /(?:<!--[^>]*?-->\s*)?<script type="application\/ld\+json">(?:(?!<\/script>)[\s\S])*?"FAQPage"(?:(?!<\/script>)[\s\S])*?<\/script>\s*/,
+    '',
+  );
+}
+
+const ldScript = (obj) =>
+  `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2)}\n</script>\n`;
+
 // Rewrite the head tags that index.html ships with home-page defaults.
-function applyHead(html, seo) {
+function applyHead(html, seo, opts = {}) {
   const url = SITE + (seo.path === '/' ? '/' : seo.path);
   const sub = (re, value) => { html = html.replace(re, (_m, a, b) => a + value + b); };
 
@@ -69,24 +84,100 @@ function applyHead(html, seo) {
   sub(/(<link rel="alternate" hreflang="ru" href=")[^"]*(">)/, url);
   sub(/(<link rel="alternate" hreflang="x-default" href=")[^"]*(">)/, url);
   sub(/(<meta property="og:url" content=")[^"]*(">)/, url);
+  sub(/(<meta property="og:type" content=")[^"]*(">)/, opts.ogType || 'website');
   sub(/(<meta property="og:title" content=")[^"]*(">)/, esc(seo.title));
   sub(/(<meta property="og:description" content=")[^"]*(">)/, esc(seo.description));
   sub(/(<meta name="twitter:title" content=")[^"]*(">)/, esc(seo.title));
   sub(/(<meta name="twitter:description" content=")[^"]*(">)/, esc(seo.description));
+
+  if (opts.view !== 'home') html = stripFaqLd(html);
+
+  const extra = (opts.jsonLd || []).map(ldScript).join('');
+  if (extra) html = html.replace('</head>', extra + '</head>');
   return html;
+}
+
+// --- per-page structured data -------------------------------------------------
+
+const breadcrumbs = (trail) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map(([name, p], i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name,
+    item: SITE + p,
+  })),
+});
+
+// The route page's own product: one named transfer at one fixed price. This is
+// what we actually want Google to attach to /<routeSlug>, rather than the home
+// page's whole-catalogue TaxiService node.
+function routeLd(r, seo) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': SITE + seo.path + '#service',
+    serviceType: 'Трансфер из аэропорта',
+    name: `Трансфер Аликанте (ALC) → ${r.ru}`,
+    description: seo.description,
+    url: SITE + seo.path,
+    provider: { '@id': SITE + '/#org' },
+    areaServed: { '@type': 'City', name: r.city },
+    offers: {
+      '@type': 'Offer',
+      price: String(r.price),
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: SITE + seo.path,
+    },
+  };
+}
+
+const RU_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля',
+  'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+// The bot writes human dates ("29 июня 2026"); schema.org and sitemaps need ISO.
+function isoDate(human) {
+  const m = String(human || '').match(/(\d{1,2})\s+([а-яё]+)\s+(\d{4})/i);
+  if (!m) return null;
+  const month = RU_MONTHS.indexOf(m[2].toLowerCase());
+  if (month < 0) return null;
+  const d = new Date(Date.UTC(+m[3], month, +m[1]));
+  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+}
+
+function newsLd(post, seo) {
+  const published = isoDate(post.date);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    '@id': SITE + seo.path + '#article',
+    headline: post.title,
+    description: post.excerpt || seo.description,
+    url: SITE + seo.path,
+    ...(published ? { datePublished: published, dateModified: published } : {}),
+    image: [SITE + '/assets/og-image.jpg'],
+    author: { '@id': SITE + '/#org' },
+    publisher: { '@id': SITE + '/#org' },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + seo.path },
+    inLanguage: 'ru',
+  };
 }
 
 function outFile(p) {
   return p === '/' ? 'index.html' : path.join(p.replace(/^\//, ''), 'index.html');
 }
 
-function sitemapXml(pages, lastmod) {
-  const body = pages.map((pg) => {
+// Only indexable pages belong in the sitemap: submitting a noindex URL is a
+// direct contradiction and Search Console reports it as an error.
+function sitemapXml(pages, buildDate) {
+  const body = pages.filter((pg) => !pg.seo.noindex).map((pg) => {
     const loc = SITE + (pg.seo.path === '/' ? '/' : pg.seo.path);
     return [
       '  <url>',
       `    <loc>${loc}</loc>`,
-      `    <lastmod>${lastmod}</lastmod>`,
+      `    <lastmod>${pg.lastmod || buildDate}</lastmod>`,
       `    <changefreq>${pg.cf}</changefreq>`,
       `    <priority>${pg.pr}</priority>`,
       '  </url>',
@@ -106,6 +197,7 @@ async function main() {
   });
 
   let pages = [];
+  let nfSeo = null;
   try {
     const { getSeo } = await vite.ssrLoadModule('/seo.jsx');
     const { ALL_ROUTES } = await vite.ssrLoadModule('/BrandData.jsx');
@@ -120,18 +212,43 @@ async function main() {
       ['drivers', null, 'monthly', '0.5'],
     ];
 
+    const HOME = ['Главная', '/'];
+
     for (const [view, , cf, pr] of sections) {
       const seo = getSeo(view, null, null);
-      pages.push({ view, seo, cf, pr, body: staticBody(view, seo) });
+      const jsonLd = view === 'home' ? [] : [breadcrumbs([HOME, [STATIC_H1[view], seo.path]])];
+      pages.push({ view, seo, cf, pr, jsonLd, body: staticBody(view, seo) });
     }
     for (const r of ALL_ROUTES) {
       const seo = getSeo('route', r.slug, null);
-      pages.push({ view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo) });
+      pages.push({
+        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo),
+        jsonLd: [
+          routeLd(r, seo),
+          breadcrumbs([HOME, ['Маршруты', '/marshruty'], [r.ru, seo.path]]),
+        ],
+      });
     }
     for (const post of (NEWS_POSTS || [])) {
       const seo = getSeo('news-post', null, post.slug);
-      pages.push({ view: 'news-post', seo, cf: 'monthly', pr: '0.5', body: newsBody(post, seo) });
+      pages.push({
+        view: 'news-post', seo, cf: 'monthly', pr: '0.5', body: newsBody(post, seo),
+        ogType: 'article',
+        lastmod: isoDate(post.date),
+        jsonLd: [
+          newsLd(post, seo),
+          breadcrumbs([HOME, ['Новости', '/novosti'], [post.title, seo.path]]),
+        ],
+      });
     }
+
+    // Unlisted, noindex — prerendered so it resolves as a real file rather than
+    // depending on an SPA catch-all rewrite (which is what made every unknown
+    // URL return the home page with a 200).
+    const anketa = getSeo('anketa', null, null);
+    pages.push({ view: 'anketa', seo: anketa, cf: 'yearly', pr: '0.1', body: staticBody('anketa', anketa) });
+
+    nfSeo = getSeo('notfound', null, null);
   } finally {
     await vite.close();
   }
@@ -139,19 +256,32 @@ async function main() {
   const template = await fs.readFile(path.join(DIST, 'index.html'), 'utf8');
 
   for (const pg of pages) {
-    let html = applyHead(template, pg.seo);
+    let html = applyHead(template, pg.seo, { view: pg.view, jsonLd: pg.jsonLd, ogType: pg.ogType });
     html = html.replace('<div id="root"></div>', `<div id="root">${pg.body}</div>`);
     const dest = path.join(DIST, outFile(pg.seo.path));
     await fs.mkdir(path.dirname(dest), { recursive: true });
     await fs.writeFile(dest, html, 'utf8');
   }
 
-  const lastmod = new Date().toISOString();
-  await fs.writeFile(path.join(DIST, 'sitemap.xml'), sitemapXml(pages, lastmod), 'utf8');
+  // Vercel serves this for any path with no matching file, with a real 404
+  // status. It still boots the SPA, so the client router renders the styled
+  // not-found view over the static fallback body.
+  const notFound = applyHead(
+    template.replace('<div id="root"></div>', `<div id="root">${staticBody('notfound', nfSeo)}</div>`),
+    { ...nfSeo, path: '/404' },
+    { view: 'notfound' },
+  ).replace(/<link rel="canonical"[^>]*>\s*/, '');
+  await fs.writeFile(path.join(DIST, '404.html'), notFound, 'utf8');
 
-  console.log(`Prerendered ${pages.length} pages + sitemap.xml`);
+  const buildDate = new Date().toISOString();
+  await fs.writeFile(path.join(DIST, 'sitemap.xml'), sitemapXml(pages, buildDate), 'utf8');
+
+  const indexable = pages.filter((p) => !p.seo.noindex).length;
+  console.log(`Prerendered ${pages.length} pages (${indexable} in sitemap) + 404.html + sitemap.xml`);
 }
 
-// Never fail the deploy on a prerender error: the SPA build + the committed
-// static sitemap.xml are a complete fallback, so exit 0 and just log.
-main().catch((err) => { console.error('Prerender failed (non-fatal):', err); process.exit(0); });
+// A prerender failure MUST fail the build. There is no SPA catch-all rewrite
+// any more (that rewrite is what made every unknown URL answer 200 with the
+// home page), so these files are the only thing standing between a deploy and
+// a site where every URL except / returns 404.
+main().catch((err) => { console.error('Prerender failed:', err); process.exit(1); });
