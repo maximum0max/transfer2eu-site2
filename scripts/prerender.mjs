@@ -34,7 +34,31 @@ const STATIC_H1 = {
 
 const SHELL = 'max-width:820px;margin:0 auto;padding:48px 24px;font-family:\'Inter\',system-ui;color:var(--t2-ink,#0F1216)';
 
-function routeBody(r, seo) {
+const a = (href, text) => `<a href="${href}">${esc(text)}</a>`;
+
+// React replaces all of this on hydration, so it is never seen by a human. It
+// exists for crawlers that don't run JS (Yandex, Bing, the AI crawlers we
+// welcome in robots.txt): without links here they'd get 69 orphan pages and no
+// crawl graph at all. Every page therefore links to the section hubs, and the
+// hubs link to their children.
+const NAV = [
+  ['/', 'Главная'],
+  ['/marshruty', 'Маршруты'],
+  ['/price', 'Цены'],
+  ['/novosti', 'Новости'],
+  ['/kontakty', 'Контакты'],
+  ['/voditelyam', 'Водителям'],
+];
+
+const siteNav = (current) => '<nav><ul>'
+  + NAV.filter(([p]) => p !== current).map(([p, t]) => `<li>${a(p, t)}</li>`).join('')
+  + '</ul></nav>';
+
+const routeLinks = (routes) => '<ul>'
+  + routes.map((r) => `<li>${a('/' + r.slug, `Трансфер Аликанте → ${r.ru} — ${r.price}€`)}</li>`).join('')
+  + '</ul>';
+
+function routeBody(r, seo, siblings) {
   return `<main style="${SHELL}">`
     + `<h1>Трансфер Аликанте → ${esc(r.ru)} от ${r.price}€</h1>`
     + `<p>${esc(seo.description)}</p>`
@@ -42,7 +66,11 @@ function routeBody(r, seo) {
     + `<li>Фиксированная цена: ${r.price}€ за автомобиль (седан, до 4 пассажиров)</li>`
     + `<li>Время в пути: ~${r.time} мин</li>`
     + `<li>Русскоязычный водитель, встреча с табличкой, работаем 24/7</li>`
-    + `</ul></main>`;
+    + `</ul>`
+    + `<h2>Другие направления</h2>`
+    + routeLinks(siblings)
+    + siteNav(seo.path)
+    + `</main>`;
 }
 
 function newsBody(post, seo) {
@@ -52,11 +80,19 @@ function newsBody(post, seo) {
     + (post.date ? `<p><em>${esc(post.date)}</em></p>` : '')
     + `<p>${esc(post.excerpt || seo.description)}</p>`
     + (first ? `<p>${esc(first.text)}</p>` : '')
+    + siteNav(seo.path)
     + `</main>`;
 }
 
-function staticBody(view, seo) {
-  return `<main style="${SHELL}"><h1>${esc(STATIC_H1[view] || 'Transfer2EU')}</h1><p>${esc(seo.description)}</p></main>`;
+// The hubs carry the full child list, so every route page and every post is
+// reachable from a crawl that starts at "/" and never runs a line of JS.
+function staticBody(view, seo, children) {
+  return `<main style="${SHELL}">`
+    + `<h1>${esc(STATIC_H1[view] || 'Transfer2EU')}</h1>`
+    + `<p>${esc(seo.description)}</p>`
+    + (children || '')
+    + siteNav(seo.path)
+    + `</main>`;
 }
 
 // The FAQ section is only rendered on the home view (App.jsx), so the FAQPage
@@ -214,15 +250,23 @@ async function main() {
 
     const HOME = ['Главная', '/'];
 
+    // Hub children: /marshruty lists every route, /novosti every post, and the
+    // home page seeds the crawl with the routes too.
+    const allRouteLinks = routeLinks(ALL_ROUTES);
+    const newsLinks = '<ul>' + (NEWS_POSTS || [])
+      .map((p) => `<li>${a('/novosti/' + p.slug, p.title)}</li>`).join('') + '</ul>';
+    const CHILDREN = { home: allRouteLinks, routes: allRouteLinks, news: newsLinks };
+
     for (const [view, , cf, pr] of sections) {
       const seo = getSeo(view, null, null);
       const jsonLd = view === 'home' ? [] : [breadcrumbs([HOME, [STATIC_H1[view], seo.path]])];
-      pages.push({ view, seo, cf, pr, jsonLd, body: staticBody(view, seo) });
+      pages.push({ view, seo, cf, pr, jsonLd, body: staticBody(view, seo, CHILDREN[view]) });
     }
     for (const r of ALL_ROUTES) {
       const seo = getSeo('route', r.slug, null);
+      const siblings = ALL_ROUTES.filter((x) => x.slug !== r.slug).slice(0, 8);
       pages.push({
-        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo),
+        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings),
         jsonLd: [
           routeLd(r, seo),
           breadcrumbs([HOME, ['Маршруты', '/marshruty'], [r.ru, seo.path]]),

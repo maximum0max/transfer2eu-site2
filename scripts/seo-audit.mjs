@@ -162,6 +162,24 @@ async function main() {
   else if (!(robots(anketa.body) || '').includes('noindex')) fail('/anketa', 'should be noindex');
   if (urls.some((u) => u.endsWith('/anketa'))) fail('/anketa', 'noindex page must not be in the sitemap');
 
+  // --- orphan pages ---------------------------------------------------------------
+  // Crawl from "/" following only <a href> in the served HTML — i.e. what a
+  // crawler that doesn't execute JavaScript sees. Anything in the sitemap that
+  // this can't reach is an orphan, discoverable only via the sitemap.
+  const seen = new Set([`${SITE}/`]);
+  const queue = [`${SITE}/`];
+  while (queue.length) {
+    const p = queue.shift();
+    const r = await get(p);
+    if (r.status !== 200) continue;
+    for (const m of r.body.matchAll(/<a href="(\/[^"#]*)"/g)) {
+      const u = SITE + (m[1] === '/' ? '/' : m[1].replace(/\/$/, ''));
+      if (!seen.has(u)) { seen.add(u); queue.push(u); }
+    }
+  }
+  const orphans = urls.filter((u) => !seen.has(u));
+  if (orphans.length) fail('crawl', `${orphans.length} sitemap page(s) unreachable by link without JS: ${orphans.slice(0, 5).join(', ')}`);
+
   // --- report -------------------------------------------------------------------
   console.log(`\nchecked ${urls.length} sitemap pages + status/redirect/legacy rules`);
   if (warns.length) {
