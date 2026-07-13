@@ -60,6 +60,30 @@ async function main() {
   const rb = await get(`${SITE}/robots.txt`);
   if (rb.status !== 200) fail('/robots.txt', `status ${rb.status}`);
   else if (!rb.body.includes('sitemap.xml')) fail('/robots.txt', 'does not reference the sitemap');
+  else {
+    // Collect the Disallow rules that apply to a generic crawler ("*" group).
+    // A Disallow that covers an indexable page is how a site quietly vanishes
+    // from Google, and a Disallow on a noindex page is worse than useless:
+    // the crawler can never read the noindex tag it is supposed to obey.
+    const disallow = [];
+    let inStar = false;
+    for (const raw of rb.body.split('\n')) {
+      const line = raw.replace(/#.*/, '').trim();
+      if (!line) continue;
+      const [k, ...rest] = line.split(':');
+      const key = k.trim().toLowerCase();
+      const val = rest.join(':').trim();
+      if (key === 'user-agent') inStar = val === '*';
+      else if (key === 'disallow' && inStar && val) disallow.push(val);
+    }
+    const blocked = (p) => disallow.some((d) => p.startsWith(d.replace(/\*$/, '')));
+    for (const u of urls) {
+      const p = new URL(u).pathname;
+      if (blocked(p)) fail(u, `indexable page is Disallowed in robots.txt`);
+    }
+    if (blocked('/anketa')) fail('/anketa', 'noindex page is Disallowed — crawlers can never read the noindex tag');
+    if (blocked('/sitemap.xml')) fail('/sitemap.xml', 'sitemap is Disallowed in robots.txt');
+  }
 
   // --- every indexable page ---------------------------------------------------
   const titles = new Map();

@@ -1,19 +1,44 @@
+# Transfer2EU — https://www.transfer2eu.com
+#
+# Nothing is disallowed: every page is meant to be crawled. /anketa is kept
+# crawlable ON PURPOSE — it carries <meta name="robots" content="noindex">, and
+# a Disallow would stop crawlers from ever reading that tag, which is how a page
+# ends up indexed as a bare URL with no title.
+#
+# Note on groups: Allow/Disallow/Clean-param apply only to the group they sit
+# in, and a crawler that matches a named group ignores the "*" group entirely.
+
 User-agent: *
 Allow: /
 
-# AI / answer-engine crawlers — explicitly welcomed
+# Yandex matters here (the audience is RU-speaking). Clean-param drops the
+# legacy ?amp duplicate URLs inherited from the old WordPress site. It has to
+# live in a group Yandex actually reads — previously it trailed the
+# Google-Extended group, so Yandex never saw it.
+#
+# There is deliberately no "Host:" directive: Yandex retired it in 2021 and the
+# canonical mirror is now declared by the apex -> www 308 redirect.
+User-agent: Yandex
+Allow: /
+Clean-param: amp
+
+# AI / answer-engine crawlers — explicitly welcomed.
 User-agent: GPTBot
 Allow: /
+
 User-agent: OAI-SearchBot
 Allow: /
-User-agent: PerplexityBot
-Allow: /
-User-agent: Google-Extended
+
+User-agent: ChatGPT-User
 Allow: /
 
-# Yandex (primary audience is RU-speaking): declare canonical mirror and tell
-# it to ignore the legacy ?amp duplicate parameter.
-Host: https://www.transfer2eu.com
-Clean-param: amp
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 Sitemap: https://www.transfer2eu.com/sitemap.xml
