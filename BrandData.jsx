@@ -3,6 +3,9 @@
 // Phone/email/wa intentionally kept to the existing transfer2eu numbers per
 // site owner — do not swap to the alicante-transfers number.
 
+// Author + licence for each route photo, written by scripts/fetch-route-photos.mjs.
+import ROUTE_PHOTO_CREDITS from './RoutePhotos.data.json';
+
 export const BRAND = {
   name:      'Transfer2EU',
   domain:    'transfer2eu.com',
@@ -97,17 +100,31 @@ export const ROUTE_GROUPS = [
 
 export const ALL_ROUTES = ROUTE_GROUPS.flatMap(g => g.routes);
 
-// Image + gradient fallback per destination — used by PopularRoutes cards
-// and route hero banners. The gradient renders behind the <img> so the card
-// still looks intentional if the photo 404s.
-export const ROUTE_IMAGES = {
-  'taksi-alikante-benidorm':       { img: 'https://images.unsplash.com/photo-1599283226915-ef8d2c5a5e15?w=1200&q=75&auto=format&fit=crop', alt: 'Высотные башни Бенидорма и пляж',         gradient: 'linear-gradient(135deg,#0ea5e9 0%,#0369a1 60%,#0c4a6e 100%)' },
-  'transfer-alicante-torrevieja':  { img: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?w=1200&q=75&auto=format&fit=crop', alt: 'Прибрежная набережная Торревьехи',         gradient: 'linear-gradient(135deg,#fb7185 0%,#e11d48 60%,#9f1239 100%)' },
-  'taksi-iz-alikante-v-kalpe':     { img: 'https://images.unsplash.com/photo-1583087253076-5d1315860eb7?w=1200&q=75&auto=format&fit=crop', alt: 'Скала Пеньон-де-Ифач и пляж Кальпе',       gradient: 'linear-gradient(135deg,#64748b 0%,#1e3a8a 60%,#0c4a6e 100%)' },
-  'denia':                         { img: 'https://images.unsplash.com/photo-1568849676085-51415703900f?w=1200&q=75&auto=format&fit=crop', alt: 'Гавань Дении и средиземноморский яхт-порт', gradient: 'linear-gradient(135deg,#fbbf24 0%,#d97706 60%,#92400e 100%)' },
-  'taxi-alicante-murcia':          { img: 'https://images.unsplash.com/photo-1583265627959-fb7042f5133b?w=1200&q=75&auto=format&fit=crop', alt: 'Кафедральный собор Мурсии',                gradient: 'linear-gradient(135deg,#f472b6 0%,#be185d 60%,#831843 100%)' },
-  'taxi-alicante-valencia':        { img: 'https://images.unsplash.com/photo-1599581456350-a5c5be71b40f?w=1200&q=75&auto=format&fit=crop', alt: 'Город искусств и наук в Валенсии',         gradient: 'linear-gradient(135deg,#7c3aed 0%,#4338ca 60%,#1e1b4b 100%)' },
-};
+// Image + gradient fallback per destination — used by PopularRoutes cards and
+// route hero banners. The gradient renders behind the <img> so the card still
+// looks intentional while the photo loads.
+//
+// The photos are SELF-HOSTED (public/assets/routes/<slug>.jpg), sourced from
+// Wikimedia Commons by scripts/fetch-route-photos.mjs. They used to be hotlinked
+// from Unsplash, and half of those URLs had since 404'd — a hotlink is a photo a
+// stranger can delete. Only 6 of the 41 routes had one at all; now every route
+// does. RoutePhotos.data.json carries the author/licence for each, which the
+// hero renders: most are CC BY-SA and attribution is a condition of use.
+const GRADIENTS = [
+  'linear-gradient(135deg,#0ea5e9 0%,#0369a1 60%,#0c4a6e 100%)',
+  'linear-gradient(135deg,#fb7185 0%,#e11d48 60%,#9f1239 100%)',
+  'linear-gradient(135deg,#64748b 0%,#1e3a8a 60%,#0c4a6e 100%)',
+  'linear-gradient(135deg,#fbbf24 0%,#d97706 60%,#92400e 100%)',
+  'linear-gradient(135deg,#34d399 0%,#059669 60%,#064e3b 100%)',
+  'linear-gradient(135deg,#7c3aed 0%,#4338ca 60%,#1e1b4b 100%)',
+];
+
+export const ROUTE_IMAGES = Object.fromEntries(ALL_ROUTES.map((r, i) => [r.slug, {
+  img: `/assets/routes/${r.slug}.jpg`,
+  alt: `${r.ru} — трансфер из аэропорта Аликанте`,
+  gradient: GRADIENTS[i % GRADIENTS.length],
+  credit: ROUTE_PHOTO_CREDITS[r.slug] || null,
+}]));
 
 // Featured 6 routes on the home grid (alicante-transfers `popular` list).
 export const POPULAR = ['Benidorm', 'Torrevieja', 'Calpe', 'Denia', 'Murcia', 'Valencia']
@@ -115,7 +132,7 @@ export const POPULAR = ['Benidorm', 'Torrevieja', 'Calpe', 'Denia', 'Murcia', 'V
     const r = ALL_ROUTES.find(x => x.city === name);
     if (!r) return null;
     const meta = ROUTE_IMAGES[r.slug];
-    return meta ? { ...r, img: meta.img, alt: meta.alt, gradient: meta.gradient } : r;
+    return meta ? { ...r, ...meta } : r;
   })
   .filter(Boolean);
 
@@ -123,7 +140,9 @@ export const findRoute = (slug) => {
   const r = ALL_ROUTES.find(x => x.slug === slug);
   if (!r) return null;
   const meta = ROUTE_IMAGES[r.slug];
-  return meta ? { ...r, img: meta.img, alt: meta.alt, gradient: meta.gradient } : r;
+  // ...meta, not a hand-picked subset: it used to drop everything but img/alt/
+  // gradient, which silently swallowed the photo credit the licence requires.
+  return meta ? { ...r, ...meta } : r;
 };
 
 export const waLink = (msg) =>

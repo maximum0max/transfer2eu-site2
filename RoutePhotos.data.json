@@ -1,0 +1,330 @@
+{
+  "taxi-aeroport-alicante": {
+    "city": "Alicante",
+    "file": "Vista de Alicante, España, 2014-07-04, DD 49.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20Alicante%2C%20Espa%C3%B1a%2C%202014-07-04%2C%20DD%2049.JPG"
+  },
+  "gran-alacant": {
+    "city": "Gran Alacant",
+    "file": "Santa Pola. Cabo de Santa Pola.JPG",
+    "author": "Enrique Íñiguez Rodríguez (Qoan)",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ASanta%20Pola.%20Cabo%20de%20Santa%20Pola.JPG"
+  },
+  "san-juan-playa": {
+    "city": "San Juan Playa",
+    "file": "Alicante - Playa de San Juan 02.jpg",
+    "author": "Zarateman",
+    "licence": "CC0",
+    "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAlicante%20-%20Playa%20de%20San%20Juan%2002.jpg"
+  },
+  "santa-pola": {
+    "city": "Santa Pola",
+    "file": "Santa Pola. Cabo de Santa Pola.JPG",
+    "author": "Enrique Íñiguez Rodríguez (Qoan)",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ASanta%20Pola.%20Cabo%20de%20Santa%20Pola.JPG"
+  },
+  "la-marina": {
+    "city": "La Marina",
+    "file": "Guardamar del Segura panorama from hotel Poseidon.jpg",
+    "author": "Klapi",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AGuardamar%20del%20Segura%20panorama%20from%20hotel%20Poseidon.jpg"
+  },
+  "los-balcones": {
+    "city": "Los Balcones",
+    "file": "VistadeTorrevieja1-España.jpg",
+    "author": "Ezarate",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVistadeTorrevieja1-Espa%C3%B1a.jpg"
+  },
+  "el-campello": {
+    "city": "El Campello",
+    "file": "® S.D. EL CAMPELLO VISTAS DESDE LA ILLETA - panoramio (2).jpg",
+    "author": "Concepcion AMAT ORTA…",
+    "licence": "CC BY 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3A%C2%AE%20S.D.%20EL%20CAMPELLO%20VISTAS%20DESDE%20LA%20ILLETA%20-%20panoramio%20(2).jpg"
+  },
+  "villajoyosa": {
+    "city": "Villajoyosa",
+    "file": "Villajoyosa, España, 2014-07-03, DD 19.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVillajoyosa%2C%20Espa%C3%B1a%2C%202014-07-03%2C%20DD%2019.JPG"
+  },
+  "la-nucia": {
+    "city": "La Nucia",
+    "file": "Vista de la Nucia des del castell de Polop.JPG",
+    "author": "Joanbanjo",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20la%20Nucia%20des%20del%20castell%20de%20Polop.JPG"
+  },
+  "finestrat": {
+    "city": "Finestrat",
+    "file": "Cala de Finestrat, Finestrat, España, 2014-07-03, DD 01.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACala%20de%20Finestrat%2C%20Finestrat%2C%20Espa%C3%B1a%2C%202014-07-03%2C%20DD%2001.JPG"
+  },
+  "taksi-alikante-benidorm": {
+    "city": "Benidorm",
+    "file": "Vista de Benidorm, España, 2014-07-02, DD 67.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20Benidorm%2C%20Espa%C3%B1a%2C%202014-07-02%2C%20DD%2067.JPG"
+  },
+  "taksi-iz-alikante-v-kalpe": {
+    "city": "Calpe",
+    "file": "Peñón de Ifach, Calpe, España, 2014-07-01, DD 08.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APe%C3%B1%C3%B3n%20de%20Ifach%2C%20Calpe%2C%20Espa%C3%B1a%2C%202014-07-01%2C%20DD%2008.JPG"
+  },
+  "albir": {
+    "city": "Albir",
+    "file": "Playa del Racó del Albir.JPG",
+    "author": "Jackrm",
+    "licence": "Public domain",
+    "licenceUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File%3APlaya%20del%20Rac%C3%B3%20del%20Albir.JPG"
+  },
+  "altea": {
+    "city": "Altea",
+    "file": "Assorted afotejos from Altea 06.jpg",
+    "author": "B25es",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAssorted%20afotejos%20from%20Altea%2006.jpg"
+  },
+  "playa-flamenca": {
+    "city": "Playa Flamenca",
+    "file": "Nautilus Orihuela Costa 160719.jpg",
+    "author": "Drefer",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANautilus%20Orihuela%20Costa%20160719.jpg"
+  },
+  "quesada": {
+    "city": "Quesada",
+    "file": "Puente de Carlos III de Rojales.jpg",
+    "author": "Orniosviajero",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APuente%20de%20Carlos%20III%20de%20Rojales.jpg"
+  },
+  "guardamar": {
+    "city": "Guardamar",
+    "file": "Guardamar del Segura panorama from hotel Poseidon.jpg",
+    "author": "Klapi",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AGuardamar%20del%20Segura%20panorama%20from%20hotel%20Poseidon.jpg"
+  },
+  "la-zenia": {
+    "city": "La Zenia",
+    "file": "Nautilus Orihuela Costa 160719.jpg",
+    "author": "Drefer",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANautilus%20Orihuela%20Costa%20160719.jpg"
+  },
+  "punta-prima": {
+    "city": "Punta Prima",
+    "file": "VistadeTorrevieja1-España.jpg",
+    "author": "Ezarate",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVistadeTorrevieja1-Espa%C3%B1a.jpg"
+  },
+  "transfer-alicante-torrevieja": {
+    "city": "Torrevieja",
+    "file": "VistadeTorrevieja1-España.jpg",
+    "author": "Ezarate",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVistadeTorrevieja1-Espa%C3%B1a.jpg"
+  },
+  "cabo-roig": {
+    "city": "Cabo Roig",
+    "file": "Nautilus Orihuela Costa 160719.jpg",
+    "author": "Drefer",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ANautilus%20Orihuela%20Costa%20160719.jpg"
+  },
+  "campoverde": {
+    "city": "Campoverde",
+    "file": "Vista de la Torre de la Horadada desde la rampa a la playa.jpg",
+    "author": "Shelf-full-of-books",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20la%20Torre%20de%20la%20Horadada%20desde%20la%20rampa%20a%20la%20playa.jpg"
+  },
+  "orihuela": {
+    "city": "Orihuela",
+    "file": "Ajuntament i església de les santes Justa i Rufina (Oriola).JPG",
+    "author": "Joanbanjo",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAjuntament%20i%20esgl%C3%A9sia%20de%20les%20santes%20Justa%20i%20Rufina%20(Oriola).JPG"
+  },
+  "mil-palmeras": {
+    "city": "Mil Palmeras",
+    "file": "Vista de la Torre de la Horadada desde la rampa a la playa.jpg",
+    "author": "Shelf-full-of-books",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20la%20Torre%20de%20la%20Horadada%20desde%20la%20rampa%20a%20la%20playa.jpg"
+  },
+  "pilar-de-la-horadada": {
+    "city": "Pilar de la Horadada",
+    "file": "Vista de la Torre de la Horadada desde la rampa a la playa.jpg",
+    "author": "Shelf-full-of-books",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20la%20Torre%20de%20la%20Horadada%20desde%20la%20rampa%20a%20la%20playa.jpg"
+  },
+  "san-pedro": {
+    "city": "San Pedro del Pinatar",
+    "file": "Pasarela a los baños de lodo en San Pedro del Pinatar, vista cercana.jpg",
+    "author": "Anidae",
+    "licence": "CC BY 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APasarela%20a%20los%20ba%C3%B1os%20de%20lodo%20en%20San%20Pedro%20del%20Pinatar%2C%20vista%20cercana.jpg"
+  },
+  "taxi-alicante-murcia": {
+    "city": "Murcia",
+    "file": "Catedral de Murcia desde la Plaza del Cardenal Belluga.jpg",
+    "author": "Mariahedez",
+    "licence": "CC BY-SA 3.0 es",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0/es/deed.en",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACatedral%20de%20Murcia%20desde%20la%20Plaza%20del%20Cardenal%20Belluga.jpg"
+  },
+  "san-javier": {
+    "city": "San Javier",
+    "file": "Mar Menor desde el paseo marítimo de Santiago de la Ribera.jpg",
+    "author": "Jmll",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AMar%20Menor%20desde%20el%20paseo%20mar%C3%ADtimo%20de%20Santiago%20de%20la%20Ribera.jpg"
+  },
+  "los-alcazares": {
+    "city": "Los Alcazares",
+    "file": "Playa del Espejo, en Los Alcázares (Murcia, España).jpg",
+    "author": "Polosureste",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APlaya%20del%20Espejo%2C%20en%20Los%20Alc%C3%A1zares%20(Murcia%2C%20Espa%C3%B1a).jpg"
+  },
+  "cartagena": {
+    "city": "Cartagena",
+    "file": "Puerto de Cartagena 2021.jpg",
+    "author": "Niels Johannes",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APuerto%20de%20Cartagena%202021.jpg"
+  },
+  "taksi-alikante-la-manga": {
+    "city": "La Manga",
+    "file": "La Manga cityscape from Mirador de Monte Blanco, Cartagena, Murcia, Spain, 2022 January.jpg",
+    "author": "Ximonic (Simo Räsänen)",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ALa%20Manga%20cityscape%20from%20Mirador%20de%20Monte%20Blanco%2C%20Cartagena%2C%20Murcia%2C%20Spain%2C%202022%20January.jpg"
+  },
+  "alcoy": {
+    "city": "Alcoy",
+    "file": "Alcoi desde El Puig - panoramio.jpg",
+    "author": "bladimiro",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AAlcoi%20desde%20El%20Puig%20-%20panoramio.jpg"
+  },
+  "moraira": {
+    "city": "Moraira",
+    "file": "Vista de Moraira des del Cap d'Or.JPG",
+    "author": "Joanbanjo",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20Moraira%20des%20del%20Cap%20d'Or.JPG"
+  },
+  "denia": {
+    "city": "Denia",
+    "file": "Castell de Dénia des del Massís del Montgó (País Valencià).jpg",
+    "author": "Vicenç Salvador Torres Guerola",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3ACastell%20de%20D%C3%A9nia%20des%20del%20Mass%C3%ADs%20del%20Montg%C3%B3%20(Pa%C3%ADs%20Valenci%C3%A0).jpg"
+  },
+  "javea": {
+    "city": "Javea",
+    "file": "Xàbia des del parador.jpg",
+    "author": "Francesc Fort",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AX%C3%A0bia%20des%20del%20parador.jpg"
+  },
+  "oliva": {
+    "city": "Oliva",
+    "file": "Oliva, plaça de l'ajuntament.JPG",
+    "author": "Joanbanjo",
+    "licence": "Public domain",
+    "licenceUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File%3AOliva%2C%20pla%C3%A7a%20de%20l'ajuntament.JPG"
+  },
+  "gandia": {
+    "city": "Gandia",
+    "file": "Passeig Germanies de Gandia.JPG",
+    "author": "Joanbanjo",
+    "licence": "Public domain",
+    "licenceUrl": "",
+    "source": "https://commons.wikimedia.org/wiki/File%3APasseig%20Germanies%20de%20Gandia.JPG"
+  },
+  "taxi-alicante-valencia": {
+    "city": "Valencia",
+    "file": "El Hemisférico, Ciudad de las Artes y las Ciencias, Valencia, España, 2014-06-29, DD 71.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AEl%20Hemisf%C3%A9rico%2C%20Ciudad%20de%20las%20Artes%20y%20las%20Ciencias%2C%20Valencia%2C%20Espa%C3%B1a%2C%202014-06-29%2C%20DD%2071.JPG"
+  },
+  "madrid": {
+    "city": "Madrid",
+    "file": "Vista de Madrid desde la catedral de la Almudena, España, 2014-12-27, DD 23.JPG",
+    "author": "Diego Delso",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AVista%20de%20Madrid%20desde%20la%20catedral%20de%20la%20Almudena%2C%20Espa%C3%B1a%2C%202014-12-27%2C%20DD%2023.JPG"
+  },
+  "barcelona": {
+    "city": "Barcelona",
+    "file": "Plaça Sagrada Família, house 1 to 7 Barcelona, Spain 1.jpg",
+    "author": "Reda Kerbush",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3APla%C3%A7a%20Sagrada%20Fam%C3%ADlia%2C%20house%201%20to%207%20Barcelona%2C%20Spain%201.jpg"
+  },
+  "malaga": {
+    "city": "Malaga",
+    "file": "View of Malaga from Castillo Gibralfaro. Spain.jpg",
+    "author": "Ввласенко",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File%3AView%20of%20Malaga%20from%20Castillo%20Gibralfaro.%20Spain.jpg"
+  }
+}

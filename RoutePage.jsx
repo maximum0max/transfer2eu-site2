@@ -87,12 +87,45 @@ function RouteHero({ r }) {
   const statNumRed = { ...statNum, color: 'var(--t2-red)' };
   const statLabel = { fontSize: 11, color: 'var(--t2-ink-3)', marginTop: 6, letterSpacing: '.06em', textTransform: 'uppercase' };
 
+  // Most route photos come from Wikimedia Commons under CC BY / CC BY-SA, where
+  // crediting the author is a condition of use, not a courtesy. Kept small and
+  // low-contrast in the corner so it reads as a photo credit and not as copy.
+  // Top-right: the bottom of the hero is where the stat card overhangs, and a
+  // credit placed there would sit behind it.
+  const creditLink = {
+    position: 'absolute', right: 12, top: 12, zIndex: 4,
+    fontSize: 10, lineHeight: 1.3, color: 'rgba(255,255,255,.55)',
+    textDecoration: 'none', maxWidth: '46%', textAlign: 'right',
+  };
+
   return (
     <section style={wrap}>
       <div style={photo}>
-        {r.img && <img src={r.img} alt={r.alt || ''} style={photoImg} />}
+        {r.img && (
+          <img
+            src={r.img}
+            alt={r.alt || ''}
+            style={photoImg}
+            fetchPriority="high"
+            width="1600"
+            height="900"
+          />
+        )}
       </div>
       <div style={overlay} />
+      {/* Sibling of the overlay, not a child of the photo: the overlay is
+          painted after the photo layer and would otherwise dim and swallow it. */}
+      {r.credit && (
+        <a
+          style={creditLink}
+          href={r.credit.source}
+          target="_blank"
+          rel="noopener nofollow"
+          title={`${r.credit.file} — ${r.credit.author}, ${r.credit.licence}`}
+        >
+          Фото: {r.credit.author} / {r.credit.licence}
+        </a>
+      )}
       <div style={content}>
         <span style={eyebrow}>{r.emoji} Аликанте ALC → {r.ru}</span>
         <h1 style={h1}>Трансфер Аликанте — {r.ru}</h1>
