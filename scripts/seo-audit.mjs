@@ -102,6 +102,25 @@ async function main() {
     }
   }
 
+  // --- assets referenced by OG tags + structured data must resolve -------------
+  // Google reports "image not found" against the structured data if they 404.
+  const home = await get(`${SITE}/`);
+  const assets = new Set([
+    tag(home.body, /<meta property="og:image" content="([^"]*)"/),
+    tag(home.body, /<link rel="icon" href="([^"]*)"/),
+  ].filter(Boolean));
+  for (const b of ldBlocks(home.body)) {
+    try {
+      const o = JSON.parse(b);
+      for (const v of [o.logo, o.image].flat()) if (typeof v === 'string' && /^https?:|^\//.test(v)) assets.add(v);
+    } catch { /* reported elsewhere */ }
+  }
+  for (const a of assets) {
+    const url = a.startsWith('http') ? a : SITE + a;
+    const r = await fetch(url, { method: 'HEAD' });
+    if (!r.ok) fail(url, `asset referenced in OG/structured data returns ${r.status}`);
+  }
+
   // --- soft-404 / status codes ------------------------------------------------
   const ghost = await get(`${SITE}/definitely-not-a-real-page-9f3a`);
   if (ghost.status !== 404) {
