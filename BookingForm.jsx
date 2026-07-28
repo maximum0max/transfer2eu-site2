@@ -128,37 +128,6 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
     return waLink(lines);
   };
 
-  // Structured payload for the owner-notification endpoint (Telegram).
-  const buildPayload = () => ({
-    route: `${fromLabel} → ${toLabel}`,
-    price: fromMode === 'other' ? 'уточним в чате' : `${selected.price}€`,
-    name: form.name,
-    phone: form.phone,
-    email: form.email,
-    date: form.date,
-    time: form.time,
-    timeLabel,
-    flight: form.flight,
-    passengers: form.passengers,
-    luggage: form.luggage,
-    notes: form.notes,
-  });
-
-  // Fire-and-forget: notify the owner the moment the form is submitted, so a
-  // lead is captured even if the customer never sends the pre-filled WhatsApp
-  // message. keepalive lets it finish while the WhatsApp tab opens. Any failure
-  // is ignored — it must never block the customer's booking flow.
-  const notifyOwner = () => {
-    try {
-      fetch('/api/notify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildPayload()),
-        keepalive: true,
-      }).catch(() => {});
-    } catch { /* noop */ }
-  };
-
   /* ---------------- styles ---------------- */
   const card = {
     background: '#fff', borderRadius: 22, overflow: 'hidden',
@@ -401,7 +370,6 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
   /* ════════════════ STEP 2 ════════════════ */
   const onSubmit = (e) => {
     if (!formValid) { e.preventDefault(); return; }
-    notifyOwner();
     setDone(true);
   };
 
