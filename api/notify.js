@@ -34,23 +34,35 @@ export default async function handler(req, res) {
   }
   d = d || {};
 
-  const rows = [
-    ['🚗 Маршрут', d.route],
-    ['💶 Стоимость', d.price],
-    ['👤 Имя', d.name],
-    ['📞 Телефон', d.phone],
-    ['📧 Email', d.email],
-    ['📅 Дата', d.date],
-    [`🕐 ${d.timeLabel || 'Время'}`, d.time],
-    ['✈️ Рейс', d.flight],
-    ['👥 Пассажиров', d.passengers],
-    ['🧳 Багаж', d.luggage],
-    ['📝 Примечания', d.notes],
-  ].filter(([, v]) => v != null && String(v).trim() !== '');
+  // Two accepted shapes:
+  //  1) Generic:  { title, fields: [ [label, value] | {label, value} ] }
+  //  2) Legacy transfer-booking shape (route/price/name/...).
+  let title, rows;
+  if (Array.isArray(d.fields)) {
+    title = d.title || 'Новая заявка с сайта transfer2eu.com';
+    rows = d.fields
+      .map((f) => (Array.isArray(f) ? f : [f && f.label, f && f.value]))
+      .filter(([, v]) => v != null && String(v).trim() !== '');
+  } else {
+    title = '🔔 Новая заявка с сайта transfer2eu.com';
+    rows = [
+      ['🚗 Маршрут', d.route],
+      ['💶 Стоимость', d.price],
+      ['👤 Имя', d.name],
+      ['📞 Телефон', d.phone],
+      ['📧 Email', d.email],
+      ['📅 Дата', d.date],
+      [`🕐 ${d.timeLabel || 'Время'}`, d.time],
+      ['✈️ Рейс', d.flight],
+      ['👥 Пассажиров', d.passengers],
+      ['🧳 Багаж', d.luggage],
+      ['📝 Примечания', d.notes],
+    ].filter(([, v]) => v != null && String(v).trim() !== '');
+  }
 
   const text =
-    '<b>🔔 Новая заявка с сайта transfer2eu.com</b>\n\n' +
-    rows.map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\n');
+    `<b>${esc(title)}</b>\n\n` +
+    rows.map(([k, v]) => `${esc(k)}: <b>${esc(v)}</b>`).join('\n');
 
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {

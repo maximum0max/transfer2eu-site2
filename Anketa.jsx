@@ -37,6 +37,9 @@ export default function Anketa() {
     if (missing.length) { setShowErr(true); return; }
     if (!ENDPOINT) { setStatus('error'); return; }
     setStatus('sending');
+    // Fire-and-forget Telegram notification to the owner (never blocks the
+    // Google Sheet submission that follows). Labels are sent in Russian.
+    notifyOwner();
     try {
       const body = new URLSearchParams({ lang, ...form });
       await fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', body });
@@ -44,6 +47,24 @@ export default function Anketa() {
     } catch (_) {
       setStatus('error');
     }
+  };
+
+  const notifyOwner = () => {
+    try {
+      const payload = {
+        title: '🏠 Новая анкета регистрации гостя (Guardia Civil)',
+        fields: [
+          ['🌐 Язык формы', lang],
+          ...FIELDS.map((f) => [f.label.ru, form[f.key]]),
+        ],
+      };
+      fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).catch(() => {});
+    } catch { /* noop */ }
   };
 
   /* ---------------- styles ---------------- */
