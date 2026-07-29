@@ -58,7 +58,34 @@ const routeLinks = (routes) => '<ul>'
   + routes.map((r) => `<li>${a('/' + r.slug, `Трансфер Аликанте → ${r.ru} — ${r.price}€`)}</li>`).join('')
   + '</ul>';
 
-function routeBody(r, seo, siblings) {
+// City-guide block (beaches / food / photo spots + map) for routes that have a
+// RouteGuide entry. Rendered into the static HTML so the unique content is
+// indexable without JS.
+function guideHtml(guide) {
+  if (!guide) return '';
+  const ul = (items, fmt) => '<ul>' + items.map(fmt).join('') + '</ul>';
+  let out = '';
+  if (guide.mapSrc) {
+    out += '<h2>Маршрут от аэропорта до центра Аликанте</h2>'
+      + `<iframe title="${esc(guide.mapTitle || '')}" src="${guide.mapSrc}" width="100%" height="360" style="border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
+      + (guide.mapNote ? `<p>${esc(guide.mapNote)}</p>` : '');
+  }
+  if (guide.beaches) {
+    out += '<h2>Пляжи в радиусе 30 км от Аликанте</h2>'
+      + ul(guide.beaches, (b) => `<li><strong>${esc(b.name)}</strong> (${esc(b.dist)}) — ${esc(b.text)}</li>`);
+  }
+  if (guide.food) {
+    out += '<h2>Где поесть в Аликанте — рекомендации для туристов</h2>'
+      + ul(guide.food, (f) => `<li><strong>${esc(f.name)}</strong> (${esc(f.type)}) — ${esc(f.text)}</li>`);
+  }
+  if (guide.photoSpots) {
+    out += '<h2>Лучшие места для фото и селфи</h2>'
+      + ul(guide.photoSpots, (s) => `<li><strong>${esc(s.name)}</strong> — ${esc(s.text)}</li>`);
+  }
+  return out;
+}
+
+function routeBody(r, seo, siblings, guide) {
   return `<main style="${SHELL}">`
     + `<h1>Трансфер Аликанте → ${esc(r.ru)} от ${r.price}€</h1>`
     + `<p>${esc(seo.description)}</p>`
@@ -67,6 +94,7 @@ function routeBody(r, seo, siblings) {
     + `<li>Время в пути: ~${r.time} мин</li>`
     + `<li>Русскоязычный водитель, встреча с табличкой, работаем 24/7</li>`
     + `</ul>`
+    + guideHtml(guide)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
     + siteNav(seo.path)
@@ -295,6 +323,7 @@ async function main() {
     const { ALL_ROUTES, POPULAR } = await vite.ssrLoadModule('/BrandData.jsx');
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
     const { INTERCITY_ROUTES } = await vite.ssrLoadModule('/Intercity.data.jsx');
+    const { ROUTE_GUIDES } = await vite.ssrLoadModule('/RouteGuide.data.jsx');
 
     const sections = [
       ['home', null, 'weekly', '1.0'],
@@ -330,7 +359,7 @@ async function main() {
       const seo = getSeo('route', r.slug, null);
       const siblings = ALL_ROUTES.filter((x) => x.slug !== r.slug).slice(0, 8);
       pages.push({
-        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings),
+        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings, ROUTE_GUIDES[r.slug] || null),
         jsonLd: [
           routeLd(r, seo),
           breadcrumbs([HOME, ['Маршруты', '/marshruty'], [r.ru, seo.path]]),

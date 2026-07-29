@@ -3,6 +3,7 @@ import BookingForm from './BookingForm.jsx'
 import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
 import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES } from './BrandData.jsx'
+import { getRouteGuide } from './RouteGuide.data.jsx'
 import { pathOf } from './router.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
 // 1) Photo-bg hero with floating stat strip
@@ -15,6 +16,7 @@ import { pathOf } from './router.jsx'
 
 function RoutePage({ slug, onNav, onSelectRoute }) {
   const r = findRoute(slug);
+  const guide = r ? getRouteGuide(r.slug) : null;
 
   if (!r) {
     return (
@@ -37,6 +39,7 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
       <Reveal><TripBreakdown r={r} /></Reveal>
       <Reveal><VehicleTiers basePrice={r.price} /></Reveal>
       <Reveal><DestinationTeaser r={r} /></Reveal>
+      {guide && <Reveal><RouteGuide guide={guide} /></Reveal>}
       <Reveal><OtherRoutes currentSlug={r.slug} onSelectRoute={onSelectRoute} /></Reveal>
       <Reveal><CTABanner onNav={onNav} /></Reveal>
     </>
@@ -537,6 +540,69 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
           <a style={pill} href={pathOf('price')}>💶 Цены на трансфер</a>
           <a style={pill} href={pathOf('news')}>📰 Полезное о Costa Blanca</a>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============ 5b. City guide — map, beaches, food, photo spots ============ */
+function RouteGuide({ guide }) {
+  const wrap = { padding: '88px 32px', background: 'var(--t2-bg-2)' };
+  const inner = { maxWidth: 1100, margin: '0 auto' };
+  const head = { textAlign: 'center', marginBottom: 28 };
+  const eyebrow = { fontSize: 12, fontWeight: 700, color: 'var(--t2-red)', letterSpacing: '.12em', textTransform: 'uppercase' };
+  const h2 = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 'clamp(26px, 3.2vw, 36px)', letterSpacing: '-.02em', color: 'var(--t2-ink)', margin: '8px 0 6px', lineHeight: 1.1 };
+  const sub = { fontSize: 15, color: 'var(--t2-ink-3)', maxWidth: 640, margin: '0 auto' };
+
+  const mapWrap = { position: 'relative', width: '100%', aspectRatio: '16 / 8', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--t2-line)', boxShadow: 'var(--t2-sh-2)', marginTop: 8, background: 'var(--t2-bg-2)' };
+  const mapNote = { fontSize: 13, color: 'var(--t2-ink-3)', marginTop: 12, textAlign: 'center' };
+
+  const secTitle = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 24, color: 'var(--t2-ink)', margin: '48px 0 4px', display: 'flex', alignItems: 'center', gap: 10 };
+  const secSub = { fontSize: 14, color: 'var(--t2-ink-3)', margin: '0 0 18px', maxWidth: 720 };
+  const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 14 };
+  const card = { background: '#fff', border: '1px solid var(--t2-line)', borderRadius: 14, padding: '16px 18px', boxShadow: 'var(--t2-sh-1)' };
+  const cardTop = { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, marginBottom: 6 };
+  const cName = { fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 15, color: 'var(--t2-ink)' };
+  const cBadge = { fontSize: 11, fontWeight: 700, color: 'var(--t2-red)', background: 'var(--t2-red-soft)', padding: '3px 8px', borderRadius: 999, whiteSpace: 'nowrap', flexShrink: 0 };
+  const cText = { fontSize: 13.5, lineHeight: 1.55, color: 'var(--t2-ink-2)' };
+
+  const Section = ({ icon, title, sub: s, items, badgeKey }) => (
+    <>
+      <h3 style={secTitle}>{icon} {title}</h3>
+      {s && <p style={secSub}>{s}</p>}
+      <div style={grid}>
+        {items.map((it, i) => (
+          <div key={i} style={card}>
+            <div style={cardTop}>
+              <span style={cName}>{it.name}</span>
+              {badgeKey && it[badgeKey] && <span style={cBadge}>{it[badgeKey]}</span>}
+            </div>
+            <div style={cText}>{it.text}</div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+
+  return (
+    <section style={wrap}>
+      <div style={inner}>
+        <div style={head}>
+          <div style={eyebrow}>Гид по Аликанте</div>
+          <h2 style={h2}>Маршрут, пляжи, еда и фото-локации</h2>
+          <p style={sub}>Пока водитель везёт вас из аэропорта — вот всё самое интересное в центре Аликанте и вокруг.</p>
+        </div>
+
+        <div style={mapWrap}>
+          <iframe title={guide.mapTitle} src={guide.mapSrc} width="100%" height="100%"
+            style={{ border: 0, display: 'block' }} loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe>
+        </div>
+        {guide.mapNote && <p style={mapNote}>{guide.mapNote}</p>}
+
+        <Section icon="🏖" title="Пляжи в радиусе 30 км" sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />
+        <Section icon="🍽" title="Где поесть — рекомендации для туристов" sub={guide.foodIntro} items={guide.food} badgeKey="type" />
+        <Section icon="📸" title="Лучшие места для фото и селфи" sub={guide.photoIntro} items={guide.photoSpots} />
       </div>
     </section>
   );
