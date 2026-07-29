@@ -199,7 +199,7 @@ function RouteDetailsBand({ r, onNav, guide }) {
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
                 📲 Написать в WhatsApp
               </a>
-              <a href={'tel:' + BRAND.tel} style={contactBtn}>📞 {BRAND.phone}</a>
+              <a href={'tel:' + BRAND.tel} style={{ ...contactBtn, background: 'var(--t2-bg-2)', color: 'var(--t2-ink)', border: '1px solid var(--t2-line)' }}>📞 {BRAND.phone}</a>
             </div>
           </div>
           ) : (
