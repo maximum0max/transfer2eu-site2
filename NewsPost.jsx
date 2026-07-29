@@ -30,6 +30,8 @@ function NewsPost({ slug, onNav }) {
   const back = { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, color: 'var(--t2-red)', cursor: 'pointer', background: 'transparent', border: 0, padding: 0, marginBottom: 16, textDecoration: 'none' };
   const pill = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 14px', borderRadius: 999, background: '#fff', border: '1px solid var(--t2-line)', color: 'var(--t2-ink-2)', textDecoration: 'none', fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 13.5 };
   const relCard = { display: 'block', padding: '16px 18px', borderRadius: 14, background: '#fff', border: '1px solid var(--t2-line)', textDecoration: 'none', boxShadow: 'var(--t2-sh-1)' };
+  const heroImg = { width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', borderRadius: 18, display: 'block', margin: '0 0 24px', background: 'var(--t2-bg-2)', boxShadow: 'var(--t2-sh-2)' };
+  const DEFAULT_IMG = '/assets/og-image.jpg';
 
   if (!post) {
     return (
@@ -59,6 +61,7 @@ function NewsPost({ slug, onNav }) {
       <div style={wrap}>
         <div style={inner}>
           <a style={back} href={pathOf('news')}>← Все материалы</a>
+          <img src={post.image || DEFAULT_IMG} alt={post.title} style={heroImg} fetchPriority="high" />
           {post.body
             ? post.body.map(renderBlock)
             : <div style={{ ...p, color: 'var(--t2-ink-3)', fontStyle: 'italic' }}>Полная версия материала готовится.</div>}

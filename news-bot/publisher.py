@@ -12,10 +12,41 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import requests
+
 log = logging.getLogger(__name__)
 
 # ../News.data.json relative to this file (news-bot/ -> site root).
 POSTS_PATH = Path(__file__).resolve().parent.parent / "News.data.json"
+# Self-hosted news photos (served from /assets/news/<slug>.<ext>).
+NEWS_IMAGES_DIR = Path(__file__).resolve().parent.parent / "public" / "assets" / "news"
+_UA = "Mozilla/5.0 (compatible; Transfer2EUNewsBot/1.0; +https://www.transfer2eu.com)"
+
+
+def _download_image(url: str | None, slug: str) -> str | None:
+    """
+    Download the article's og:image and self-host it as
+    public/assets/news/<slug>.<ext>. Returns the site-relative path, or None if
+    there's no usable image (so the site falls back to the default og-image).
+    """
+    if not url:
+        return None
+    try:
+        r = requests.get(url, headers={"User-Agent": _UA}, timeout=30)
+        r.raise_for_status()
+        ct = (r.headers.get("content-type") or "").lower()
+        if not ct.startswith("image/"):
+            return None
+        data = r.content
+        if len(data) < 3000 or len(data) > 2_800_000:
+            return None  # too small (icon) or too large for the web
+        ext = "png" if "png" in ct else "webp" if "webp" in ct else "gif" if "gif" in ct else "jpg"
+        NEWS_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+        (NEWS_IMAGES_DIR / f"{slug}.{ext}").write_bytes(data)
+        return f"/assets/news/{slug}.{ext}"
+    except Exception as e:  # never let a photo failure block publishing
+        log.warning(f"Could not fetch image for '{slug}': {e}")
+        return None
 
 RU_MONTHS = [
     "января", "февраля", "марта", "апреля", "мая", "июня",
@@ -77,6 +108,9 @@ def publish_post(rewritten: dict[str, Any]) -> str:
         "url": rewritten["source_url"],
         "body": body,
     }
+    image_path = _download_image(rewritten.get("image_url"), slug)
+    if image_path:
+        post["image"] = image_path
     if rewritten.get("tags"):
         post["tags"] = rewritten["tags"]
 

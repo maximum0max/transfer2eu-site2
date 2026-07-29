@@ -8,10 +8,11 @@ a balanced mix.
 import json
 import logging
 import random
+import re
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import feedparser
 import requests
@@ -86,14 +87,28 @@ def _parse_host(url: str) -> str:
     return host
 
 
-def fetch_article_text(url: str) -> str | None:
-    """Fetch and extract the main article text from a URL."""
+def _extract_og_image(html: str, base_url: str) -> str | None:
+    """Pull the article's social-share image (og:image / twitter:image)."""
+    for prop in ("og:image:secure_url", "og:image", "twitter:image", "twitter:image:src"):
+        tag = re.search(
+            r'<meta[^>]+(?:property|name)=["\']' + re.escape(prop) + r'["\'][^>]*>',
+            html, re.IGNORECASE,
+        )
+        if tag:
+            content = re.search(r'content=["\']([^"\']+)["\']', tag.group(0), re.IGNORECASE)
+            if content:
+                return urljoin(base_url, content.group(1).replace("&amp;", "&"))
+    return None
+
+
+def fetch_article(url: str) -> tuple[str | None, str | None]:
+    """Fetch a URL and return (main article text, og:image URL). Either may be None."""
     try:
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=FETCH_TIMEOUT)
         resp.raise_for_status()
     except requests.RequestException as e:
         log.warning(f"Failed to fetch article body for {url}: {e}")
-        return None
+        return None, None
 
     text = trafilatura.extract(
         resp.text,
@@ -103,8 +118,8 @@ def fetch_article_text(url: str) -> str | None:
     )
     if not text or len(text) < 200:
         log.warning(f"Extracted text too short or empty for {url}")
-        return None
-    return text
+        return None, None
+    return text, _extract_og_image(resp.text, url)
 
 
 def get_new_articles(
@@ -188,9 +203,10 @@ def _enrich(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Fetch full body text for the top candidates; drop any that fail."""
     enriched: list[dict[str, Any]] = []
     for cand in candidates[:ENRICH_ATTEMPTS]:
-        text = fetch_article_text(cand["url"])
+        text, image_url = fetch_article(cand["url"])
         if not text:
             continue
         cand["content"] = text
+        cand["image_url"] = image_url
         enriched.append(cand)
     return enriched

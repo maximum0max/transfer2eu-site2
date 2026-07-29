@@ -15,7 +15,10 @@ function NewsList({ onOpenPost, onNav }) {
   const empty = { textAlign: 'center', padding: '40px 0', color: 'var(--t2-ink-3)', fontSize: 16 };
 
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 18 };
-  const card = { background: 'var(--t2-bg)', border: '1px solid var(--t2-line)', borderRadius: 14, padding: '20px 22px', cursor: 'pointer', textDecoration: 'none', display: 'block', boxShadow: 'var(--t2-sh-1)', transition: 'all 220ms cubic-bezier(.2,.7,.2,1)' };
+  const card = { background: 'var(--t2-bg)', border: '1px solid var(--t2-line)', borderRadius: 14, overflow: 'hidden', cursor: 'pointer', textDecoration: 'none', display: 'flex', flexDirection: 'column', boxShadow: 'var(--t2-sh-1)', transition: 'all 220ms cubic-bezier(.2,.7,.2,1)' };
+  const cardImg = { width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block', background: 'var(--t2-bg-2)' };
+  const cardBody = { padding: '16px 20px' };
+  const DEFAULT_IMG = '/assets/og-image.jpg';
   const lift = e => { e.currentTarget.style.boxShadow = 'var(--t2-sh-3)'; e.currentTarget.style.transform = 'translateY(-2px)'; };
   const drop = e => { e.currentTarget.style.boxShadow = 'var(--t2-sh-1)'; e.currentTarget.style.transform = 'translateY(0)'; };
   const meta = { fontSize: 12, color: 'var(--t2-ink-3)', marginBottom: 8, fontVariantNumeric: 'tabular-nums' };
@@ -40,9 +43,12 @@ function NewsList({ onOpenPost, onNav }) {
                 <a key={p.slug} style={card} href={pathOf('news-post', p.slug)}
                    onClick={() => onOpenPost(p.slug)}
                    onMouseEnter={lift} onMouseLeave={drop}>
-                  <div style={meta}>{p.date}</div>
-                  <h2 style={title}>{p.title}</h2>
-                  {p.excerpt && <p style={excerpt}>{p.excerpt}</p>}
+                  <img src={p.image || DEFAULT_IMG} alt={p.title} loading="lazy" decoding="async" style={cardImg} />
+                  <div style={cardBody}>
+                    <div style={meta}>{p.date}</div>
+                    <h2 style={title}>{p.title}</h2>
+                    {p.excerpt && <p style={excerpt}>{p.excerpt}</p>}
+                  </div>
                 </a>
               ))}
             </div>

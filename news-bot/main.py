@@ -87,6 +87,9 @@ def run() -> int:
                 mark_processed(url)  # don't keep retrying a bad article
                 continue
 
+            # Carry the article's own photo (og:image) through to the publisher.
+            rewritten["image_url"] = article.get("image_url")
+
             try:
                 slug = publish_post(rewritten)
             except Exception as e:

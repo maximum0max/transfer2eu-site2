@@ -70,17 +70,18 @@ function guideHtml(guide) {
       + `<iframe title="${esc(guide.mapTitle || '')}" src="${guide.mapSrc}" width="100%" height="360" style="border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
       + (guide.mapNote ? `<p>${esc(guide.mapNote)}</p>` : '');
   }
+  const pic = (it) => it.img ? `<img src="${it.img}" alt="${esc(it.name)}" width="360" loading="lazy" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:6px 0"> ` : '';
   if (guide.beaches) {
     out += '<h2>Пляжи в радиусе 30 км от Аликанте</h2>'
-      + ul(guide.beaches, (b) => `<li><strong>${esc(b.name)}</strong> (${esc(b.dist)}) — ${esc(b.text)}</li>`);
+      + ul(guide.beaches, (b) => `<li>${pic(b)}<strong>${esc(b.name)}</strong> (${esc(b.dist)}) — ${esc(b.text)}</li>`);
   }
   if (guide.food) {
     out += '<h2>Где поесть в Аликанте — рекомендации для туристов</h2>'
-      + ul(guide.food, (f) => `<li><strong>${esc(f.name)}</strong> (${esc(f.type)}) — ${esc(f.text)}</li>`);
+      + ul(guide.food, (f) => `<li>${pic(f)}<strong>${esc(f.name)}</strong> (${esc(f.type)}) — ${esc(f.text)}</li>`);
   }
   if (guide.photoSpots) {
     out += '<h2>Лучшие места для фото и селфи</h2>'
-      + ul(guide.photoSpots, (s) => `<li><strong>${esc(s.name)}</strong> — ${esc(s.text)}</li>`);
+      + ul(guide.photoSpots, (s) => `<li>${pic(s)}<strong>${esc(s.name)}</strong> — ${esc(s.text)}</li>`);
   }
   return out;
 }
@@ -116,8 +117,10 @@ function newsBody(post, seo, related, routes) {
       + routeLinks(routes)
       + `<p>${a('/marshruty', 'Все 40+ маршрутов')} · ${a('/price', 'Цены на трансфер')} · ${a('/kontakty', 'Контакты 24/7')}</p>`
     : '';
+  const img = post.image || '/assets/og-image.jpg';
   return `<main style="${SHELL}">`
     + `<h1>${esc(post.title)}</h1>`
+    + `<img src="${img}" alt="${esc(post.title)}" width="820" style="max-width:100%;height:auto;border-radius:14px;display:block;margin:8px 0 16px" loading="eager">`
     + (post.date ? `<p><em>${esc(post.date)}</em></p>` : '')
     + `<p>${esc(post.excerpt || seo.description)}</p>`
     + (first ? `<p>${esc(first.text)}</p>` : '')
@@ -186,6 +189,11 @@ function applyHead(html, seo, opts = {}) {
   sub(/(<meta property="og:description" content=")[^"]*(">)/, esc(seo.description));
   sub(/(<meta name="twitter:title" content=")[^"]*(">)/, esc(seo.title));
   sub(/(<meta name="twitter:description" content=")[^"]*(">)/, esc(seo.description));
+  if (opts.ogImage) {
+    const imgUrl = SITE + opts.ogImage;
+    sub(/(<meta property="og:image" content=")[^"]*(">)/, imgUrl);
+    sub(/(<meta name="twitter:image" content=")[^"]*(">)/, imgUrl);
+  }
 
   if (opts.view !== 'home') html = stripFaqLd(html);
 
@@ -277,7 +285,7 @@ function newsLd(post, seo) {
     description: post.excerpt || seo.description,
     url: SITE + seo.path,
     ...(published ? { datePublished: published, dateModified: published } : {}),
-    image: [SITE + '/assets/og-image.jpg'],
+    image: [SITE + (post.image || '/assets/og-image.jpg')],
     author: { '@id': SITE + '/#org' },
     publisher: { '@id': SITE + '/#org' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': SITE + seo.path },
@@ -339,8 +347,12 @@ async function main() {
     // Hub children: /marshruty lists every route, /novosti every post, and the
     // home page seeds the crawl with the routes too.
     const allRouteLinks = routeLinks(ALL_ROUTES);
-    const newsLinks = '<ul>' + (NEWS_POSTS || [])
-      .map((p) => `<li>${a('/novosti/' + p.slug, p.title)}</li>`).join('') + '</ul>';
+    const newsLinks = '<ul>' + (NEWS_POSTS || []).map((p) => {
+      const im = p.image || '/assets/og-image.jpg';
+      return `<li><a href="/novosti/${p.slug}">`
+        + `<img src="${im}" alt="${esc(p.title)}" width="280" loading="lazy" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:6px 0">`
+        + `${esc(p.title)}</a></li>`;
+    }).join('') + '</ul>';
     // Intercity routes get an in-link from the /marshruty hub so they are part
     // of the crawlable graph, not just the sitemap.
     const intercityHubLinks = (INTERCITY_ROUTES || []).length
@@ -392,6 +404,7 @@ async function main() {
       pages.push({
         view: 'news-post', seo, cf: 'monthly', pr: '0.5', body: newsBody(post, seo, related, popRoutes),
         ogType: 'article',
+        ogImage: post.image || null,
         lastmod: isoDate(post.date),
         jsonLd: [
           newsLd(post, seo),
@@ -414,7 +427,7 @@ async function main() {
   const template = await fs.readFile(path.join(DIST, 'index.html'), 'utf8');
 
   for (const pg of pages) {
-    let html = applyHead(template, pg.seo, { view: pg.view, jsonLd: pg.jsonLd, ogType: pg.ogType });
+    let html = applyHead(template, pg.seo, { view: pg.view, jsonLd: pg.jsonLd, ogType: pg.ogType, ogImage: pg.ogImage });
     html = html.replace('<div id="root"></div>', `<div id="root">${pg.body}</div>`);
     const dest = path.join(DIST, outFile(pg.seo.path));
     await fs.mkdir(path.dirname(dest), { recursive: true });

@@ -147,7 +147,8 @@
       "Mercedes",
       "автомобили",
       "европейский рынок"
-    ]
+    ],
+    "image": "/assets/news/mercedes-amg-g63-cabriolet.jpg"
   },
   {
     "slug": "train-delay-almeria-madrid",
@@ -197,7 +198,8 @@
       "транспорт",
       "поездки",
       "Испания"
-    ]
+    ],
+    "image": "/assets/news/train-delay-almeria-madrid.png"
   },
   {
     "slug": "cars-new-engines-transformation",
@@ -255,7 +257,8 @@
       "автомобили",
       "двигатели",
       "автопром"
-    ]
+    ],
+    "image": "/assets/news/cars-new-engines-transformation.jpg"
   },
   {
     "slug": "benidorm-myths-realities",
@@ -363,7 +366,8 @@
       "Aston Martin",
       "финансы",
       "автомобильный рынок"
-    ]
+    ],
+    "image": "/assets/news/aston-martin-financial-boost.jpg"
   },
   {
     "slug": "alicante-airport-free-drop-offs",
@@ -415,7 +419,8 @@
       "Испания",
       "туризм",
       "Аликанте"
-    ]
+    ],
+    "image": "/assets/news/alicante-airport-free-drop-offs.jpg"
   },
   {
     "slug": "uk-vat-electricity-ev",
@@ -467,7 +472,8 @@
       "Великобритания",
       "зарядка",
       "энергия"
-    ]
+    ],
+    "image": "/assets/news/uk-vat-electricity-ev.jpg"
   },
   {
     "slug": "panic-barcelona-airport-backpack-incident",
@@ -576,7 +582,8 @@
       "Audi",
       "автомобили",
       "новые модели"
-    ]
+    ],
+    "image": "/assets/news/audi-q7-2027-price-increase.jpg"
   },
   {
     "slug": "spain-heatwave-storms-july",
@@ -629,7 +636,8 @@
       "Коста-Бланка",
       "жара",
       "грозы"
-    ]
+    ],
+    "image": "/assets/news/spain-heatwave-storms-july.jpg"
   },
   {
     "slug": "new-bmw-m3-manual-gearbox",
@@ -679,7 +687,8 @@
       "BMW",
       "автомобили",
       "механическая коробка передач"
-    ]
+    ],
+    "image": "/assets/news/new-bmw-m3-manual-gearbox.jpg"
   },
   {
     "slug": "andalusia-heatwave-health-warnings",
@@ -787,7 +796,8 @@
       "Volkswagen",
       "электромобили",
       "новые модели"
-    ]
+    ],
+    "image": "/assets/news/vw-id-cross-europe.jpg"
   },
   {
     "slug": "marbella-dog-friendly-beaches",
@@ -838,7 +848,8 @@
       "пляжи",
       "домашние животные",
       "отдых"
-    ]
+    ],
+    "image": "/assets/news/marbella-dog-friendly-beaches.jpg"
   },
   {
     "slug": "aston-martin-strategy-losses",
@@ -896,7 +907,8 @@
       "Aston Martin",
       "автомобили",
       "европейский рынок"
-    ]
+    ],
+    "image": "/assets/news/aston-martin-strategy-losses.jpg"
   },
   {
     "slug": "catalunya-heatwave-wildfire-risk",
@@ -1006,7 +1018,8 @@
       "McLaren",
       "гиперкары",
       "автомобили"
-    ]
+    ],
+    "image": "/assets/news/mclaren-w1-flagship-hypercar.jpg"
   },
   {
     "slug": "tribute-shows-costa-blanca",
@@ -1056,7 +1069,8 @@
       "концерты",
       "Коста-Бланка",
       "музыка"
-    ]
+    ],
+    "image": "/assets/news/tribute-shows-costa-blanca.jpg"
   },
   {
     "slug": "controversial-ford-models",
@@ -1114,7 +1128,8 @@
       "Ford",
       "автомобили",
       "история"
-    ]
+    ],
+    "image": "/assets/news/controversial-ford-models.jpg"
   },
   {
     "slug": "malaga-summer-dishes",
@@ -1214,7 +1229,8 @@
       "Lexus",
       "электромобили",
       "новые модели"
-    ]
+    ],
+    "image": "/assets/news/lexus-sedan-lf-zc-cancelled.jpg"
   },
   {
     "slug": "seron-ham-sausage-festival",
@@ -1274,7 +1290,8 @@
       "гастрономия",
       "туризм",
       "Испания"
-    ]
+    ],
+    "image": "/assets/news/seron-ham-sausage-festival.jpg"
   },
   {
     "slug": "maserati-grecale-used-suv",
@@ -1324,7 +1341,8 @@
       "Maserati",
       "SUV",
       "автомобили"
-    ]
+    ],
+    "image": "/assets/news/maserati-grecale-used-suv.jpg"
   },
   {
     "slug": "antonio-banderas-social-media-advertising",
@@ -1427,7 +1445,8 @@
       "автоспорт",
       "электромобили",
       "европейский рынок"
-    ]
+    ],
+    "image": "/assets/news/genesis-reputation-europe-motorsport-innovation.jpg"
   },
   {
     "slug": "torrevieja-summer-waterfront-pool",
@@ -1479,7 +1498,8 @@
       "достопримечательности",
       "бассейны",
       "Коста-Бланка"
-    ]
+    ],
+    "image": "/assets/news/torrevieja-summer-waterfront-pool.webp"
   },
   {
     "slug": "impact-of-hormuz-deal-on-fuel-prices",
@@ -1581,7 +1601,8 @@
       "Porsche",
       "электромобили",
       "автомобили"
-    ]
+    ],
+    "image": "/assets/news/porsche-taycan-2027-virtual-gears.jpg"
   },
   {
     "slug": "denia-festa-major-summer-festival",
@@ -1633,7 +1654,8 @@
       "лето",
       "Коста-Бланка",
       "путешествия"
-    ]
+    ],
+    "image": "/assets/news/denia-festa-major-summer-festival.jpg"
   },
   {
     "slug": "new-bmw-x5-engines-and-tech",
@@ -1691,7 +1713,8 @@
       "автомобили",
       "BMW",
       "европейский рынок"
-    ]
+    ],
+    "image": "/assets/news/new-bmw-x5-engines-and-tech.jpg"
   },
   {
     "slug": "romanian-tourist-injured-balcony-collapse",
@@ -1795,7 +1818,8 @@
       "суперкары",
       "автомобили",
       "новинки"
-    ]
+    ],
+    "image": "/assets/news/lamborghini-revuelto-sv-debut.jpg"
   },
   {
     "slug": "fogueres-de-sant-joan-javea",
@@ -1845,7 +1869,8 @@
       "фестиваль",
       "Javea",
       "Коста-Бланка"
-    ]
+    ],
+    "image": "/assets/news/fogueres-de-sant-joan-javea.jpg"
   },
   {
     "slug": "mg-new-small-ev-concept",
@@ -1895,7 +1920,8 @@
       "MG",
       "электромобили",
       "автомобильный рынок"
-    ]
+    ],
+    "image": "/assets/news/mg-new-small-ev-concept.jpg"
   },
   {
     "slug": "false-colon-cancer-diagnoses",
@@ -1995,7 +2021,8 @@
       "автомобили",
       "искусственный интеллект",
       "Chevrolet"
-    ]
+    ],
+    "image": "/assets/news/ai-gm-corvette-c9-design.jpg"
   },
   {
     "slug": "benidorm-parking-system",
