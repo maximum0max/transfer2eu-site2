@@ -2,7 +2,7 @@ import React from 'react'
 import BookingForm from './BookingForm.jsx'
 import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
-import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES } from './BrandData.jsx'
+import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink } from './BrandData.jsx'
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
 import { pathOf } from './router.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
@@ -186,7 +186,11 @@ function RouteDetailsBand({ r, onNav, guide }) {
             {guide.mapNote && <p style={mapNote}>{guide.mapNote}</p>}
             <div style={phoneRow}>
               <a href={'tel:' + BRAND.tel} style={phoneBtn}>📞 {BRAND.phone}</a>
-              <a onClick={() => onNav('price')} style={{ ...phoneBtn, cursor: 'pointer' }}>Сравнить цены →</a>
+              <a href={waLink('Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте в центр города.')}
+                 target="_blank" rel="noopener noreferrer"
+                 style={{ ...phoneBtn, background: '#25d366', color: '#fff', border: '1px solid #25d366' }}>
+                📲 Написать в WhatsApp
+              </a>
             </div>
           </div>
           ) : (
