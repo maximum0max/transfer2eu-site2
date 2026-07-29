@@ -61,26 +61,21 @@ const routeLinks = (routes) => '<ul>'
 // City-guide block (beaches / food / photo spots + map) for routes that have a
 // RouteGuide entry. Rendered into the static HTML so the unique content is
 // indexable without JS.
-function guideHtml(guide) {
+function guideHtml(guide, city) {
   if (!guide) return '';
   const ul = (items, fmt) => '<ul>' + items.map(fmt).join('') + '</ul>';
   let out = '';
-  if (guide.mapSrc) {
-    out += '<h2>Маршрут от аэропорта до центра Аликанте</h2>'
-      + `<iframe title="${esc(guide.mapTitle || '')}" src="${guide.mapSrc}" width="100%" height="360" style="border:0;border-radius:16px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
-      + (guide.mapNote ? `<p>${esc(guide.mapNote)}</p>` : '');
-  }
-  const pic = (it) => it.img ? `<img src="${it.img}" alt="${esc(it.name)}" width="360" loading="lazy" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:6px 0"> ` : '';
+  const pic = (it) => it.img ? `<img src="${it.img}" alt="${esc(it.name)} — ${esc(city)}" width="360" loading="lazy" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:6px 0"> ` : '';
   if (guide.beaches) {
-    out += '<h2>Пляжи в радиусе 30 км от Аликанте</h2>'
+    out += `<h2>Пляжи ${esc(city)} и рядом</h2>`
       + ul(guide.beaches, (b) => `<li>${pic(b)}<strong>${esc(b.name)}</strong> (${esc(b.dist)}) — ${esc(b.text)}</li>`);
   }
   if (guide.food) {
-    out += '<h2>Где поесть в Аликанте — рекомендации для туристов</h2>'
+    out += `<h2>Где поесть в ${esc(city)} — рекомендации для туристов</h2>`
       + ul(guide.food, (f) => `<li>${pic(f)}<strong>${esc(f.name)}</strong> (${esc(f.type)}) — ${esc(f.text)}</li>`);
   }
   if (guide.photoSpots) {
-    out += '<h2>Лучшие места для фото и селфи</h2>'
+    out += `<h2>Что посмотреть и лучшие места для фото в ${esc(city)}</h2>`
       + ul(guide.photoSpots, (s) => `<li>${pic(s)}<strong>${esc(s.name)}</strong> — ${esc(s.text)}</li>`);
   }
   return out;
@@ -101,7 +96,7 @@ function routeBody(r, seo, siblings, guide) {
     + `<h2>Маршрут от аэропорта Аликанте до ${esc(r.ru)} на карте</h2>`
     + `<iframe title="Маршрут от аэропорта Аликанте (ALC) до ${esc(r.ru)}" src="${mapSrc}" width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
     + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Написать в WhatsApp</a> · <a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
-    + guideHtml(guide)
+    + guideHtml(guide, r.ru)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
     + siteNav(seo.path)

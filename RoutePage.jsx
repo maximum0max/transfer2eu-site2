@@ -39,7 +39,7 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
       <Reveal><TripBreakdown r={r} /></Reveal>
       <Reveal><VehicleTiers basePrice={r.price} /></Reveal>
       <Reveal><DestinationTeaser r={r} /></Reveal>
-      {guide && <Reveal><RouteGuide guide={guide} /></Reveal>}
+      {guide && <Reveal><RouteGuide guide={guide} cityRu={r.ru} /></Reveal>}
       <Reveal><OtherRoutes currentSlug={r.slug} onSelectRoute={onSelectRoute} /></Reveal>
       <Reveal><CTABanner onNav={onNav} /></Reveal>
     </>
@@ -553,7 +553,7 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
 }
 
 /* ============ 5b. City guide — beaches, food, photo spots (with photos) ====== */
-function RouteGuide({ guide }) {
+function RouteGuide({ guide, cityRu = 'Аликанте' }) {
   const wrap = { padding: '88px 32px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1100, margin: '0 auto' };
   const head = { textAlign: 'center', marginBottom: 28 };
@@ -605,14 +605,14 @@ function RouteGuide({ guide }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Гид по Аликанте</div>
+          <div style={eyebrow}>Гид по {cityRu}</div>
           <h2 style={h2}>Пляжи, еда и лучшие фото-локации</h2>
-          <p style={sub}>Пока водитель везёт вас из аэропорта — вот всё самое интересное в центре Аликанте и вокруг.</p>
+          <p style={sub}>Пока водитель везёт вас из аэропорта — вот всё самое интересное в {cityRu} и вокруг.</p>
         </div>
 
-        <Section icon="🏖" title="Пляжи в радиусе 30 км" sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />
-        <Section icon="🍽" title="Где поесть — рекомендации для туристов" sub={guide.foodIntro} items={guide.food} badgeKey="type" />
-        <Section icon="📸" title="Лучшие места для фото и селфи" sub={guide.photoIntro} items={guide.photoSpots} />
+        <Section icon="🏖" title={`Пляжи ${cityRu} и рядом`} sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />
+        <Section icon="🍽" title={`Где поесть в ${cityRu} — рекомендации`} sub={guide.foodIntro} items={guide.food} badgeKey="type" />
+        <Section icon="📸" title={`Что посмотреть и лучшие фото в ${cityRu}`} sub={guide.photoIntro} items={guide.photoSpots} />
 
         {creditList.length > 0 && (
           <details style={{ marginTop: 40, fontSize: 12, color: 'var(--t2-ink-3)' }}>
