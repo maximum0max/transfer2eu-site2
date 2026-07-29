@@ -43,6 +43,15 @@ const STATIC_SEO = {
 // duration) has to survive the cut.
 const withSuffix = (t) => (t.length + SUFFIX.length <= 60 ? t + SUFFIX : t);
 
+// Keep meta descriptions inside Google's ~160-char snippet budget (trim at a
+// word boundary so the tail isn't a cut-off word).
+const clampDesc = (s, max = 160) => {
+  s = String(s || '').trim();
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  return cut.slice(0, cut.lastIndexOf(' ') > 100 ? cut.lastIndexOf(' ') : cut.length).trim() + '…';
+};
+
 export function getSeo(view, routeSlug, postSlug) {
   if (view === 'route') {
     const r = findRoute(routeSlug);
@@ -64,7 +73,7 @@ export function getSeo(view, routeSlug, postSlug) {
     const post = (NEWS_POSTS || []).find((p) => p.slug === postSlug);
     if (post) return {
       title: withSuffix(post.title),
-      description: post.excerpt || 'Материал Transfer2EU — новости и гайды о жизни в Испании и трансферах по Costa Blanca.',
+      description: clampDesc(post.excerpt || 'Материал Transfer2EU — новости и гайды о жизни в Испании и трансферах по Costa Blanca.'),
       path: pathOf('news-post', post.slug),
     };
   }
