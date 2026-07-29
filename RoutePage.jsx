@@ -179,64 +179,37 @@ function RouteDetailsBand({ r, onNav, guide }) {
   const factSub = { fontSize: 11, color: 'var(--t2-ink-3)', marginTop: 2 };
 
   const phoneRow = { display: 'flex', gap: 10, flexWrap: 'wrap' };
-  const phoneBtn = { background: '#fff', color: 'var(--t2-ink)', fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 14, padding: '11px 20px', borderRadius: 12, textDecoration: 'none', border: '1px solid var(--t2-line)', boxShadow: 'var(--t2-sh-1)' };
+
+  // Route map is generic: origin = Alicante airport, destination = this city.
+  // A guide entry (RouteGuide.data.jsx) can override the src/title/note.
+  const gMap = guide || {};
+  const mapSrc = gMap.mapSrc
+    || `https://maps.google.com/maps?saddr=${encodeURIComponent('Aeropuerto de Alicante-Elche ALC')}&daddr=${encodeURIComponent(r.city + ', España')}&hl=ru&output=embed`;
+  const mapTitle = gMap.mapTitle || `Маршрут от аэропорта Аликанте (ALC) до ${r.ru} на карте`;
+  const mapNoteText = gMap.mapNote
+    || `Аэропорт Аликанте (ALC) → ${r.ru} — примерно ${r.time} минут в пути. Фиксированная цена ${r.price}€ за автомобиль.`;
 
   return (
     <section style={wrap}>
       <div style={inner}>
         <div style={grid} className="t2-route-grid">
-          {guide && guide.mapSrc ? (
           <div style={{ paddingTop: 24 }}>
             <div style={eyebrow}>Маршрут на карте</div>
-            <h2 style={h2}>Дорога из аэропорта ALC в центр Аликанте</h2>
+            <h2 style={h2}>Дорога из аэропорта ALC в {r.ru}</h2>
             <div style={mapWrap}>
-              <iframe title={guide.mapTitle} src={guide.mapSrc} width="100%" height="100%"
+              <iframe title={mapTitle} src={mapSrc} width="100%" height="100%"
                 style={{ border: 0, display: 'block' }} loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe>
             </div>
-            {guide.mapNote && <p style={{ ...mapNote, textAlign: 'center' }}>{guide.mapNote}</p>}
+            <p style={{ ...mapNote, textAlign: 'center' }}>{mapNoteText}</p>
             <div style={{ ...phoneRow, justifyContent: 'center' }}>
-              <a href={waLink('Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте в центр города.')}
+              <a href={waLink(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`)}
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
                 📲 Написать в WhatsApp
               </a>
               <a href={'tel:' + BRAND.tel} style={{ ...contactBtn, background: '#cbd5e1', color: 'var(--t2-ink)', border: '1px solid #b3c0cf' }}>📞 {BRAND.phone}</a>
             </div>
           </div>
-          ) : (
-          <div style={{ paddingTop: 24 }}>
-            <div style={eyebrow}>Маршрут</div>
-            <h2 style={h2}>Прямой трансфер из ALC в {r.ru}</h2>
-            <p style={body}>
-              Бронируйте онлайн или в WhatsApp. Цена не меняется от времени суток, пробок или языка
-              водителя. Платные дороги, детское кресло и встреча у выхода — включены.
-            </p>
-
-            <div style={facts}>
-              <div style={fact}>
-                <span style={factEmoji}>📍</span>
-                <div style={factText}><div style={factTitle}>Точка подачи</div><div style={factSub}>Зал прилёта, выход с табличкой</div></div>
-              </div>
-              <div style={fact}>
-                <span style={factEmoji}>⏱</span>
-                <div style={factText}><div style={factTitle}>Ожидание</div><div style={factSub}>до 90 минут бесплатно</div></div>
-              </div>
-              <div style={fact}>
-                <span style={factEmoji}>🅿</span>
-                <div style={factText}><div style={factTitle}>Платные дороги</div><div style={factSub}>включены в цену</div></div>
-              </div>
-              <div style={fact}>
-                <span style={factEmoji}>💳</span>
-                <div style={factText}><div style={factTitle}>Оплата</div><div style={factSub}>картой или наличными</div></div>
-              </div>
-            </div>
-
-            <div style={phoneRow}>
-              <a href={'tel:' + BRAND.tel} style={phoneBtn}>📞 {BRAND.phone}</a>
-              <a onClick={() => onNav('price')} style={{ ...phoneBtn, cursor: 'pointer' }}>Сравнить цены →</a>
-            </div>
-          </div>
-          )}
 
           <div id="booking">
             <BookingForm initialSlug={r.slug} lockDestination />

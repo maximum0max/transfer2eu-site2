@@ -87,6 +87,9 @@ function guideHtml(guide) {
 }
 
 function routeBody(r, seo, siblings, guide) {
+  const mapSrc = (guide && guide.mapSrc)
+    || `https://maps.google.com/maps?saddr=${encodeURIComponent('Aeropuerto de Alicante-Elche ALC')}&daddr=${encodeURIComponent(r.city + ', España')}&hl=ru&output=embed`;
+  const waText = encodeURIComponent(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`);
   return `<main style="${SHELL}">`
     + `<h1>Трансфер Аликанте → ${esc(r.ru)} от ${r.price}€</h1>`
     + `<p>${esc(seo.description)}</p>`
@@ -95,6 +98,9 @@ function routeBody(r, seo, siblings, guide) {
     + `<li>Время в пути: ~${r.time} мин</li>`
     + `<li>Русскоязычный водитель, встреча с табличкой, работаем 24/7</li>`
     + `</ul>`
+    + `<h2>Маршрут от аэропорта Аликанте до ${esc(r.ru)} на карте</h2>`
+    + `<iframe title="Маршрут от аэропорта Аликанте (ALC) до ${esc(r.ru)}" src="${mapSrc}" width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
+    + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Написать в WhatsApp</a> · <a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
     + guideHtml(guide)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
