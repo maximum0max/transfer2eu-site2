@@ -13,45 +13,44 @@ const UA = 'Transfer2EU-guide-photos/1.0 (https://www.transfer2eu.com)';
 const RETRY = [];
 
 const PLACES = [
-  // Orihuela (city + costa)
-  ['ori-zenia', 'Playa de La Zenia Orihuela'],
-  ['ori-campoamor', 'Playa de Campoamor Orihuela'],
-  ['ori-catedral', 'Catedral de Orihuela'],
-  ['ori-santodomingo', 'Colegio de Santo Domingo Orihuela'],
-  ['ori-palmeral', 'Palmeral de Orihuela'],
-  // Cartagena
-  ['car-cortina', 'Cala Cortina Cartagena'],
-  ['car-calblanque', 'Calblanque'],
-  ['car-teatro', 'Teatro Romano de Cartagena'],
-  ['car-puerto', 'Puerto de Cartagena'],
-  ['car-castillo', 'Castillo de la Concepción Cartagena'],
-  ['car-modernista', 'Palacio de Aguirre Cartagena'],
-  // San Pedro del Pinatar
-  ['spp-villananitos', 'Playa Villananitos San Pedro del Pinatar'],
-  ['spp-puntica', 'Playa La Puntica Lo Pagán'],
-  ['spp-salinas', 'Salinas de San Pedro del Pinatar'],
-  ['spp-molino', 'Molino de Quintín San Pedro del Pinatar'],
-  // Finestrat
-  ['fin-cala', 'Cala de Finestrat'],
-  ['fin-puigcampana', 'Puig Campana'],
-  ['fin-village', 'Finestrat pueblo'],
-  ['fin-plaza', 'Finestrat iglesia'],
-  // La Manga del Mar Menor
-  ['man-marmenor', 'La Manga del Mar Menor playa'],
-  ['man-mediterraneo', 'La Manga Mediterráneo'],
-  ['man-cabopalos', 'Faro de Cabo de Palos'],
-  // Los Alcázares
-  ['lal-playa', 'Playa Los Alcázares Mar Menor'],
-  ['lal-torre', 'Torre del Rame Los Alcázares'],
-  // Gandía
-  ['gan-playa', 'Playa de Gandía'],
-  ['gan-palacio', 'Palacio Ducal de Gandía'],
-  ['gan-colegiata', 'Colegiata de Gandía'],
-  // Alcoy (inland — no beach)
-  ['alc-modernista', 'Círculo Industrial Alcoy'],
-  ['alc-puente', 'Puente de San Jorge Alcoy'],
-  ['alc-oldtown', 'Alcoy centro histórico'],
-  ['alc-fontroja', 'Font Roja Alcoy'],
+  // La Nucia (inland)
+  ['lan-ermita', 'Santuario La Nucia'],
+  ['lan-captivador', 'Captivador La Nucia'],
+  ['lan-casetes', 'La Nucia casco antiguo'],
+  ['lan-deportiva', 'Ciutat Esportiva Camilo Cano La Nucia'],
+  // La Zenia
+  ['zen-cala', 'Playa Cala Bosque La Zenia'],
+  ['zen-boulevard', 'Zenia Boulevard'],
+  // Playa Flamenca
+  ['fla-playa', 'Playa Flamenca Orihuela'],
+  ['fla-cala', 'Cala Mosca Orihuela'],
+  // Punta Prima
+  ['pun-playa', 'Playa de Punta Prima Torrevieja'],
+  ['pun-torre', 'Torre vigía Punta Prima'],
+  // Cabo Roig
+  ['cab-playa', 'Playa de Cabo Roig'],
+  ['cab-torre', 'Torre de Cabo Roig'],
+  ['cab-cala', 'Cala Capitán Orihuela'],
+  // Pilar de la Horadada
+  ['pil-higuericas', 'Playa Higuericas Pilar de la Horadada'],
+  ['pil-torre', 'Torre de la Horadada'],
+  ['pil-milpalmeras', 'Playa Mil Palmeras'],
+  // Gran Alacant
+  ['gra-dunas', 'Dunas del Carabassí'],
+  // Murcia
+  ['mur-catedral', 'Catedral de Murcia'],
+  ['mur-casino', 'Real Casino de Murcia'],
+  ['mur-belluga', 'Plaza Cardenal Belluga Murcia'],
+  ['mur-segura', 'Puente Viejo Murcia'],
+  ['mur-flores', 'Plaza de las Flores Murcia'],
+  // Valencia
+  ['val-ciudad', 'Ciudad de las Artes y las Ciencias'],
+  ['val-catedral', 'Micalet Catedral de Valencia'],
+  ['val-lonja', 'Lonja de la Seda Valencia'],
+  ['val-mercado', 'Mercado Central de Valencia interior'],
+  ['val-virgen', 'Plaza de la Virgen Valencia'],
+  ['val-malvarrosa', 'Playa de la Malvarrosa'],
+  ['val-turia', 'Jardín del Turia Valencia'],
 ];
 
 const stripHtml = (s) => String(s || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();

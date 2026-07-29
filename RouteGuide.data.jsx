@@ -454,6 +454,181 @@ ROUTE_GUIDES['alcoy'] = {
   ],
 };
 
+// ---- Batch 4: Orihuela Costa, San Juan, Gran Alacant, Murcia, Valencia ----
+
+ROUTE_GUIDES['la-nucia'] = {
+  foodIntro: 'Средиземноморская и горная кухня в спокойном городке у Бенидорма (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Средиземноморская кухня', type: 'Кухня', text: 'Рестораны с местными продуктами и арросами.' },
+    { key: 'sento', name: 'Тапас в центре', type: 'Тапас', text: 'Уютные бары в тихом городке.' },
+    { key: 'portal', name: 'Кафе и террасы', type: 'Кафе', text: 'Спокойный отдых вдали от суеты побережья.' },
+  ],
+  photoIntro: 'Спортивный город и природные уголки Ла-Нусии.',
+  photoSpots: [
+    { key: 'lan-captivador', name: 'Природная зона Каптивадор', text: 'Живописные тропы и виды в окрестностях городка.' },
+    { key: 'lan-deportiva', name: 'Ciutat Esportiva Camilo Cano', text: 'Один из лучших спортивных комплексов Испании — тренировочная база команд.' },
+  ],
+};
+
+ROUTE_GUIDES['la-zenia'] = {
+  beachesIntro: 'Ла-Зения — золотые пляжи и бухты Ориуэла Коста рядом с крупным ТЦ.',
+  beaches: [
+    { key: 'ori-zenia', name: 'Playa de La Zenia', dist: 'центр', text: 'Популярный песчаный пляж с голубым флагом.' },
+    { key: 'zen-cala', name: 'Cala Bosque (Cala Capitán)', dist: '1 км', text: 'Уютная бухта с прозрачной водой и небольшой мариной.' },
+  ],
+  foodIntro: 'Морепродукты и международная кухня побережья (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты у моря', type: 'Море', text: 'Свежая рыба у пляжей и марины.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары на набережной и у бухт.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Прибрежная тропа и крупнейший на побережье торговый центр.',
+  photoSpots: [
+    { key: 'zen-boulevard', name: 'Zenia Boulevard', text: 'Крупнейший торговый центр провинции Аликанте — шопинг и рестораны.' },
+  ],
+};
+
+ROUTE_GUIDES['playa-flamenca'] = {
+  beachesIntro: 'Пляя-Фламенка — песчаные пляжи и скалистые бухты Ориуэла Коста.',
+  beaches: [
+    { key: 'fla-playa', name: 'Playa Flamenca', dist: 'центр', text: 'Песчаные участки и скалистые бухты с прозрачной водой.' },
+    { key: 'fla-cala', name: 'Cala Estaca / Cala Mosca', dist: '1 км', text: 'Небольшие уютные бухты вдоль прибрежной тропы.' },
+  ],
+  foodIntro: 'Морепродукты и знаменитый субботний рынок (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты у моря', type: 'Море', text: 'Свежая рыба у пляжей.' },
+    { key: 'sento', name: 'Тапас на набережной', type: 'Тапас', text: 'Бары и террасы у моря.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+};
+
+ROUTE_GUIDES['punta-prima'] = {
+  beachesIntro: 'Пунта-Прима — песчаный пляж и прибрежная тропа на юге Торревьехи.',
+  beaches: [
+    { key: 'pun-playa', name: 'Playa de Punta Prima', dist: 'центр', text: 'Песчаный пляж с пологим входом и прибрежным променадом.' },
+  ],
+  foodIntro: 'Морепродукты и арросы у моря (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты', type: 'Море', text: 'Свежая рыба у побережья.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары на набережной.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Историческая сторожевая башня на прибрежной тропе.',
+  photoSpots: [
+    { key: 'pun-torre', name: 'Torre del Moro', text: 'Старинная сторожевая башня на живописной прибрежной тропе к Торревьехе.' },
+  ],
+};
+
+ROUTE_GUIDES['cabo-roig'] = {
+  beachesIntro: 'Кабо-Ройг — скалистые обрывы, бухты и марина.',
+  beaches: [
+    { key: 'cab-playa', name: 'Playa de Cabo Roig', dist: 'центр', text: 'Песчаный пляж у скал и марины с прозрачной водой.' },
+    { key: 'cab-cala', name: 'Cala Capitán', dist: '1 км', text: 'Живописная бухта на прибрежной тропе.' },
+  ],
+  foodIntro: 'Рестораны у марины со свежими морепродуктами (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты у марины', type: 'Море', text: 'Свежая рыба с видом на порт.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары у пляжа и марины.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Сторожевая башня на обрыве — символ Кабо-Ройг.',
+  photoSpots: [
+    { key: 'cab-torre', name: 'Torre de Cabo Roig', text: 'Историческая башня на скалистом мысу с панорамой побережья.' },
+  ],
+};
+
+ROUTE_GUIDES['pilar-de-la-horadada'] = {
+  beachesIntro: 'Пилар-де-ла-Орадада — самый южный курорт провинции с золотыми пляжами.',
+  beaches: [
+    { key: 'pil-higuericas', name: 'Playa de las Higuericas', dist: 'побережье', text: 'Широкий песчаный пляж с голубым флагом.' },
+    { key: 'pil-milpalmeras', name: 'Playa de Mil Palmeras', dist: 'побережье', text: 'Семейный пляж с мелким песком и пологим входом.' },
+  ],
+  foodIntro: 'Морепродукты и арросы у моря (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты', type: 'Море', text: 'Свежая рыба из местного порта.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары на набережной.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Сторожевая башня Торре-де-ла-Орадада на берегу.',
+  photoSpots: [
+    { key: 'pil-torre', name: 'Torre de la Horadada', text: 'Историческая сторожевая башня XVI века у моря — символ городка.' },
+  ],
+};
+
+ROUTE_GUIDES['san-juan-playa'] = {
+  beachesIntro: 'Сан-Хуан — самый большой и популярный пляж Аликанте.',
+  beaches: [
+    { key: 'san-juan', name: 'Playa de San Juan', dist: 'центр', text: 'Три километра широкого золотого песка, набережная, бары и рестораны.' },
+    { key: 'muchavista', name: 'Playa de Muchavista', dist: '2 км', text: 'Продолжение пляжной линии к северу, вдоль променада Эль-Кампельо.' },
+  ],
+  foodIntro: 'Пляжные рестораны и арросы у моря (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Паэлья и морепродукты', type: 'Рис', text: 'Рестораны прямо у пляжа — паэлья и свежая рыба.' },
+    { key: 'sento', name: 'Тапас и чирингито', type: 'Тапас', text: 'Пляжные бары и террасы вдоль набережной.' },
+    { key: 'nou-manolin', name: 'Свежие морепродукты', type: 'Море', text: 'Дневной улов местной кухни.' },
+  ],
+  photoIntro: 'Дикие бухты мыса Кабо-де-лас-Уэртас рядом.',
+  photoSpots: [
+    { key: 'cantalar', name: 'Cabo de las Huertas', text: 'Скалистые бухты с прозрачной водой между Сан-Хуаном и городом — снорклинг.' },
+  ],
+};
+
+ROUTE_GUIDES['gran-alacant'] = {
+  beachesIntro: 'Гран-Алакант — пляж Карабасси с песчаными дюнами.',
+  beaches: [
+    { key: 'carabassi', name: 'Playa del Carabassí', dist: 'центр', text: 'Широкий пляж с природными дюнами и сосновой зоной.' },
+  ],
+  foodIntro: 'Рыба и арросы рядом с Санта-Полой (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты', type: 'Море', text: 'Свежая рыба из порта Санта-Полы поблизости.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары и террасы городка.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Охраняемые дюны Карабасси — уникальный природный ландшафт.',
+  photoSpots: [
+    { key: 'gra-dunas', name: 'Дюны Карабасси', text: 'Охраняемая природная зона с песчаными дюнами и соснами.' },
+  ],
+};
+
+ROUTE_GUIDES['taxi-alicante-murcia'] = {
+  foodIntro: 'Мурсия — «уэрта Европы»: овощи, зарангольо, маринера и рисовые блюда (на фото — местная кухня).',
+  food: [
+    { key: 'mercado', name: 'Рынок Verónicas', type: 'Рынок', text: 'Свежие овощи «уэрты», морепродукты и местные деликатесы.' },
+    { key: 'sento', name: 'Тапас на Plaza de las Flores', type: 'Тапас', text: 'Знаменитая площадь с барами — маринера и монтадитос.' },
+    { key: 'nou-manolin', name: 'Арросы и уэрта', type: 'Кухня', text: 'Овощные блюда и рисы Региона Мурсия.' },
+  ],
+  photoIntro: 'Барочный собор, казино и площади старого города.',
+  photoSpots: [
+    { key: 'mur-catedral', name: 'Catedral de Murcia', text: 'Собор с роскошным барочным фасадом и колокольней 90 м.' },
+    { key: 'mur-belluga', name: 'Plaza Cardenal Belluga', text: 'Главная площадь перед собором с дворцом епископа.' },
+    { key: 'mur-casino', name: 'Real Casino de Murcia', text: 'Роскошное здание XIX века с восточным патио и бальным залом.' },
+    { key: 'mur-flores', name: 'Plaza de las Flores', text: 'Живописная площадь с цветами и тапас-барами в центре.' },
+    { key: 'mur-segura', name: 'Puente Viejo и река Сегура', text: 'Старинный мост и набережная Малекон.' },
+  ],
+};
+
+ROUTE_GUIDES['taxi-alicante-valencia'] = {
+  beachesIntro: 'Валенсия — большой город с широким городским пляжем Мальварроса.',
+  beaches: [
+    { key: 'val-malvarrosa', name: 'Playa de la Malvarrosa', dist: 'город', text: 'Широкий городской пляж с длинным променадом и ресторанами паэльи.' },
+  ],
+  foodIntro: 'Валенсия — родина паэльи и орчаты (на фото — местная кухня).',
+  food: [
+    { key: 'nou-manolin', name: 'Паэлья валенсиана', type: 'Рис', text: 'Настоящая паэлья родом отсюда — с курицей, кроликом и фасолью.' },
+    { key: 'darsena', name: 'Морепродукты у моря', type: 'Море', text: 'Рестораны паэльи и рыбы на набережной Мальварросы.' },
+    { key: 'sento', name: 'Тапас и орчата', type: 'Тапас', text: 'Бары старого города и знаменитая орчата с фартонами.' },
+  ],
+  photoIntro: 'Город искусств, собор, Шёлковая биржа и сады Турия.',
+  photoSpots: [
+    { key: 'val-ciudad', name: 'Ciudad de las Artes y las Ciencias', text: 'Футуристический комплекс Сантьяго Калатравы — визитная карточка Валенсии.' },
+    { key: 'val-catedral', name: 'Кафедральный собор и Мигелете', text: 'Собор с башней Эль-Мигелете и Святым Граалем внутри.' },
+    { key: 'val-lonja', name: 'Lonja de la Seda', text: 'Готическая Шёлковая биржа — объект Всемирного наследия ЮНЕСКО.' },
+    { key: 'val-virgen', name: 'Plaza de la Virgen', text: 'Историческая площадь с фонтаном Турия и базиликой.' },
+    { key: 'val-turia', name: 'Сады Турия', text: 'Бывшее русло реки — 9 км зелёного парка через весь город.' },
+    { key: 'val-mercado', name: 'Mercado Central', text: 'Модернистский рынок — один из крупнейших в Европе.' },
+  ],
+};
+
 // Attach resolved image paths to every guide item.
 for (const g of Object.values(ROUTE_GUIDES)) {
   for (const list of [g.beaches, g.food, g.photoSpots]) {

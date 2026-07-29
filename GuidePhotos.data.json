@@ -712,5 +712,167 @@
     "author": "bladimiro",
     "license": "CC BY-SA 3.0",
     "source": "https://commons.wikimedia.org/wiki/File:Alcoy,_Alicante,_Spain_-_panoramio_(1).jpg"
+  },
+  "lan-captivador": {
+    "title": "Loop van de Sequia Mare.jpg",
+    "author": "Bic",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Loop_van_de_Sequia_Mare.jpg"
+  },
+  "lan-deportiva": {
+    "title": "Ciudad Deportiva Camilo Cano.jpg",
+    "author": "La Nucia Ayuntamiento",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ciudad_Deportiva_Camilo_Cano.jpg"
+  },
+  "zen-cala": {
+    "title": "Orihuela, cala Bosque - panoramio.jpg",
+    "author": "baloun",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Orihuela,_cala_Bosque_-_panoramio.jpg"
+  },
+  "zen-boulevard": {
+    "title": "Centro comercial La Zenia Boulevard, Orihuela.jpg",
+    "author": "Emilio Gómez Fernández",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Centro_comercial_La_Zenia_Boulevard,_Orihuela.jpg"
+  },
+  "fla-playa": {
+    "title": "ORIHUELA PLAYA FLAMENCA ROCAS - panoramio.jpg",
+    "author": "Concepcion AMAT ORTA…",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:ORIHUELA_PLAYA_FLAMENCA_ROCAS_-_panoramio.jpg"
+  },
+  "cab-playa": {
+    "title": "® S.D. ORIHUELA CABO ROIG COSTA PLAYA DE CABO ROIG PANOVISION - panoramio.jpg",
+    "author": "Concepcion AMAT ORTA…",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C2%AE_S.D._ORIHUELA_CABO_ROIG_COSTA_PLAYA_DE_CABO_ROIG_PANOVISION_-_panoramio.jpg"
+  },
+  "cab-torre": {
+    "title": "Torre de Cabo Roig in Cabo Roig, Orihuela Costa, Orihuela, Alicante, Spain, 2022 January.jpg",
+    "author": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Torre_de_Cabo_Roig_in_Cabo_Roig,_Orihuela_Costa,_Orihuela,_Alicante,_Spain,_2022_January.jpg"
+  },
+  "cab-cala": {
+    "title": "Beach in Cala Capitán in Cabo Roig in Orihuela Costa, Orihuela, Alicante, Spain, 2022 January.jpg",
+    "author": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Beach_in_Cala_Capit%C3%A1n_in_Cabo_Roig_in_Orihuela_Costa,_Orihuela,_Alicante,_Spain,_2022_January.jpg"
+  },
+  "pil-higuericas": {
+    "title": "Playa Higuericas - 49287655727.jpg",
+    "author": "Kent Wang",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Playa_Higuericas_-_49287655727.jpg"
+  },
+  "pil-torre": {
+    "title": "Commercial square in Torre de la Horadada 2.jpg",
+    "author": "Anidae",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Commercial_square_in_Torre_de_la_Horadada_2.jpg"
+  },
+  "pil-milpalmeras": {
+    "title": "Playa de las Mil Palmeras (Alicante).jpg",
+    "author": "Noecampat",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Playa_de_las_Mil_Palmeras_(Alicante).jpg"
+  },
+  "gra-dunas": {
+    "title": "Dunascarabassi.jpg",
+    "author": "Jappy20",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Dunascarabassi.jpg"
+  },
+  "mur-catedral": {
+    "title": "Catedral de Santa María, Murcia, España, 2022-07-12, DD 33-35 HDR.jpg",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Catedral_de_Santa_Mar%C3%ADa,_Murcia,_Espa%C3%B1a,_2022-07-12,_DD_33-35_HDR.jpg"
+  },
+  "mur-casino": {
+    "title": "Real Casino, Murcia, España, 2022-07-12, DD 21.jpg",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Real_Casino,_Murcia,_Espa%C3%B1a,_2022-07-12,_DD_21.jpg"
+  },
+  "mur-belluga": {
+    "title": "Plaza del Cardenal Belluga, Murcia (2).jpg",
+    "author": "Pimlico27",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Plaza_del_Cardenal_Belluga,_Murcia_(2).jpg"
+  },
+  "mur-segura": {
+    "title": "Puente Viejo, Murcia.JPG",
+    "author": "José Garcia, \"pepegar\"",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Puente_Viejo,_Murcia.JPG"
+  },
+  "mur-flores": {
+    "title": "Plaza de las Flores.JPG",
+    "author": "Murcianboy",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Plaza_de_las_Flores.JPG"
+  },
+  "val-ciudad": {
+    "title": "Museo Príncipe Felipe, Ciudad de las Artes y las Ciencias, Valencia, España, 2014-06-29, DD 59.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Museo_Pr%C3%ADncipe_Felipe,_Ciudad_de_las_Artes_y_las_Ciencias,_Valencia,_Espa%C3%B1a,_2014-06-29,_DD_59.JPG"
+  },
+  "val-catedral": {
+    "title": "Micalet i un poc de cimbori, catedral de València.JPG",
+    "author": "Joanbanjo",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Micalet_i_un_poc_de_cimbori,_catedral_de_Val%C3%A8ncia.JPG"
+  },
+  "val-lonja": {
+    "title": "Lonja de la Seda, Valencia, España, 2014-06-29, DD 23-25 HDR.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lonja_de_la_Seda,_Valencia,_Espa%C3%B1a,_2014-06-29,_DD_23-25_HDR.JPG"
+  },
+  "val-mercado": {
+    "title": "Mercado Central, Valencia, España, 2014-06-30, DD 116.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Mercado_Central,_Valencia,_Espa%C3%B1a,_2014-06-30,_DD_116.JPG"
+  },
+  "val-virgen": {
+    "title": "Plaza de la Virgen, Valencia, España, 2014-06-30, DD 163.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Plaza_de_la_Virgen,_Valencia,_Espa%C3%B1a,_2014-06-30,_DD_163.JPG"
+  },
+  "val-malvarrosa": {
+    "title": "Playa de la Malvarrosa (Valencia) 01.jpg",
+    "author": "Manuel Martín Vicente from Spain",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Playa_de_la_Malvarrosa_(Valencia)_01.jpg"
+  },
+  "val-turia": {
+    "title": "Outdoor-Gym-Jardín-del-Turia-Park-Valencia.jpg",
+    "author": "Acediscovery",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Outdoor-Gym-Jard%C3%ADn-del-Turia-Park-Valencia.jpg"
+  },
+  "pun-playa": {
+    "title": "Nautilus Restaurante in Punta Prima, Torrevieja, Alicante, Spain, 2022 January.jpg",
+    "author": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nautilus_Restaurante_in_Punta_Prima,_Torrevieja,_Alicante,_Spain,_2022_January.jpg"
+  },
+  "pun-torre": {
+    "title": "Torre del moro Torrevieja.jpg",
+    "author": "Mianviru",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Torre_del_moro_Torrevieja.jpg"
+  },
+  "fla-cala": {
+    "title": "® M.D. ORIHUELA PLAYA FLAMENCA VISTAS ◙ - panoramio (3).jpg",
+    "author": "Concepcion AMAT ORTA…",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:%C2%AE_M.D._ORIHUELA_PLAYA_FLAMENCA_VISTAS_%E2%97%99_-_panoramio_(3).jpg"
   }
 }
