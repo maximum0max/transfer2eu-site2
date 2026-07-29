@@ -163,6 +163,7 @@ function RouteDetailsBand({ r, onNav, guide }) {
     fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 13.3,
     padding: '10.5px 19px', borderRadius: 12, textDecoration: 'none',
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+    whiteSpace: 'nowrap',
     boxShadow: 'var(--t2-sh-1)', width: 204, maxWidth: '100%', boxSizing: 'border-box',
   };
 
