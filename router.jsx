@@ -17,6 +17,7 @@
 
 import { ALL_ROUTES } from './BrandData.jsx';
 import { NEWS_POSTS } from './News.data.jsx';
+import { INTERCITY_SLUGS } from './Intercity.data.jsx';
 
 const ROUTE_SLUGS = new Set(ALL_ROUTES.map((r) => r.slug));
 const NEWS_SLUGS = new Set((NEWS_POSTS || []).map((p) => p.slug));
@@ -33,7 +34,7 @@ const STATIC_PATH = {
 };
 
 export function pathOf(view, slug) {
-  if (view === 'route') return '/' + slug;
+  if (view === 'route' || view === 'intercity') return '/' + slug;
   if (view === 'news-post') return '/novosti/' + slug;
   return STATIC_PATH[view] || '/';
 }
@@ -60,6 +61,7 @@ export function parsePath(pathname) {
 
   const seg = p.slice(1);
   if (!seg.includes('/') && ROUTE_SLUGS.has(seg)) return { view: 'route', routeSlug: seg };
+  if (!seg.includes('/') && INTERCITY_SLUGS.has(seg)) return { view: 'intercity', routeSlug: seg };
 
   return { view: 'notfound' };
 }

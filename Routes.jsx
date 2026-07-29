@@ -6,6 +6,7 @@ import SeoArticle from './SeoArticle.jsx'
 import Reveal from './Reveal.jsx'
 import { ROUTE_GROUPS, ALL_ROUTES } from './BrandData.jsx'
 import { ROUTES_SEO } from './Seo.data.jsx'
+import { INTERCITY_ROUTES } from './Intercity.data.jsx'
 import { pathOf } from './router.jsx'
 // Routes page v4 — two-step booking form at the top, then a redesigned
 // destinations catalog with "boarding-pass" style cards grouped by region,
@@ -77,8 +78,43 @@ function DestinationsCatalog({ onSelectRoute }) {
             <RegionBlock group={g} accent={regionAccents[g.label] || { from: '#64748b', to: '#334155' }} onSelectRoute={onSelectRoute} />
           </Reveal>
         ))}
+
+        {(INTERCITY_ROUTES || []).length > 0 && <IntercityBlock />}
       </div>
     </section>
+  );
+}
+
+/* ============ Intercity (non-airport) routes ============ */
+function IntercityBlock() {
+  const block = { marginTop: 8 };
+  const header = { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18, paddingBottom: 12, borderBottom: '2px solid var(--t2-line)' };
+  const dotEmoji = { width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg,#0ea5e9,#0369a1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: '#fff' };
+  const label = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 22, color: 'var(--t2-ink)', letterSpacing: '-.01em' };
+  const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14 };
+  const card = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 18px', background: '#fff', borderRadius: 16, border: '1px solid var(--t2-line)', textDecoration: 'none', color: 'inherit' };
+  const name = { fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 15, color: 'var(--t2-ink)' };
+  const sub = { fontSize: 12, color: 'var(--t2-ink-3)', marginTop: 2 };
+  const price = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 18, color: 'var(--t2-red)', fontVariantNumeric: 'tabular-nums' };
+
+  return (
+    <div style={block}>
+      <div style={header}>
+        <div style={dotEmoji}>🛣</div>
+        <div style={label}>Междугородние трансферы</div>
+      </div>
+      <div style={grid}>
+        {INTERCITY_ROUTES.map(r => (
+          <a key={r.slug} href={pathOf('intercity', r.slug)} style={card}>
+            <div>
+              <div style={name}>{r.emoji} {r.from} → {r.to}</div>
+              <div style={sub}>~{Math.floor(r.time / 60)} ч {r.time % 60} мин · {r.distance} км</div>
+            </div>
+            <div style={price}>{r.price}€</div>
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }
 

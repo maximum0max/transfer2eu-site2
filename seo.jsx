@@ -5,6 +5,7 @@
 
 import { findRoute } from './BrandData.jsx';
 import { NEWS_POSTS } from './News.data.jsx';
+import { findIntercity } from './Intercity.data.jsx';
 import { pathOf } from './router.jsx';
 
 const SITE = 'https://www.transfer2eu.com';
@@ -49,6 +50,14 @@ export function getSeo(view, routeSlug, postSlug) {
       title: withSuffix(`Трансфер Аликанте → ${r.ru} от ${r.price}€`),
       description: `Трансфер из аэропорта Аликанте (ALC) в ${r.ru} — фикс-цена ${r.price}€ за авто, ~${r.time} мин в пути. Русскоязычный водитель, встреча с табличкой, 24/7.`,
       path: pathOf('route', r.slug),
+    };
+  }
+  if (view === 'intercity') {
+    const r = findIntercity(routeSlug);
+    if (r) return {
+      title: withSuffix(`Такси ${r.from} → ${r.to} от ${r.price}€`),
+      description: r.description,
+      path: pathOf('intercity', r.slug),
     };
   }
   if (view === 'news-post') {

@@ -13,6 +13,7 @@ import PricesPage from './Prices.jsx'
 import ContactsPage from './Contacts.jsx'
 import DriversPage from './Drivers.jsx'
 import RoutePage from './RoutePage.jsx'
+import IntercityRoute from './IntercityRoute.jsx'
 import NewsList from './NewsList.jsx'
 import NewsPost from './NewsPost.jsx'
 import Anketa from './Anketa.jsx'
@@ -81,6 +82,7 @@ export default function App() {
         {view === 'contacts'  && <ContactsPage onNav={onNav} />}
         {view === 'drivers'   && <DriversPage  onNav={onNav} />}
         {view === 'route'     && <RoutePage slug={routeSlug} onNav={onNav} onSelectRoute={onSelectRoute} />}
+        {view === 'intercity' && <IntercityRoute slug={routeSlug} onNav={onNav} />}
         {view === 'news'      && <NewsList onOpenPost={onOpenPost} onNav={onNav} />}
         {view === 'news-post' && <NewsPost slug={postSlug} onNav={onNav} />}
         {view === 'notfound'  && <NotFound />}

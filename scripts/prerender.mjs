@@ -99,6 +99,24 @@ function newsBody(post, seo, related, routes) {
     + `</main>`;
 }
 
+function intercityBody(r, seo, routes) {
+  const blocks = (r.body || []).map((b) => {
+    if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
+    if (b.type === 'p') return `<p>${esc(b.text)}</p>`;
+    if (b.type === 'ul') return '<ul>' + b.items.map((it) => `<li>${esc(it)}</li>`).join('') + '</ul>';
+    return '';
+  }).join('');
+  return `<main style="${SHELL}">`
+    + `<h1>${esc(r.h1)}</h1>`
+    + `<p>${esc(r.intro)}</p>`
+    + blocks
+    + '<h2>Трансфер из аэропорта Аликанте</h2>'
+    + routeLinks(routes)
+    + `<p>${a('/marshruty', 'Все 40+ маршрутов')} · ${a('/price', 'Цены на трансфер')} · ${a('/kontakty', 'Контакты 24/7')}</p>`
+    + siteNav(seo.path)
+    + `</main>`;
+}
+
 // The hubs carry the full child list, so every route page and every post is
 // reachable from a crawl that starts at "/" and never runs a line of JS.
 function staticBody(view, seo, children) {
@@ -185,6 +203,29 @@ function routeLd(r, seo) {
   };
 }
 
+// Intercity route product: origin is NOT the airport, so areaServed names the
+// destination city and the Service is a plain city-to-city transfer.
+function intercityLd(r, seo) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': SITE + seo.path + '#service',
+    serviceType: 'Междугородний трансфер',
+    name: `Такси ${r.from} → ${r.to}`,
+    description: seo.description,
+    url: SITE + seo.path,
+    provider: { '@id': SITE + '/#org' },
+    areaServed: { '@type': 'City', name: r.to },
+    offers: {
+      '@type': 'Offer',
+      price: String(r.price),
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      url: SITE + seo.path,
+    },
+  };
+}
+
 const RU_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля',
   'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -253,6 +294,7 @@ async function main() {
     const { getSeo } = await vite.ssrLoadModule('/seo.jsx');
     const { ALL_ROUTES, POPULAR } = await vite.ssrLoadModule('/BrandData.jsx');
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
+    const { INTERCITY_ROUTES } = await vite.ssrLoadModule('/Intercity.data.jsx');
 
     const sections = [
       ['home', null, 'weekly', '1.0'],
@@ -270,7 +312,14 @@ async function main() {
     const allRouteLinks = routeLinks(ALL_ROUTES);
     const newsLinks = '<ul>' + (NEWS_POSTS || [])
       .map((p) => `<li>${a('/novosti/' + p.slug, p.title)}</li>`).join('') + '</ul>';
-    const CHILDREN = { home: allRouteLinks, routes: allRouteLinks, news: newsLinks };
+    // Intercity routes get an in-link from the /marshruty hub so they are part
+    // of the crawlable graph, not just the sitemap.
+    const intercityHubLinks = (INTERCITY_ROUTES || []).length
+      ? '<h2>Междугородние трансферы</h2><ul>'
+        + INTERCITY_ROUTES.map((r) => `<li>${a('/' + r.slug, `Такси ${r.from} → ${r.to} — ${r.price}€`)}</li>`).join('')
+        + '</ul>'
+      : '';
+    const CHILDREN = { home: allRouteLinks, routes: allRouteLinks + intercityHubLinks, news: newsLinks };
 
     for (const [view, , cf, pr] of sections) {
       const seo = getSeo(view, null, null);
@@ -288,8 +337,20 @@ async function main() {
         ],
       });
     }
-    const allPosts = NEWS_POSTS || [];
     const popRoutes = (POPULAR || []).slice(0, 5);
+    for (const r of (INTERCITY_ROUTES || [])) {
+      const seo = getSeo('intercity', r.slug, null);
+      pages.push({
+        view: 'intercity', seo, cf: 'monthly', pr: '0.6',
+        body: intercityBody(r, seo, popRoutes),
+        jsonLd: [
+          intercityLd(r, seo),
+          breadcrumbs([HOME, ['Маршруты', '/marshruty'], [`${r.from} → ${r.to}`, seo.path]]),
+        ],
+      });
+    }
+
+    const allPosts = NEWS_POSTS || [];
     for (let i = 0; i < allPosts.length; i++) {
       const post = allPosts[i];
       const seo = getSeo('news-post', null, post.slug);

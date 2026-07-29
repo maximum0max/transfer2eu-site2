@@ -67,6 +67,14 @@ export default function middleware(request) {
     return Response.redirect(url.toString(), 301);
   }
 
+  // Old brand/landing URL from the WordPress site — no modern equivalent, so
+  // consolidate it onto the home page instead of returning 404.
+  if (p === '/transfer2eu-online' || p === '/transfer2eu-online/') {
+    url.pathname = '/';
+    url.search = '';
+    return Response.redirect(url.toString(), 301);
+  }
+
   // Permanently removed legacy URLs.
   if (GONE.some((re) => re.test(p))) return gone();
 
