@@ -596,7 +596,7 @@ function RouteGuide({ guide, cityRu = 'Аликанте' }) {
   // Photo attribution (CC BY-SA / CC BY require it) — one compact, collapsible list.
   const seen = new Set();
   const creditList = [];
-  for (const it of [...guide.beaches, ...guide.food, ...guide.photoSpots]) {
+  for (const it of [...(guide.beaches || []), ...(guide.food || []), ...(guide.photoSpots || [])]) {
     const c = GUIDE_CREDITS[it.key];
     if (c && !seen.has(it.key)) { seen.add(it.key); creditList.push({ ...c, place: it.name }); }
   }
@@ -610,9 +610,12 @@ function RouteGuide({ guide, cityRu = 'Аликанте' }) {
           <p style={sub}>Пока водитель везёт вас из аэропорта — вот всё самое интересное в {cityRu} и вокруг.</p>
         </div>
 
-        <Section icon="🏖" title={`Пляжи ${cityRu} и рядом`} sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />
-        <Section icon="🍽" title={`Где поесть в ${cityRu} — рекомендации`} sub={guide.foodIntro} items={guide.food} badgeKey="type" />
-        <Section icon="📸" title={`Что посмотреть и лучшие фото в ${cityRu}`} sub={guide.photoIntro} items={guide.photoSpots} />
+        {guide.beaches && guide.beaches.length > 0 &&
+          <Section icon="🏖" title={`Пляжи ${cityRu} и рядом`} sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />}
+        {guide.food && guide.food.length > 0 &&
+          <Section icon="🍽" title={`Где поесть в ${cityRu} — рекомендации`} sub={guide.foodIntro} items={guide.food} badgeKey="type" />}
+        {guide.photoSpots && guide.photoSpots.length > 0 &&
+          <Section icon="📸" title={`Что посмотреть и лучшие фото в ${cityRu}`} sub={guide.photoIntro} items={guide.photoSpots} />}
 
         {creditList.length > 0 && (
           <details style={{ marginTop: 40, fontSize: 12, color: 'var(--t2-ink-3)' }}>

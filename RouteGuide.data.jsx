@@ -306,9 +306,158 @@ ROUTE_GUIDES['santa-pola'] = {
   ],
 };
 
+// ---- Batch 3: south coast, Mar Menor, inland ----
+
+ROUTE_GUIDES['orihuela'] = {
+  beachesIntro: 'Ориуэла Коста — золотые пляжи и бухты, а сам город — жемчужина барокко.',
+  beaches: [
+    { key: 'ori-zenia', name: 'Playa de La Zenia', dist: 'Ориуэла Коста', text: 'Популярный песчаный пляж рядом с торговым центром Zenia Boulevard.' },
+    { key: 'ori-campoamor', name: 'Playa de Campoamor', dist: 'Ориуэла Коста', text: 'Широкий пляж с дюнами и сосновой рощей в Дехеса-де-Кампоамор.' },
+  ],
+  foodIntro: 'Средиземноморская кухня побережья и арросы (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты на побережье', type: 'Море', text: 'Свежая рыба у пляжей Ориуэла Коста.' },
+    { key: 'sento', name: 'Тапас в центре', type: 'Тапас', text: 'Бары в историческом центре Ориуэлы.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Готический собор, монастырь-университет и пальмовая роща.',
+  photoSpots: [
+    { key: 'ori-catedral', name: 'Catedral de Orihuela', text: 'Готический собор XIV века в самом сердце старого города.' },
+    { key: 'ori-santodomingo', name: 'Colegio de Santo Domingo', text: 'Бывший монастырь-университет с ренессансными дворами.' },
+    { key: 'ori-palmeral', name: 'Palmeral de Orihuela', text: 'Вторая по величине пальмовая роща Европы после Эльче.' },
+  ],
+};
+
+ROUTE_GUIDES['cartagena'] = {
+  beachesIntro: 'Картахена — города с 3000-летней историей и дикие пляжи Кальбланке рядом.',
+  beaches: [
+    { key: 'car-cortina', name: 'Cala Cortina', dist: 'у города', text: 'Уютная городская бухта с прозрачной водой в двух шагах от центра.' },
+    { key: 'car-calblanque', name: 'Calblanque', dist: '20 км', text: 'Дикие пляжи и дюны в природном парке — одно из красивейших мест побережья.' },
+  ],
+  foodIntro: 'Морепродукты, caldero (рисовое блюдо Мар-Менора) и тапас (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты в порту', type: 'Море', text: 'Свежий улов у оживлённой набережной.' },
+    { key: 'nou-manolin', name: 'Caldero и арросы', type: 'Рис', text: 'Знаменитое рисовое блюдо региона Мар-Менор.' },
+    { key: 'sento', name: 'Тапас на Calle Mayor', type: 'Тапас', text: 'Бары и террасы на главной пешеходной улице.' },
+  ],
+  photoIntro: 'Римский театр, порт и модернистская архитектура — must-see Картахены.',
+  photoSpots: [
+    { key: 'car-teatro', name: 'Teatro Romano', text: 'Отреставрированный римский театр I века до н. э. — символ города.' },
+    { key: 'car-puerto', name: 'Порт и набережная', text: 'Живописная гавань с военно-морской историей и подводным музеем ARQVA.' },
+    { key: 'car-castillo', name: 'Castillo de la Concepción', text: 'Замок на холме с панорамой города и порта (подъём на лифте).' },
+    { key: 'car-modernista', name: 'Модернистская архитектура', text: 'Роскошные фасады начала XX века — дворец Агирре и Calle Mayor.' },
+  ],
+};
+
+ROUTE_GUIDES['san-pedro'] = {
+  beachesIntro: 'Сан-Педро-дель-Пинатар — тёплое мелкое Мар-Менор и природный парк Салинас.',
+  beaches: [
+    { key: 'spp-villananitos', name: 'Playa de Villananitos', dist: 'центр', text: 'Мелкий тёплый пляж Мар-Менора с пологим входом — идеально для детей.' },
+    { key: 'spp-puntica', name: 'Playa de la Puntica (Lo Pagán)', dist: 'центр', text: 'Городской пляж у канала с видом на лагуну.' },
+  ],
+  foodIntro: 'Рыба Мар-Менора и caldero (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Рыба Мар-Менора', type: 'Море', text: 'Свежий улов из лагуны и моря.' },
+    { key: 'nou-manolin', name: 'Caldero и арросы', type: 'Рис', text: 'Традиционное рисовое блюдо на рыбном бульоне.' },
+    { key: 'sento', name: 'Тапас в Lo Pagán', type: 'Тапас', text: 'Бары и террасы у порта.' },
+  ],
+  photoIntro: 'Соляные озёра с фламинго, лечебные грязи и старинные мельницы.',
+  photoSpots: [
+    { key: 'spp-salinas', name: 'Салинас и лечебные грязи', text: 'Природный парк с фламинго и знаменитыми грязевыми ваннами (baños de lodo).' },
+    { key: 'spp-molino', name: 'Molino de Quintín', text: 'Старинная соляная мельница среди озёр — открыточный кадр.' },
+  ],
+};
+
+ROUTE_GUIDES['finestrat'] = {
+  beachesIntro: 'Финестрат — уютная бухта у моря и белая горная деревня.',
+  beaches: [
+    { key: 'fin-cala', name: 'Cala de Finestrat', dist: 'побережье', text: 'Небольшая уютная бухта с песком и галькой, рядом с Бенидормом.' },
+  ],
+  foodIntro: 'Средиземноморская кухня и тапас в горной деревне (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Рыба и морепродукты', type: 'Море', text: 'Свежие дары моря у бухты.' },
+    { key: 'sento', name: 'Тапас в деревне', type: 'Тапас', text: 'Ресторанчики в старом горном селе.' },
+    { key: 'portal', name: 'Кафе с видом на горы', type: 'Кафе', text: 'Террасы с панорамой Пуч-Кампана.' },
+  ],
+  photoIntro: 'Гора Пуч-Кампана и белая деревня на скале — эффектные кадры.',
+  photoSpots: [
+    { key: 'fin-puigcampana', name: 'Puig Campana', text: 'Вторая по высоте вершина провинции (1406 м) с легендарной «выемкой».' },
+    { key: 'fin-plaza', name: 'Старое село и церковь', text: 'Белые домики на скале, церковь Сан-Бартоломе и смотровая площадь.' },
+  ],
+};
+
+ROUTE_GUIDES['taksi-alikante-la-manga'] = {
+  beachesIntro: 'Ла-Манга — узкая коса между тёплым Мар-Менором и Средиземным морем.',
+  beaches: [
+    { key: 'man-marmenor', name: 'Пляжи Мар-Менора', dist: 'коса', text: 'Тёплая мелкая лагуна с солёной водой — спокойно и безопасно для детей.' },
+    { key: 'man-mediterraneo', name: 'Средиземноморская сторона', dist: 'коса', text: 'Открытое море с видом на остров Исла-Гроса.' },
+  ],
+  foodIntro: 'Морепродукты двух морей и арросы (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты', type: 'Море', text: 'Рыба и дары моря с обеих сторон косы.' },
+    { key: 'nou-manolin', name: 'Caldero и арросы', type: 'Рис', text: 'Рисовые блюда региона Мар-Менор.' },
+    { key: 'sento', name: 'Тапас у моря', type: 'Тапас', text: 'Бары и террасы вдоль косы.' },
+  ],
+  photoIntro: 'Маяк Кабо-де-Палос и дайвинг у островов Ормигас.',
+  photoSpots: [
+    { key: 'man-cabopalos', name: 'Faro de Cabo de Palos', text: 'Маяк на мысу с панорамой моря — рядом лучший дайвинг у Islas Hormigas.' },
+  ],
+};
+
+ROUTE_GUIDES['los-alcazares'] = {
+  beachesIntro: 'Лос-Алькасарес — спокойные тёплые пляжи Мар-Менора.',
+  beaches: [
+    { key: 'lal-playa', name: 'Playa del Espejo', dist: 'центр', text: 'Мелкий тёплый пляж лагуны с пологим входом и променадом.' },
+  ],
+  foodIntro: 'Рыба Мар-Менора и caldero (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Рыба Мар-Менора', type: 'Море', text: 'Свежий улов из лагуны.' },
+    { key: 'nou-manolin', name: 'Caldero и арросы', type: 'Рис', text: 'Традиционное рисовое блюдо.' },
+    { key: 'sento', name: 'Тапас на набережной', type: 'Тапас', text: 'Бары и террасы у моря.' },
+  ],
+  photoIntro: 'Историческая башня и курортная набережная.',
+  photoSpots: [
+    { key: 'lal-torre', name: 'Torre del Rame', text: 'Историческая башня — напоминание о прошлом городка-курорта с бальнеологией.' },
+  ],
+};
+
+ROUTE_GUIDES['gandia'] = {
+  beachesIntro: 'Гандия — один из лучших песчаных пляжей побережья Валенсии.',
+  beaches: [
+    { key: 'gan-playa', name: 'Playa de Gandía', dist: '4 км', text: 'Широкий песчаный пляж с длинным променадом и голубым флагом.' },
+  ],
+  foodIntro: 'Родина фидеуа и рисовых блюд (на фото — местная кухня).',
+  food: [
+    { key: 'nou-manolin', name: 'Фидеуа и арросы', type: 'Рис', text: 'Фидеуа родом из Гандии — паэлья на лапше вместо риса.' },
+    { key: 'darsena', name: 'Морепродукты у пляжа', type: 'Море', text: 'Свежая рыба на набережной Playa Nord.' },
+    { key: 'sento', name: 'Тапас в старом городе', type: 'Тапас', text: 'Бары в историческом центре.' },
+  ],
+  photoIntro: 'Дворец Борджиа и старый город — историческое сердце Гандии.',
+  photoSpots: [
+    { key: 'gan-palacio', name: 'Palacio Ducal de los Borja', text: 'Готико-ренессансный дворец семьи Борджиа — главная достопримечательность.' },
+    { key: 'gan-colegiata', name: 'Colegiata de Santa María', text: 'Величественная готическая коллегиата в центре старого города.' },
+  ],
+};
+
+ROUTE_GUIDES['alcoy'] = {
+  foodIntro: 'Горная кухня, «бахо» и знаменитый кофе-ликёр (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Местная кухня', type: 'Кухня', text: 'Сытные горные блюда — пути с нутом, борреты.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары в модернистском центре Алькоя.' },
+    { key: 'portal', name: 'Кафе и кондитерские', type: 'Кафе', text: 'Знаменитые сладости и кофе-ликёр «Café-Licor».' },
+  ],
+  photoIntro: 'Модернистская архитектура, мосты и горы — Алькой без пляжей, но с характером.',
+  photoSpots: [
+    { key: 'alc-modernista', name: 'Модернистская архитектура', text: 'Círculo Industrial и роскошные фасады начала XX века.' },
+    { key: 'alc-puente', name: 'Puente de San Jorge', text: 'Знаменитый мост в стиле ар-деко над оврагом — символ города.' },
+    { key: 'alc-fontroja', name: 'Природа и горы', text: 'Природный парк Фонт-Роха и горное окружение Алькоя.' },
+  ],
+};
+
 // Attach resolved image paths to every guide item.
 for (const g of Object.values(ROUTE_GUIDES)) {
   for (const list of [g.beaches, g.food, g.photoSpots]) {
+    if (!list) continue;
     for (const item of list) item.img = img(item.key);
   }
 }

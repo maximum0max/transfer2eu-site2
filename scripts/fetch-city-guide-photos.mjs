@@ -10,68 +10,48 @@ const OUT = path.join(process.cwd(), 'public', 'assets', 'guide');
 const CREDITS = path.join(process.cwd(), 'GuidePhotos.data.json');
 const UA = 'Transfer2EU-guide-photos/1.0 (https://www.transfer2eu.com)';
 
-const RETRY = [
-  ['vil-casas', 'Casas de colores La Vila Joiosa'],
-  ['vil-puerto', 'Puerto La Vila Joiosa'],
-  ['vil-oldtown', 'Vila Joiosa fachadas'],
-  ['jav-oldtown', 'Xàbia centro histórico'],
-  ['mor-portet', 'El Portet Moraira'],
-  ['gua-viveros', 'Playa de los Viveros Guardamar'],
-  ['gua-dunas', 'Dunas de Guardamar'],
-  ['sap-granplaya', 'Playa de Levante Santa Pola'],
-];
+const RETRY = [];
 
 const PLACES = [
-  // Jávea
-  ['jav-arenal', 'Playa del Arenal Jávea'],
-  ['jav-granadella', 'Cala Granadella Jávea'],
-  ['jav-portitxol', 'Cala Portitxol Jávea'],
-  ['jav-cabonao', 'Cabo de la Nao Jávea'],
-  ['jav-faro', 'Faro Cabo San Antonio Jávea'],
-  ['jav-oldtown', 'Casco antiguo Jávea'],
-  ['jav-church', 'Iglesia San Bartolomé Jávea'],
-  // Torrevieja
-  ['tor-cura', 'Playa del Cura Torrevieja'],
-  ['tor-locos', 'Playa de los Locos Torrevieja'],
-  ['tor-lamata', 'Playa La Mata Torrevieja'],
-  ['tor-laguna', 'Laguna rosa Torrevieja'],
-  ['tor-puerto', 'Puerto de Torrevieja'],
-  ['tor-eras', 'Eras de la Sal Torrevieja'],
-  ['tor-paseo', 'Paseo Juan Aparicio Torrevieja'],
-  // Villajoyosa
-  ['vil-centro', 'Playa Centro Villajoyosa'],
-  ['vil-paradis', 'Playa El Paradís Villajoyosa'],
-  ['vil-casas', 'Casas de colores Villajoyosa'],
-  ['vil-oldtown', 'Villajoyosa fachadas colores'],
-  ['vil-iglesia', 'Iglesia de la Asunción Villajoyosa'],
-  ['vil-puerto', 'Puerto de Villajoyosa'],
-  // El Campello
-  ['cam-carrermar', 'Playa Carrer la Mar Campello'],
-  ['cam-illeta', 'Illeta dels Banyets Campello'],
-  ['cam-torre', 'Torre de la Illeta Campello'],
-  ['cam-puerto', 'Puerto de El Campello'],
-  // Albir
-  ['alb-playa', 'Playa del Albir'],
-  ['alb-faro', 'Faro del Albir'],
-  ['alb-serra', 'Serra Gelada Albir'],
-  ['alb-villa', 'Villa Romana Albir'],
-  // Moraira
-  ['mor-ampolla', 'Playa Ampolla Moraira'],
-  ['mor-portet', 'Cala del Portet Moraira'],
-  ['mor-castillo', 'Castillo de Moraira'],
-  ['mor-capdor', "Torre del Cap d'Or Moraira"],
-  ['mor-puerto', 'Puerto de Moraira'],
-  // Guardamar del Segura
-  ['gua-centro', 'Playa Guardamar del Segura'],
-  ['gua-viveros', 'Playa Viveros Guardamar'],
-  ['gua-dunas', 'Dunas Guardamar del Segura'],
-  ['gua-castillo', 'Castillo Guardamar del Segura'],
-  // Santa Pola
-  ['sap-granplaya', 'Gran Playa Santa Pola'],
-  ['sap-tamarit', 'Playa Tamarit Santa Pola'],
-  ['sap-castillo', 'Castillo de Santa Pola'],
-  ['sap-salinas', 'Salinas de Santa Pola'],
-  ['sap-faro', 'Faro de Santa Pola'],
+  // Orihuela (city + costa)
+  ['ori-zenia', 'Playa de La Zenia Orihuela'],
+  ['ori-campoamor', 'Playa de Campoamor Orihuela'],
+  ['ori-catedral', 'Catedral de Orihuela'],
+  ['ori-santodomingo', 'Colegio de Santo Domingo Orihuela'],
+  ['ori-palmeral', 'Palmeral de Orihuela'],
+  // Cartagena
+  ['car-cortina', 'Cala Cortina Cartagena'],
+  ['car-calblanque', 'Calblanque'],
+  ['car-teatro', 'Teatro Romano de Cartagena'],
+  ['car-puerto', 'Puerto de Cartagena'],
+  ['car-castillo', 'Castillo de la Concepción Cartagena'],
+  ['car-modernista', 'Palacio de Aguirre Cartagena'],
+  // San Pedro del Pinatar
+  ['spp-villananitos', 'Playa Villananitos San Pedro del Pinatar'],
+  ['spp-puntica', 'Playa La Puntica Lo Pagán'],
+  ['spp-salinas', 'Salinas de San Pedro del Pinatar'],
+  ['spp-molino', 'Molino de Quintín San Pedro del Pinatar'],
+  // Finestrat
+  ['fin-cala', 'Cala de Finestrat'],
+  ['fin-puigcampana', 'Puig Campana'],
+  ['fin-village', 'Finestrat pueblo'],
+  ['fin-plaza', 'Finestrat iglesia'],
+  // La Manga del Mar Menor
+  ['man-marmenor', 'La Manga del Mar Menor playa'],
+  ['man-mediterraneo', 'La Manga Mediterráneo'],
+  ['man-cabopalos', 'Faro de Cabo de Palos'],
+  // Los Alcázares
+  ['lal-playa', 'Playa Los Alcázares Mar Menor'],
+  ['lal-torre', 'Torre del Rame Los Alcázares'],
+  // Gandía
+  ['gan-playa', 'Playa de Gandía'],
+  ['gan-palacio', 'Palacio Ducal de Gandía'],
+  ['gan-colegiata', 'Colegiata de Gandía'],
+  // Alcoy (inland — no beach)
+  ['alc-modernista', 'Círculo Industrial Alcoy'],
+  ['alc-puente', 'Puente de San Jorge Alcoy'],
+  ['alc-oldtown', 'Alcoy centro histórico'],
+  ['alc-fontroja', 'Font Roja Alcoy'],
 ];
 
 const stripHtml = (s) => String(s || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
