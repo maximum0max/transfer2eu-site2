@@ -193,8 +193,8 @@ function RouteDetailsBand({ r, onNav, guide }) {
                 style={{ border: 0, display: 'block' }} loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe>
             </div>
-            {guide.mapNote && <p style={mapNote}>{guide.mapNote}</p>}
-            <div style={phoneRow}>
+            {guide.mapNote && <p style={{ ...mapNote, textAlign: 'center' }}>{guide.mapNote}</p>}
+            <div style={{ ...phoneRow, justifyContent: 'center' }}>
               <a href={waLink('Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте в центр города.')}
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
                 📲 Написать в WhatsApp
