@@ -10,47 +10,68 @@ const OUT = path.join(process.cwd(), 'public', 'assets', 'guide');
 const CREDITS = path.join(process.cwd(), 'GuidePhotos.data.json');
 const UA = 'Transfer2EU-guide-photos/1.0 (https://www.transfer2eu.com)';
 
+const RETRY = [
+  ['vil-casas', 'Casas de colores La Vila Joiosa'],
+  ['vil-puerto', 'Puerto La Vila Joiosa'],
+  ['vil-oldtown', 'Vila Joiosa fachadas'],
+  ['jav-oldtown', 'Xàbia centro histórico'],
+  ['mor-portet', 'El Portet Moraira'],
+  ['gua-viveros', 'Playa de los Viveros Guardamar'],
+  ['gua-dunas', 'Dunas de Guardamar'],
+  ['sap-granplaya', 'Playa de Levante Santa Pola'],
+];
+
 const PLACES = [
-  // Benidorm — beaches
-  ['ben-levante', 'Playa de Levante Benidorm'],
-  ['ben-poniente', 'Playa de Poniente Benidorm'],
-  ['ben-malpas', 'Cala Mal Pas Benidorm'],
-  ['ben-tioximo', 'Cala Tio Ximo Benidorm'],
-  // Benidorm — attractions / photo
-  ['ben-balcon', 'Balcón del Mediterráneo Benidorm'],
-  ['ben-oldtown', 'Casco antiguo Benidorm'],
-  ['ben-church', 'Iglesia San Jaime Benidorm'],
-  ['ben-skyline', 'Benidorm skyline'],
-  // Calpe — beaches
-  ['cal-fossa', 'Playa de la Fossa Calpe'],
-  ['cal-arenal', 'Playa Arenal Bol Calpe'],
-  ['cal-raco', 'Cala del Racó Calpe'],
-  ['cal-puerto', 'Puerto de Calpe'],
-  // Calpe — attractions / photo
-  ['cal-penon', 'Peñón de Ifach'],
-  ['cal-salinas', 'Salinas de Calpe'],
-  ['cal-oldtown', 'Casco antiguo Calpe'],
-  ['cal-banos', 'Baños de la Reina Calpe'],
-  // Altea — beaches
-  ['alt-roda', 'Playa de la Roda Altea'],
-  ['alt-olla', "Playa L'Olla Altea"],
-  ['alt-cap', 'Cap Negret Altea'],
-  ['alt-mascarat', 'Mascarat Altea'],
-  // Altea — attractions / photo
-  ['alt-church', 'Iglesia Nuestra Señora del Consuelo Altea'],
-  ['alt-oldtown', 'Casco antiguo Altea'],
-  ['alt-plaza', 'Plaza de la Iglesia Altea'],
-  ['alt-paseo', 'Altea vista mar'],
-  // Denia — beaches
-  ['den-marines', 'Playa Les Marines Denia'],
-  ['den-rotes', 'Les Rotes Denia'],
-  ['den-marineta', 'Marineta Cassiana Denia'],
-  ['den-raset', 'Platja del Raset Dénia'],
-  // Denia — attractions / photo
-  ['den-castillo', 'Castillo de Denia'],
-  ['den-puerto', 'Puerto de Denia'],
-  ['den-montgo', 'Parque Natural del Montgó'],
-  ['den-covatallada', 'Cova Tallada Denia'],
+  // Jávea
+  ['jav-arenal', 'Playa del Arenal Jávea'],
+  ['jav-granadella', 'Cala Granadella Jávea'],
+  ['jav-portitxol', 'Cala Portitxol Jávea'],
+  ['jav-cabonao', 'Cabo de la Nao Jávea'],
+  ['jav-faro', 'Faro Cabo San Antonio Jávea'],
+  ['jav-oldtown', 'Casco antiguo Jávea'],
+  ['jav-church', 'Iglesia San Bartolomé Jávea'],
+  // Torrevieja
+  ['tor-cura', 'Playa del Cura Torrevieja'],
+  ['tor-locos', 'Playa de los Locos Torrevieja'],
+  ['tor-lamata', 'Playa La Mata Torrevieja'],
+  ['tor-laguna', 'Laguna rosa Torrevieja'],
+  ['tor-puerto', 'Puerto de Torrevieja'],
+  ['tor-eras', 'Eras de la Sal Torrevieja'],
+  ['tor-paseo', 'Paseo Juan Aparicio Torrevieja'],
+  // Villajoyosa
+  ['vil-centro', 'Playa Centro Villajoyosa'],
+  ['vil-paradis', 'Playa El Paradís Villajoyosa'],
+  ['vil-casas', 'Casas de colores Villajoyosa'],
+  ['vil-oldtown', 'Villajoyosa fachadas colores'],
+  ['vil-iglesia', 'Iglesia de la Asunción Villajoyosa'],
+  ['vil-puerto', 'Puerto de Villajoyosa'],
+  // El Campello
+  ['cam-carrermar', 'Playa Carrer la Mar Campello'],
+  ['cam-illeta', 'Illeta dels Banyets Campello'],
+  ['cam-torre', 'Torre de la Illeta Campello'],
+  ['cam-puerto', 'Puerto de El Campello'],
+  // Albir
+  ['alb-playa', 'Playa del Albir'],
+  ['alb-faro', 'Faro del Albir'],
+  ['alb-serra', 'Serra Gelada Albir'],
+  ['alb-villa', 'Villa Romana Albir'],
+  // Moraira
+  ['mor-ampolla', 'Playa Ampolla Moraira'],
+  ['mor-portet', 'Cala del Portet Moraira'],
+  ['mor-castillo', 'Castillo de Moraira'],
+  ['mor-capdor', "Torre del Cap d'Or Moraira"],
+  ['mor-puerto', 'Puerto de Moraira'],
+  // Guardamar del Segura
+  ['gua-centro', 'Playa Guardamar del Segura'],
+  ['gua-viveros', 'Playa Viveros Guardamar'],
+  ['gua-dunas', 'Dunas Guardamar del Segura'],
+  ['gua-castillo', 'Castillo Guardamar del Segura'],
+  // Santa Pola
+  ['sap-granplaya', 'Gran Playa Santa Pola'],
+  ['sap-tamarit', 'Playa Tamarit Santa Pola'],
+  ['sap-castillo', 'Castillo de Santa Pola'],
+  ['sap-salinas', 'Salinas de Santa Pola'],
+  ['sap-faro', 'Faro de Santa Pola'],
 ];
 
 const stripHtml = (s) => String(s || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -98,7 +119,7 @@ async function main() {
   await fs.mkdir(OUT, { recursive: true });
   let credits = {};
   try { credits = JSON.parse(await fs.readFile(CREDITS, 'utf8')); } catch { /* start fresh */ }
-  for (const [key, query] of PLACES) {
+  for (const [key, query] of [...PLACES, ...RETRY]) {
     try {
       const hit = pick(await api(query));
       if (!hit) { console.log(`✗ ${key}: no image for "${query}"`); continue; }

@@ -146,6 +146,166 @@ ROUTE_GUIDES['denia'] = {
   ],
 };
 
+// ---- Batch 2: more Costa Blanca resorts ----
+
+ROUTE_GUIDES['javea'] = {
+  beachesIntro: 'Хавеа — песчаный Аренал и знаменитые бухты с кристальной водой.',
+  beaches: [
+    { key: 'jav-arenal', name: 'Playa del Arenal', dist: 'центр', text: 'Главный песчаный пляж с оживлённой набережной, барами и ресторанами.' },
+    { key: 'jav-granadella', name: 'Cala Granadella', dist: '6 км', text: 'Одна из красивейших бухт Испании в сосновом обрамлении — снорклинг и дайвинг.' },
+    { key: 'jav-portitxol', name: 'Cala del Portitxol (La Barraca)', dist: '4 км', text: 'Галечная бухта с прозрачной водой и белыми рыбацкими домиками.' },
+  ],
+  foodIntro: 'Свежая рыба в порту и рисовые блюда (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Арросы и морепродукты', type: 'Рис', text: 'Рисовые блюда и рыба на набережной и в порту La Grava.' },
+    { key: 'sento', name: 'Тапас в старом городе', type: 'Тапас', text: 'Атмосферные бары в историческом центре Хавеа.' },
+    { key: 'nou-manolin', name: 'Рыбные рестораны у Granadella', type: 'Море', text: 'Обед с видом на бирюзовую бухту.' },
+  ],
+  photoIntro: 'Мысы с маяками и церковь-крепость — лучшие виды Хавеа.',
+  photoSpots: [
+    { key: 'jav-cabonao', name: 'Cabo de la Nao', text: 'Мыс с обрывами и панорамой Средиземного моря — знаковая смотровая.' },
+    { key: 'jav-faro', name: 'Faro del Cabo de San Antonio', text: 'Маяк-смотровая над мариной и побережьем.' },
+    { key: 'jav-church', name: 'Iglesia de San Bartolomé', text: 'Церковь-крепость XIV века в старом городе.' },
+  ],
+};
+
+ROUTE_GUIDES['transfer-alicante-torrevieja'] = {
+  beachesIntro: 'Торревьеха — городские пляжи и природный парк Ла-Мата.',
+  beaches: [
+    { key: 'tor-cura', name: 'Playa del Cura', dist: 'центр', text: 'Центральный городской пляж с золотым песком и набережной.' },
+    { key: 'tor-locos', name: 'Playa de los Locos', dist: '1 км', text: 'Популярный пляж со скалистыми бухтами по краям.' },
+    { key: 'tor-lamata', name: 'Playa de La Mata', dist: '3 км', text: 'Длинный пляж у природного парка Ла-Мата.' },
+  ],
+  foodIntro: 'Морепродукты, арросы и тапас у моря.',
+  food: [
+    { key: 'darsena', name: 'Морепродукты в порту', type: 'Море', text: 'Свежая рыба и дары моря у марины.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары и террасы вдоль набережной.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Местные рисовые блюда.' },
+  ],
+  photoIntro: 'Розовое озеро с фламинго — фото-локация №1 Торревьехи.',
+  photoSpots: [
+    { key: 'tor-laguna', name: 'Розовое озеро (Laguna Rosa)', text: 'Солёное озеро с фламинго и розовой водой — самая известная фото-локация.' },
+    { key: 'tor-paseo', name: 'Paseo Juan Aparicio', text: 'Набережная со скульптурами и видом на порт.' },
+    { key: 'tor-puerto', name: 'Порт и Dique de Levante', text: 'Марина и прогулка по молу с видом на город.' },
+  ],
+};
+
+ROUTE_GUIDES['villajoyosa'] = {
+  beachesIntro: 'Вильяхойоса — песчаные пляжи у знаменитых разноцветных домов.',
+  beaches: [
+    { key: 'vil-centro', name: 'Playa Centro', dist: 'центр', text: 'Городской пляж прямо у разноцветных фасадов рыбацкого квартала.' },
+    { key: 'vil-paradis', name: 'Playa del Paraíso', dist: '2 км', text: 'Широкий песчаный пляж с чистой водой.' },
+  ],
+  foodIntro: 'Морепродукты и знаменитый шоколад Valor (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Свежие морепродукты', type: 'Море', text: 'Дневной улов в рыбацком порту.' },
+    { key: 'sento', name: 'Тапас в старом городе', type: 'Тапас', text: 'Бары среди разноцветных улочек.' },
+    { key: 'nou-manolin', name: 'Арросы у моря', type: 'Рис', text: 'Рисовые блюда на набережной.' },
+  ],
+  photoIntro: 'Разноцветные дома у моря — визитная карточка Вильяхойосы.',
+  photoSpots: [
+    { key: 'vil-centro', name: 'Разноцветные дома', text: 'Знаменитые крашеные фасады рыбацкого квартала у самого моря — открытка города.' },
+    { key: 'vil-iglesia', name: 'Iglesia-fortaleza de la Asunción', text: 'Церковь-крепость XVI века в историческом центре.' },
+    { key: 'vil-puerto', name: 'Порт и марина', text: 'Рыбацкий порт с лодками и морскими видами.' },
+  ],
+};
+
+ROUTE_GUIDES['el-campello'] = {
+  beachesIntro: 'Эль-Кампельо — длинный песчаный Мучависта и уютные бухты.',
+  beaches: [
+    { key: 'muchavista', name: 'Playa Muchavista', dist: 'центр', text: 'Длинный песчаный пляж с многокилометровым променадом.' },
+    { key: 'cam-carrermar', name: 'Playa del Carrer la Mar', dist: 'центр', text: 'Городской пляж у порта и набережной.' },
+  ],
+  foodIntro: 'Рыбацкий посёлок с лучшими морепродуктами (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Свежая рыба из порта', type: 'Море', text: 'Дневной улов прямо с аукциона.' },
+    { key: 'sento', name: 'Тапас у моря', type: 'Тапас', text: 'Бары и террасы на набережной.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Древняя башня и археологический памятник у моря.',
+  photoSpots: [
+    { key: 'cam-illeta', name: 'Illeta dels Banyets', text: 'Археологический памятник на мысу у моря — иберийское и римское наследие.' },
+    { key: 'cam-torre', name: 'Torre de la Illeta', text: 'Сторожевая башня XVI века — символ Эль-Кампельо.' },
+    { key: 'cam-puerto', name: 'Порт и марина', text: 'Живописный порт, особенно вечером.' },
+  ],
+};
+
+ROUTE_GUIDES['albir'] = {
+  beachesIntro: 'Альбир — белый галечный пляж у природного парка Серра-Гелада.',
+  beaches: [
+    { key: 'alb-playa', name: 'Playa del Albir', dist: 'центр', text: 'Белый галечный пляж с прозрачной водой и длинной набережной.' },
+  ],
+  foodIntro: 'Средиземноморская кухня и кафе вдоль набережной (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Рыба и морепродукты', type: 'Море', text: 'Свежие дары моря у пляжа.' },
+    { key: 'sento', name: 'Тапас и кафе', type: 'Тапас', text: 'Бары и террасы на променаде.' },
+    { key: 'portal', name: 'Международная кухня', type: 'Кафе', text: 'Разнообразие ресторанов на любой вкус.' },
+  ],
+  photoIntro: 'Маяк Альбир в конце живописной тропы — must-see локация.',
+  photoSpots: [
+    { key: 'alb-faro', name: 'Faro del Albir', text: 'Маяк в конце живописной тропы в парке Серра-Гелада — панорама залива.' },
+    { key: 'alb-serra', name: 'Природный парк Серра-Гелада', text: 'Тропа вдоль обрывов с панорамами моря и Бенидорма.' },
+    { key: 'alb-villa', name: 'Римская вилла Альбир', text: 'Археологический памятник с мозаиками римской эпохи.' },
+  ],
+};
+
+ROUTE_GUIDES['moraira'] = {
+  beachesIntro: 'Морайра — песчаный пляж у замка и защищённая бухта Портет.',
+  beaches: [
+    { key: 'mor-ampolla', name: "Playa de l'Ampolla", dist: 'центр', text: 'Главный песчаный пляж у крепости, с пологим входом.' },
+    { key: 'mor-portet', name: 'Cala del Portet', dist: '1,5 км', text: 'Защищённая бухта с бирюзовой водой — снорклинг.' },
+  ],
+  foodIntro: 'Изысканные рестораны и морепродукты у марины (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты у марины', type: 'Море', text: 'Свежая рыба с видом на порт.' },
+    { key: 'sento', name: 'Тапас в центре', type: 'Тапас', text: 'Бары и террасы у набережной.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Замок на пляже и башня Кап-д’Ор — лучшие кадры Морайры.',
+  photoSpots: [
+    { key: 'mor-castillo', name: 'Castillo de Moraira', text: 'Крепость XVIII века прямо на пляже — символ города.' },
+    { key: 'mor-capdor', name: "Torre del Cap d'Or", text: 'Сторожевая башня на мысу — трекинг с панорамными видами.' },
+  ],
+};
+
+ROUTE_GUIDES['guardamar'] = {
+  beachesIntro: 'Гуардамар — километры песка среди сосен и дюн.',
+  beaches: [
+    { key: 'gua-centro', name: 'Playa de Guardamar', dist: 'центр', text: 'Широкий песчаный пляж у соснового парка и дюн.' },
+  ],
+  foodIntro: 'Рыба из порта и рисовые блюда (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Свежая рыба', type: 'Море', text: 'Дневной улов из порта Гуардамара.' },
+    { key: 'sento', name: 'Тапас у моря', type: 'Тапас', text: 'Бары и террасы в центре.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда местной кухни.' },
+  ],
+  photoIntro: 'Дюны, сосновый парк и средневековая рабита.',
+  photoSpots: [
+    { key: 'gua-dunas', name: 'Дюны и Рабита Калифаль', text: 'Сосновый парк с дюнами и средневековой мусульманской рабитой (X в.).' },
+    { key: 'gua-castillo', name: 'Замок Гуардамар', text: 'Руины крепости на холме с панорамой побережья и устья реки Сегура.' },
+  ],
+};
+
+ROUTE_GUIDES['santa-pola'] = {
+  beachesIntro: 'Санта-Пола — мелкие семейные пляжи и виды на остров Табарка.',
+  beaches: [
+    { key: 'sap-granplaya', name: 'Playa de Levante (Gran Playa)', dist: 'центр', text: 'Широкий песчаный пляж с пологим входом — удобен для детей.' },
+    { key: 'sap-tamarit', name: 'Playa del Tamarit', dist: '4 км', text: 'Пляж у соляных озёр с видом на остров Табарка.' },
+  ],
+  foodIntro: 'Рыбацкий порт с лучшими морепродуктами (на фото — местная кухня).',
+  food: [
+    { key: 'darsena', name: 'Морепродукты из порта', type: 'Море', text: 'Свежий улов прямо с рыбного аукциона.' },
+    { key: 'sento', name: 'Тапас у порта', type: 'Тапас', text: 'Бары и террасы у марины.' },
+    { key: 'nou-manolin', name: 'Арросы и паэлья', type: 'Рис', text: 'Рисовые блюда с морепродуктами.' },
+  ],
+  photoIntro: 'Крепость в центре, маяк на мысу и солёные озёра с фламинго.',
+  photoSpots: [
+    { key: 'sap-castillo', name: 'Castillo-Fortaleza', text: 'Крепость XVI века в самом центре города.' },
+    { key: 'sap-salinas', name: 'Салинас (природный парк)', text: 'Солёные озёра с фламинго — заповедник у города.' },
+    { key: 'sap-faro', name: 'Маяк и смотровая Кабо-де-Санта-Пола', text: 'Маяк на мысу с панорамой моря и острова Табарка.' },
+  ],
+};
+
 // Attach resolved image paths to every guide item.
 for (const g of Object.values(ROUTE_GUIDES)) {
   for (const list of [g.beaches, g.food, g.photoSpots]) {
