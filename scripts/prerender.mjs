@@ -73,13 +73,28 @@ function routeBody(r, seo, siblings) {
     + `</main>`;
 }
 
-function newsBody(post, seo) {
+function newsBody(post, seo, related, routes) {
   const first = Array.isArray(post.body) ? post.body.find((b) => b.type === 'p') : null;
+  // Onward internal links so no article is a crawl dead-end: related posts +
+  // popular transfer routes + the service hubs. This is what a JS-less crawler
+  // (and Google's first crawl) sees, so the links must be real <a> in the HTML.
+  const relatedBlock = (related && related.length)
+    ? '<h2>Читайте также</h2><ul>'
+      + related.map((p) => `<li>${a('/novosti/' + p.slug, p.title)}</li>`).join('')
+      + '</ul>'
+    : '';
+  const routesBlock = (routes && routes.length)
+    ? '<h2>Заказать трансфер из аэропорта Аликанте</h2>'
+      + routeLinks(routes)
+      + `<p>${a('/marshruty', 'Все 40+ маршрутов')} · ${a('/price', 'Цены на трансфер')} · ${a('/kontakty', 'Контакты 24/7')}</p>`
+    : '';
   return `<main style="${SHELL}">`
     + `<h1>${esc(post.title)}</h1>`
     + (post.date ? `<p><em>${esc(post.date)}</em></p>` : '')
     + `<p>${esc(post.excerpt || seo.description)}</p>`
     + (first ? `<p>${esc(first.text)}</p>` : '')
+    + relatedBlock
+    + routesBlock
     + siteNav(seo.path)
     + `</main>`;
 }
@@ -236,7 +251,7 @@ async function main() {
   let nfSeo = null;
   try {
     const { getSeo } = await vite.ssrLoadModule('/seo.jsx');
-    const { ALL_ROUTES } = await vite.ssrLoadModule('/BrandData.jsx');
+    const { ALL_ROUTES, POPULAR } = await vite.ssrLoadModule('/BrandData.jsx');
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
 
     const sections = [
@@ -273,10 +288,19 @@ async function main() {
         ],
       });
     }
-    for (const post of (NEWS_POSTS || [])) {
+    const allPosts = NEWS_POSTS || [];
+    const popRoutes = (POPULAR || []).slice(0, 5);
+    for (let i = 0; i < allPosts.length; i++) {
+      const post = allPosts[i];
       const seo = getSeo('news-post', null, post.slug);
+      // Next 3 posts, cyclically — every post links forward, so the whole news
+      // set forms one connected chain no matter where a crawler enters.
+      const related = [];
+      for (let k = 1; related.length < 3 && k < allPosts.length; k++) {
+        related.push(allPosts[(i + k) % allPosts.length]);
+      }
       pages.push({
-        view: 'news-post', seo, cf: 'monthly', pr: '0.5', body: newsBody(post, seo),
+        view: 'news-post', seo, cf: 'monthly', pr: '0.5', body: newsBody(post, seo, related, popRoutes),
         ogType: 'article',
         lastmod: isoDate(post.date),
         jsonLd: [

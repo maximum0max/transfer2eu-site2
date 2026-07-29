@@ -1,5 +1,6 @@
 import React from 'react'
 import { POPULAR, waLink } from './BrandData.jsx'
+import { pathOf } from './router.jsx'
 // PopularRoutes v3 — photo cards. Each card: 4:3 photo with dark gradient
 // overlay + city name + emoji badge + time pill, then a clean white body
 // with the price row, "what's included" micro-line, and a primary CTA.
@@ -52,7 +53,7 @@ function RouteCard({ r, onSelectRoute }) {
     transform: hover ? 'translateY(-4px)' : 'translateY(0)',
     transition: 'all 280ms cubic-bezier(.2,.7,.2,1)',
     cursor: 'pointer', display: 'flex', flexDirection: 'column',
-    position: 'relative',
+    position: 'relative', textDecoration: 'none', color: 'inherit',
   };
 
   const photoBox = {
@@ -128,14 +129,12 @@ function RouteCard({ r, onSelectRoute }) {
   const altText = r.alt || `Трансфер из аэропорта Аликанте в ${r.ru}`;
 
   return (
-    <article
+    <a
+      href={pathOf('route', r.slug)}
       style={card}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={() => onSelectRoute(r.slug)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectRoute(r.slug); } }}
-      tabIndex={0}
-      role="link"
       aria-label={`${headingText} от ${r.price}€`}
     >
       <h3 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
@@ -172,15 +171,12 @@ function RouteCard({ r, onSelectRoute }) {
             за<br/>автомобиль
           </div>
         </div>
-        <button
-          style={btn}
-          onClick={(e) => { e.stopPropagation(); onSelectRoute(r.slug); }}
-        >
+        <span style={btn}>
           Выбрать маршрут
           <span style={{ fontSize: 16, lineHeight: 1 }}>→</span>
-        </button>
+        </span>
       </div>
-    </article>
+    </a>
   );
 }
 
@@ -209,7 +205,7 @@ function BottomCTA({ onNav }) {
            target="_blank" rel="noopener noreferrer" style={waBtn}>
           📲 WhatsApp
         </a>
-        <a onClick={() => onNav && onNav('routes')} style={altBtn}>Все 40+ маршрутов →</a>
+        <a href={pathOf('routes')} onClick={() => onNav && onNav('routes')} style={altBtn}>Все 40+ маршрутов →</a>
       </div>
     </div>
   );

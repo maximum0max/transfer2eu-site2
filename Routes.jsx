@@ -6,6 +6,7 @@ import SeoArticle from './SeoArticle.jsx'
 import Reveal from './Reveal.jsx'
 import { ROUTE_GROUPS, ALL_ROUTES } from './BrandData.jsx'
 import { ROUTES_SEO } from './Seo.data.jsx'
+import { pathOf } from './router.jsx'
 // Routes page v4 — two-step booking form at the top, then a redesigned
 // destinations catalog with "boarding-pass" style cards grouped by region,
 // followed by a verbatim SEO article (collapsible) for search engines.
@@ -120,6 +121,7 @@ function TicketCard({ r, accent, onSelectRoute }) {
     transform: hover ? 'translateY(-3px)' : 'translateY(0)',
     transition: 'all 240ms cubic-bezier(.2,.7,.2,1)',
     cursor: 'pointer', display: 'flex', flexDirection: 'column',
+    textDecoration: 'none', color: 'inherit',
   };
   const accentStripe = {
     height: 4, background: `linear-gradient(90deg, ${accent.from}, ${accent.to})`,
@@ -174,14 +176,12 @@ function TicketCard({ r, accent, onSelectRoute }) {
   };
 
   return (
-    <article
+    <a
+      href={pathOf('route', r.slug)}
       style={card}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={() => onSelectRoute(r.slug)}
-      onKeyDown={(e) => { if (e.key === 'Enter') onSelectRoute(r.slug); }}
-      tabIndex={0}
-      role="link"
       aria-label={`Трансфер Аликанте → ${r.ru} от ${r.price}€`}
     >
       <div style={accentStripe} />
@@ -216,11 +216,11 @@ function TicketCard({ r, accent, onSelectRoute }) {
         <span style={stat}>🚗 Седан</span>
       </div>
 
-      <button style={cta} onClick={(e) => { e.stopPropagation(); onSelectRoute(r.slug); }}>
+      <span style={cta}>
         Выбрать маршрут
         <span style={{ fontSize: 14 }}>→</span>
-      </button>
-    </article>
+      </span>
+    </a>
   );
 }
 

@@ -2,7 +2,8 @@ import React from 'react'
 import BookingForm from './BookingForm.jsx'
 import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
-import { BRAND, findRoute, POPULAR } from './BrandData.jsx'
+import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES } from './BrandData.jsx'
+import { pathOf } from './router.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
 // 1) Photo-bg hero with floating stat strip
 // 2) Two-column band: trip details on left + BookingForm on right
@@ -472,8 +473,23 @@ function DestinationTeaser({ r }) {
 
 /* ============ 6. Other routes ============ */
 function OtherRoutes({ currentSlug, onSelectRoute }) {
-  const all = (POPULAR || []).filter(r => r.slug !== currentSlug);
-  if (!all.length) return null;
+  // Topical clustering for SEO: show routes in the SAME region first (a tight
+  // internal-link neighbourhood), then fill with site-wide popular routes.
+  // Every card is a real <a href> so search engines crawl the whole route graph.
+  const group = (ROUTE_GROUPS || []).find(g => g.routes.some(x => x.slug === currentSlug));
+  const siblings = group ? group.routes.filter(x => x.slug !== currentSlug) : [];
+  const seen = new Set([currentSlug]);
+  const related = [];
+  for (const r of [...siblings, ...(POPULAR || [])]) {
+    if (seen.has(r.slug)) continue;
+    seen.add(r.slug);
+    const meta = ROUTE_IMAGES[r.slug];
+    related.push(meta ? { ...r, ...meta } : r);
+    if (related.length >= 6) break;
+  }
+  if (!related.length) return null;
+
+  const regionLabel = group ? group.label : null;
 
   const wrap = { padding: '64px 32px 88px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1280, margin: '0 auto' };
@@ -482,7 +498,7 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
   const h2 = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 'clamp(24px, 3vw, 32px)', letterSpacing: '-.02em', color: 'var(--t2-ink)', margin: '8px 0 0', lineHeight: 1.1 };
 
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 };
-  const card = { background: '#fff', borderRadius: 16, overflow: 'hidden', border: '1px solid var(--t2-line)', cursor: 'pointer', transition: 'all 220ms', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px' };
+  const card = { background: '#fff', borderRadius: 16, overflow: 'hidden', border: '1px solid var(--t2-line)', cursor: 'pointer', transition: 'all 220ms', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', textDecoration: 'none', color: 'inherit' };
   const thumb = { width: 56, height: 56, borderRadius: 12, overflow: 'hidden', flexShrink: 0, background: 'var(--t2-bg-2)' };
   const thumbImg = { width: '100%', height: '100%', objectFit: 'cover' };
   const cText = { flex: 1, minWidth: 0 };
@@ -490,27 +506,36 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
   const cTime = { fontSize: 11, color: 'var(--t2-ink-3)', marginTop: 2 };
   const cPrice = { fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 16, color: 'var(--t2-red)', fontVariantNumeric: 'tabular-nums' };
 
+  const linkRow = { display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginTop: 28 };
+  const pill = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 999, background: '#fff', border: '1px solid var(--t2-line)', color: 'var(--t2-ink-2)', textDecoration: 'none', fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 14 };
+
   return (
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
           <div style={eyebrow}>Другие направления</div>
-          <h2 style={h2}>Популярные маршруты из ALC</h2>
+          <h2 style={h2}>{regionLabel ? `Трансфер по региону «${regionLabel}»` : 'Популярные маршруты из ALC'}</h2>
         </div>
         <div style={grid}>
-          {all.slice(0, 5).map(r => (
-            <div key={r.slug} style={card}
-                 onClick={() => onSelectRoute(r.slug)}
-                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t2-red)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--t2-sh-2)'; }}
-                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--t2-line)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-              <div style={thumb}>{r.img && <img src={r.img} alt="" style={thumbImg} />}</div>
+          {related.map(r => (
+            <a key={r.slug} style={card} href={pathOf('route', r.slug)}
+               onClick={() => onSelectRoute(r.slug)}
+               aria-label={`Трансфер Аликанте → ${r.ru} от ${r.price}€`}
+               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t2-red)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--t2-sh-2)'; }}
+               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--t2-line)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+              <div style={thumb}>{r.img && <img src={r.img} alt={`Трансфер Аликанте — ${r.ru}`} loading="lazy" style={thumbImg} />}</div>
               <div style={cText}>
-                <div style={cName}>{r.emoji} {r.ru}</div>
+                <div style={cName}>{r.emoji} Аликанте → {r.ru}</div>
                 <div style={cTime}>{r.time} мин от ALC</div>
               </div>
               <div style={cPrice}>{r.price}€</div>
-            </div>
+            </a>
           ))}
+        </div>
+        <div style={linkRow}>
+          <a style={pill} href={pathOf('routes')}>📍 Все 40+ направлений</a>
+          <a style={pill} href={pathOf('price')}>💶 Цены на трансфер</a>
+          <a style={pill} href={pathOf('news')}>📰 Полезное о Costa Blanca</a>
         </div>
       </div>
     </section>
