@@ -156,6 +156,16 @@ function RouteDetailsBand({ r, onNav, guide }) {
   const mapWrap = { position: 'relative', width: '100%', aspectRatio: '4 / 3', borderRadius: 18, overflow: 'hidden', border: '1px solid var(--t2-line)', boxShadow: 'var(--t2-sh-2)', background: 'var(--t2-bg-2)' };
   const mapNote = { fontSize: 13, color: 'var(--t2-ink-3)', margin: '12px 0 20px' };
 
+  // Identical style for both contact buttons (WhatsApp + phone), sized 5% smaller
+  // than the previous WhatsApp button (fontSize 14→13.3, padding 11×20→10.5×19).
+  const contactBtn = {
+    background: '#25d366', color: '#fff', border: '1px solid #25d366',
+    fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 13.3,
+    padding: '10.5px 19px', borderRadius: 12, textDecoration: 'none',
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    boxShadow: 'var(--t2-sh-1)',
+  };
+
   const eyebrow = { fontSize: 12, fontWeight: 700, color: 'var(--t2-red)', letterSpacing: '.12em', textTransform: 'uppercase' };
   const h2 = { fontFamily: "'Onest',sans-serif", fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 800, letterSpacing: '-.02em', color: 'var(--t2-ink)', margin: '8px 0 16px', lineHeight: 1.1 };
   const body = { fontSize: 15, lineHeight: 1.6, color: 'var(--t2-ink-2)', margin: '0 0 24px' };
@@ -185,12 +195,11 @@ function RouteDetailsBand({ r, onNav, guide }) {
             </div>
             {guide.mapNote && <p style={mapNote}>{guide.mapNote}</p>}
             <div style={phoneRow}>
-              <a href={'tel:' + BRAND.tel} style={phoneBtn}>📞 {BRAND.phone}</a>
               <a href={waLink('Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте в центр города.')}
-                 target="_blank" rel="noopener noreferrer"
-                 style={{ ...phoneBtn, background: '#25d366', color: '#fff', border: '1px solid #25d366' }}>
+                 target="_blank" rel="noopener noreferrer" style={contactBtn}>
                 📲 Написать в WhatsApp
               </a>
+              <a href={'tel:' + BRAND.tel} style={contactBtn}>📞 {BRAND.phone}</a>
             </div>
           </div>
           ) : (
