@@ -163,7 +163,7 @@ function RouteDetailsBand({ r, onNav, guide }) {
     fontFamily: "'Inter',system-ui", fontWeight: 600, fontSize: 13.3,
     padding: '10.5px 19px', borderRadius: 12, textDecoration: 'none',
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-    boxShadow: 'var(--t2-sh-1)', width: 216, maxWidth: '100%', boxSizing: 'border-box',
+    boxShadow: 'var(--t2-sh-1)', width: 194, maxWidth: '100%', boxSizing: 'border-box',
   };
 
   const eyebrow = { fontSize: 12, fontWeight: 700, color: 'var(--t2-red)', letterSpacing: '.12em', textTransform: 'uppercase' };
