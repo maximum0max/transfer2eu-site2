@@ -53,6 +53,9 @@ function matchRoute(text) {
     ROUTES.find((r) => norm(r.ru) === q || norm(r.city) === q) ||
     ROUTES.find((r) => norm(r.ru).startsWith(q) || norm(r.city).startsWith(q)) ||
     (q.length >= 3 ? ROUTES.find((r) => norm(r.ru).includes(q) || norm(r.city).includes(q)) : null) ||
+    // city name embedded in a longer message (e.g. "Бенидорм 12.08 14:30")
+    ROUTES.find((r) => norm(r.ru).length >= 4 && q.includes(norm(r.ru))) ||
+    ROUTES.find((r) => norm(r.city).length >= 4 && q.includes(norm(r.city))) ||
     null
   );
 }
@@ -61,6 +64,15 @@ const GREETING =
   'Здравствуйте! 👋 Я бот Transfer2EU.\n\n' +
   'Подскажу цену на трансфер из аэропорта Аликанте (ALC). ' +
   'Куда планируете поездку? Выберите направление ниже или напишите название города 👇';
+
+const THANKS =
+  'Спасибо за информацию! 🙌\n' +
+  'Мы уже занимаемся поиском свободного водителя. ' +
+  'Водитель будет назначен и напишет вам за день до поездки.';
+
+const whoOf = (msg) =>
+  [msg.from && msg.from.first_name, msg.from && msg.from.username && '@' + msg.from.username]
+    .filter(Boolean).join(' ') || 'гость';
 
 function priceText(r) {
   return (
@@ -133,9 +145,14 @@ export default async function handler(req, res) {
       if (r) {
         await sendPrice(chatId, r);
         if (OWNER) {
-          const who = [msg.from && msg.from.first_name, msg.from && msg.from.username && '@' + msg.from.username]
-            .filter(Boolean).join(' ');
-          tg('sendMessage', { chat_id: OWNER, text: `🔔 Запрос цены в боте: ${who || 'гость'} → ${r.ru} (${quote(r.price)}€)` }).catch(() => {});
+          tg('sendMessage', { chat_id: OWNER, text: `🔔 Запрос цены в боте: ${whoOf(msg)} → ${r.ru} (${quote(r.price)}€)` }).catch(() => {});
+        }
+      } else if (/\d/.test(text)) {
+        // Not a city but contains numbers — treat as booking details (date /
+        // time / flight) sent after a price was shown. Thank + forward the lead.
+        await tg('sendMessage', { chat_id: chatId, text: THANKS });
+        if (OWNER) {
+          tg('sendMessage', { chat_id: OWNER, text: `📝 Заявка из бота от ${whoOf(msg)}:\n${text}` }).catch(() => {});
         }
       } else {
         await tg('sendMessage', {
