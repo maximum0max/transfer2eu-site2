@@ -25,7 +25,7 @@ function RouteCard({ from, to, duration, vehicle, price, badge, gradient, img, o
       <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
           <div style={{ fontFamily: "'Onest','Inter',sans-serif", fontWeight: 700, fontSize: 18, color: 'var(--t2-ink)', letterSpacing: '-.01em' }}>{from} → {to}</div>
-          <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 18, color: 'var(--t2-ink)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>от {price} €</div>
+          <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 18, color: 'var(--t2-ink)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>{price} €</div>
         </div>
         <div style={{ display: 'flex', gap: 16, color: 'var(--t2-ink-3)', fontSize: 13 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="clock" size={14} color="var(--t2-ink-3)" />{duration}</span>

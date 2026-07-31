@@ -218,7 +218,7 @@ function TicketCard({ r, accent, onSelectRoute }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={() => onSelectRoute(r.slug)}
-      aria-label={`Трансфер Аликанте → ${r.ru} от ${r.price}€`}
+      aria-label={`Трансфер Аликанте → ${r.ru} ${r.price}€`}
     >
       <div style={accentStripe} />
 

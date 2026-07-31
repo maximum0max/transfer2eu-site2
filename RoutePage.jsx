@@ -133,7 +133,7 @@ function RouteHero({ r }) {
       <div style={content}>
         <span style={eyebrow}>{r.emoji} Аликанте ALC → {r.ru}</span>
         <h1 style={h1}>Трансфер Аликанте — {r.ru}</h1>
-        <p style={sub}>от <b>{r.price}€</b> · {r.time} мин в пути · фиксированная цена за автомобиль (седан)</p>
+        <p style={sub}><b>{r.price}€</b> · {r.time} мин в пути · фиксированная цена за автомобиль (седан)</p>
       </div>
       <div style={statStrip} className="t2-stat-strip">
         <div style={statCard}>
@@ -530,7 +530,7 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
           {related.map(r => (
             <a key={r.slug} style={card} href={pathOf('route', r.slug)}
                onClick={() => onSelectRoute(r.slug)}
-               aria-label={`Трансфер Аликанте → ${r.ru} от ${r.price}€`}
+               aria-label={`Трансфер Аликанте → ${r.ru} ${r.price}€`}
                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t2-red)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--t2-sh-2)'; }}
                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--t2-line)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
               <div style={thumb}>{r.img && <img src={r.img} alt={`Трансфер Аликанте — ${r.ru}`} loading="lazy" style={thumbImg} />}</div>

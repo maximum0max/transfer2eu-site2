@@ -86,7 +86,7 @@ function routeBody(r, seo, siblings, guide) {
     || `https://maps.google.com/maps?saddr=${encodeURIComponent('Aeropuerto de Alicante-Elche ALC')}&daddr=${encodeURIComponent(r.city + ', España')}&hl=ru&output=embed`;
   const waText = encodeURIComponent(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`);
   return `<main style="${SHELL}">`
-    + `<h1>Трансфер Аликанте → ${esc(r.ru)} от ${r.price}€</h1>`
+    + `<h1>Трансфер Аликанте → ${esc(r.ru)} ${r.price}€</h1>`
     + `<p>${esc(seo.description)}</p>`
     + `<ul>`
     + `<li>Фиксированная цена: ${r.price}€ за автомобиль (седан, до 4 пассажиров)</li>`

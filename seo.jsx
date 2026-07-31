@@ -13,7 +13,7 @@ const SUFFIX = ' · Transfer2EU';
 
 const STATIC_SEO = {
   home: {
-    title: 'Трансфер из аэропорта Аликанте (ALC) от 25€' + SUFFIX,
+    title: 'Трансфер из аэропорта Аликанте (ALC) 25€' + SUFFIX,
     description: 'Трансфер из аэропорта Аликанте (ALC): Бенидорм 60€, Кальпе 80€, Валенсия 150€ и 40+ городов Costa Blanca. Фикс-цена, русскоязычный водитель, 24/7.',
   },
   routes: {
@@ -56,7 +56,7 @@ export function getSeo(view, routeSlug, postSlug) {
   if (view === 'route') {
     const r = findRoute(routeSlug);
     if (r) return {
-      title: withSuffix(`Трансфер Аликанте → ${r.ru} от ${r.price}€`),
+      title: withSuffix(`Трансфер Аликанте → ${r.ru} ${r.price}€`),
       description: `Трансфер из аэропорта Аликанте (ALC) в ${r.ru} — фикс-цена ${r.price}€ за авто, ~${r.time} мин в пути. Русскоязычный водитель, встреча с табличкой, 24/7.`,
       path: pathOf('route', r.slug),
     };
@@ -64,7 +64,7 @@ export function getSeo(view, routeSlug, postSlug) {
   if (view === 'intercity') {
     const r = findIntercity(routeSlug);
     if (r) return {
-      title: withSuffix(`Такси ${r.from} → ${r.to} от ${r.price}€`),
+      title: withSuffix(`Такси ${r.from} → ${r.to} ${r.price}€`),
       description: r.description,
       path: pathOf('intercity', r.slug),
     };

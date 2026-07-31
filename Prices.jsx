@@ -208,7 +208,7 @@ function PriceGrid({ onSelectRoute }) {
                  onClick={() => onSelectRoute(r.slug)}
                  onKeyDown={(e) => { if (e.key === 'Enter') onSelectRoute(r.slug); }}
                  tabIndex={0} role="link"
-                 aria-label={`Трансфер Аликанте → ${r.ru} от ${r.price}€`}
+                 aria-label={`Трансфер Аликанте → ${r.ru} ${r.price}€`}
                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t2-red)'; e.currentTarget.style.background = 'var(--t2-red-soft)'; }}
                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--t2-line)'; e.currentTarget.style.background = '#fff'; }}>
               <span style={cellEmoji}>{r.emoji}</span>

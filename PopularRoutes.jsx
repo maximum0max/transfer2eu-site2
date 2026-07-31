@@ -135,7 +135,7 @@ function RouteCard({ r, onSelectRoute }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={() => onSelectRoute(r.slug)}
-      aria-label={`${headingText} от ${r.price}€`}
+      aria-label={`${headingText} ${r.price}€`}
     >
       <h3 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>
         {headingText}
