@@ -28,11 +28,16 @@ async function tg(method, body) {
 
 const POPULAR = ['Benidorm', 'Torrevieja', 'Calpe', 'Alicante', 'Denia', 'Valencia', 'Murcia', 'Cartagena'];
 
+// Pricing rule: 1€ per km rounded UP to the nearest 5, minimum 30€ (short trips
+// up to ~15 km). The site prices already follow 1€/km-rounded-to-5, so they are
+// the reference — we just enforce the 30€ floor and keep everything on a 5€ step.
+const quote = (p) => Math.max(30, Math.ceil((Number(p) || 0) / 5) * 5);
+
 function popularKeyboard() {
   const btns = POPULAR
     .map((c) => ROUTES.find((r) => r.city === c))
     .filter(Boolean)
-    .map((r) => ({ text: `${r.ru} — ${r.price}€`, callback_data: `r:${r.slug}` }));
+    .map((r) => ({ text: `${r.ru} — ${quote(r.price)}€`, callback_data: `r:${r.slug}` }));
   const rows = [];
   for (let i = 0; i < btns.length; i += 2) rows.push(btns.slice(i, i + 2));
   rows.push([{ text: '📋 Все направления и цены', url: `${SITE}/price` }]);
@@ -60,7 +65,7 @@ const GREETING =
 function priceText(r) {
   return (
     `🚕 Аликанте (ALC) → *${r.ru}*\n` +
-    `💶 Фиксированная цена: *${r.price}€* за автомобиль (седан, до 4 пассажиров)\n` +
+    `💶 Фиксированная цена: *${quote(r.price)}€* за автомобиль (седан, до 4 пассажиров)\n` +
     `🕐 ~${r.time} мин в пути\n\n` +
     '✅ Включено: платные дороги, детское кресло, встреча с табличкой, работаем 24/7.\n' +
     '👨‍✈️ Русскоязычный водитель.\n\n' +
@@ -69,7 +74,7 @@ function priceText(r) {
 }
 
 function orderKeyboard(r) {
-  const wa = `https://wa.me/34651011911?text=${encodeURIComponent(`Здравствуйте! Хочу заказать трансфер Аликанте → ${r.ru} (${r.price}€).`)}`;
+  const wa = `https://wa.me/34651011911?text=${encodeURIComponent(`Здравствуйте! Хочу заказать трансфер Аликанте → ${r.ru} (${quote(r.price)}€).`)}`;
   return {
     inline_keyboard: [
       [{ text: '✅ Забронировать в WhatsApp', url: wa }],
@@ -130,7 +135,7 @@ export default async function handler(req, res) {
         if (OWNER) {
           const who = [msg.from && msg.from.first_name, msg.from && msg.from.username && '@' + msg.from.username]
             .filter(Boolean).join(' ');
-          tg('sendMessage', { chat_id: OWNER, text: `🔔 Запрос цены в боте: ${who || 'гость'} → ${r.ru} (${r.price}€)` }).catch(() => {});
+          tg('sendMessage', { chat_id: OWNER, text: `🔔 Запрос цены в боте: ${who || 'гость'} → ${r.ru} (${quote(r.price)}€)` }).catch(() => {});
         }
       } else {
         await tg('sendMessage', {
