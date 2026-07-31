@@ -8,7 +8,7 @@
 //
 // Register the webhook once by opening /api/telegram-setup after deploy.
 
-import ROUTES from './routes.json';
+import ROUTES from './routes.data.js';
 import { createHash } from 'node:crypto';
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
