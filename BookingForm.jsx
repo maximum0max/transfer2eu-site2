@@ -401,7 +401,7 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
               <label style={label}>Имя <span style={{ color: 'var(--t2-red)' }}>*</span></label>
-              <input type="text" value={form.name} onChange={e => setField('name', e.target.value)} placeholder="Иван Петров" autoComplete="name" style={field} />
+              <input type="text" value={form.name} onChange={e => setField('name', e.target.value)} placeholder="Jason Statham" autoComplete="name" style={field} />
             </div>
             <div>
               <label style={label}>Телефон <span style={{ color: 'var(--t2-red)' }}>*</span></label>
