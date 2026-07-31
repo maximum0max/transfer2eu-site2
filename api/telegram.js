@@ -81,7 +81,11 @@ function priceText(r) {
     `🕐 ~${r.time} мин в пути\n\n` +
     '✅ Включено: платные дороги, детское кресло, работаем 24/7.\n' +
     '👨‍✈️ Русскоязычный водитель.\n\n' +
-    `Чтобы забронировать — напишите дату, время и номер рейса, либо нажмите кнопку ниже.`
+    'Чтобы забронировать — напишите:\n' +
+    '✅ *Дату*\n' +
+    '✅ *Время*\n' +
+    '✅ *Номер рейса*\n' +
+    'либо нажмите кнопку ниже 👇'
   );
 }
 
@@ -89,11 +93,45 @@ function orderKeyboard(r) {
   const wa = `https://wa.me/34651011911?text=${encodeURIComponent(`Здравствуйте! Хочу заказать трансфер Аликанте → ${r.ru} (${quote(r.price)}€).`)}`;
   return {
     inline_keyboard: [
-      [{ text: '✅ Забронировать в WhatsApp', url: wa }],
+      [{ text: '📝 Забронировать в Telegram', callback_data: `book:${r.slug}` }],
+      [{ text: '💬 Забронировать в WhatsApp', url: wa }],
       [{ text: '🌐 Страница маршрута', url: `${SITE}/${r.slug}` }],
       [{ text: '🔁 Другой маршрут', callback_data: 'menu' }],
     ],
   };
+}
+
+// force_reply prompt after "Забронировать". The route ru sits after "→" so we
+// can recover it from reply_to_message.text (no external state store needed).
+function bookingPrompt(r) {
+  return (
+    `🧾 Бронирование: Аликанте (ALC) → ${r.ru} (${quote(r.price)}€)\n\n` +
+    'Ответьте на это сообщение и укажите одной строкой:\n' +
+    '✅ *Дату*\n✅ *Время*\n✅ *Номер рейса*\n✅ *Пассажиров*\n✅ *Багаж*\n\n' +
+    'Например: 12.08.2026, 14:30, FR2643, 2, 2'
+  );
+}
+
+// Recover the route from a booking-prompt text (the part after "→").
+function routeFromPrompt(promptText) {
+  const after = String(promptText || '').split('→')[1] || '';
+  return ROUTES.find((r) => after.includes(r.ru)) || null;
+}
+
+// Build the structured trip request sent to the owner.
+function ownerBooking(r, text, msg) {
+  const parts = String(text || '').split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean);
+  const [date, time, flight, pax, lug] = parts;
+  return (
+    '🆕 НОВАЯ ЗАЯВКА НА ТРАНСФЕР\n' +
+    `🛫 Маршрут: Аликанте (ALC) → ${r ? r.ru : '—'}${r ? ` — ${quote(r.price)}€` : ''}\n` +
+    `📅 Дата: ${date || '—'}\n` +
+    `🕐 Время: ${time || '—'}\n` +
+    `✈️ Рейс: ${flight || '—'}\n` +
+    `👥 Пассажиров: ${pax || '—'}\n` +
+    `🧳 Багаж: ${lug || '—'}\n` +
+    `👤 Клиент: ${whoOf(msg)}`
+  );
 }
 
 async function sendPrice(chatId, r) {
@@ -127,6 +165,16 @@ export default async function handler(req, res) {
       } else if (cq.data && cq.data.startsWith('r:')) {
         const r = ROUTES.find((x) => x.slug === cq.data.slice(2));
         if (r) await sendPrice(chatId, r);
+      } else if (cq.data && cq.data.startsWith('book:')) {
+        const r = ROUTES.find((x) => x.slug === cq.data.slice(5));
+        if (r) {
+          await tg('sendMessage', {
+            chat_id: chatId,
+            text: bookingPrompt(r),
+            parse_mode: 'Markdown',
+            reply_markup: { force_reply: true, input_field_placeholder: '12.08.2026, 14:30, FR2643, 2, 2' },
+          });
+        }
       }
       return res.status(200).json({ ok: true });
     }
@@ -141,6 +189,15 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true });
       }
 
+      // Reply to a booking prompt → send the owner a structured trip request.
+      const rt = msg.reply_to_message;
+      if (rt && /Бронирование:/.test(rt.text || '')) {
+        const br = routeFromPrompt(rt.text);
+        if (OWNER) await tg('sendMessage', { chat_id: OWNER, text: ownerBooking(br, text, msg) });
+        await tg('sendMessage', { chat_id: chatId, text: THANKS });
+        return res.status(200).json({ ok: true });
+      }
+
       const r = matchRoute(text);
       if (r) {
         await sendPrice(chatId, r);
@@ -148,11 +205,11 @@ export default async function handler(req, res) {
           tg('sendMessage', { chat_id: OWNER, text: `🔔 Запрос цены в боте: ${whoOf(msg)} → ${r.ru} (${quote(r.price)}€)` }).catch(() => {});
         }
       } else if (/\d/.test(text)) {
-        // Not a city but contains numbers — treat as booking details (date /
-        // time / flight) sent after a price was shown. Thank + forward the lead.
+        // Not a city but contains numbers — booking details typed without the
+        // button. Thank + forward a structured lead (route unknown here).
         await tg('sendMessage', { chat_id: chatId, text: THANKS });
         if (OWNER) {
-          tg('sendMessage', { chat_id: OWNER, text: `📝 Заявка из бота от ${whoOf(msg)}:\n${text}` }).catch(() => {});
+          tg('sendMessage', { chat_id: OWNER, text: ownerBooking(null, text, msg) }).catch(() => {});
         }
       } else {
         await tg('sendMessage', {
