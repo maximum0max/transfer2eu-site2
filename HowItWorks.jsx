@@ -93,7 +93,7 @@ function HowItWorks() {
 
         <div style={cta}>
           <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
-            📲 Написать в WhatsApp
+            📲 Заказать в WhatsApp
           </a>
         </div>
       </div>

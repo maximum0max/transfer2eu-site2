@@ -120,7 +120,7 @@ function Header({ onNav, view }) {
           })}
           <a href={waLink()} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, marginTop: 16, width: '100%', justifyContent: 'center' }}>
-            📲 Написать в WhatsApp
+            📲 Заказать в WhatsApp
           </a>
         </div>
       )}

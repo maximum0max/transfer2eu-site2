@@ -205,7 +205,7 @@ function RouteDetailsBand({ r, onNav, guide }) {
             <div style={{ ...phoneRow, justifyContent: 'center' }}>
               <a href={waLink(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`)}
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
-                📲 Написать в WhatsApp
+                📲 Заказать в WhatsApp
               </a>
               <a href={'tel:' + BRAND.tel} style={{ ...contactBtn, background: '#cbd5e1', color: 'var(--t2-ink)', border: '1px solid #b3c0cf' }}>📞 {BRAND.phone}</a>
             </div>

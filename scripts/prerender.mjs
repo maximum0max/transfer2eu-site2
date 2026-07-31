@@ -95,7 +95,7 @@ function routeBody(r, seo, siblings, guide) {
     + `</ul>`
     + `<h2>Маршрут от аэропорта Аликанте до ${esc(r.ru)} на карте</h2>`
     + `<iframe title="Маршрут от аэропорта Аликанте (ALC) до ${esc(r.ru)}" src="${mapSrc}" width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
-    + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Написать в WhatsApp</a> · <a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
+    + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Заказать в WhatsApp</a> · <a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
     + guideHtml(guide, r.ru)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
