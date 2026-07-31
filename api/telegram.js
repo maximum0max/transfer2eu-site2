@@ -85,6 +85,7 @@ function priceText(r) {
     '✅ *Дату*\n' +
     '✅ *Время*\n' +
     '✅ *Номер рейса*\n' +
+    '✅ *Телефон* (WhatsApp / Telegram)\n' +
     'либо нажмите кнопку ниже 👇'
   );
 }
@@ -107,8 +108,8 @@ function bookingPrompt(r) {
   return (
     `🧾 Бронирование: Аликанте (ALC) → ${r.ru} (${quote(r.price)}€)\n\n` +
     'Ответьте на это сообщение и укажите одной строкой:\n' +
-    '✅ *Дату*\n✅ *Время*\n✅ *Номер рейса*\n✅ *Пассажиров*\n✅ *Багаж*\n\n' +
-    'Например: 12.08.2026, 14:30, FR2643, 2, 2'
+    '✅ *Дату*\n✅ *Время*\n✅ *Номер рейса*\n✅ *Телефон* (WhatsApp / Telegram)\n✅ *Пассажиров*\n✅ *Багаж*\n\n' +
+    'Например: 12.08.2026, 14:30, FR2643, +34 600 000 000, 2, 2'
   );
 }
 
@@ -121,13 +122,14 @@ function routeFromPrompt(promptText) {
 // Build the structured trip request sent to the owner.
 function ownerBooking(r, text, msg) {
   const parts = String(text || '').split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean);
-  const [date, time, flight, pax, lug] = parts;
+  const [date, time, flight, phone, pax, lug] = parts;
   return (
     '🆕 НОВАЯ ЗАЯВКА НА ТРАНСФЕР\n' +
     `🛫 Маршрут: Аликанте (ALC) → ${r ? r.ru : '—'}${r ? ` — ${quote(r.price)}€` : ''}\n` +
     `📅 Дата: ${date || '—'}\n` +
     `🕐 Время: ${time || '—'}\n` +
     `✈️ Рейс: ${flight || '—'}\n` +
+    `📞 Телефон: ${phone || '—'}\n` +
     `👥 Пассажиров: ${pax || '—'}\n` +
     `🧳 Багаж: ${lug || '—'}\n` +
     `👤 Клиент: ${whoOf(msg)}`
