@@ -119,20 +119,74 @@ function routeFromPrompt(promptText) {
   return ROUTES.find((r) => after.includes(r.ru)) || null;
 }
 
+// Extract booking fields by content (not by position), so free-form messages
+// like "26.08 в 16:05 рейс FR257, +34654027901, 3 пассажира, 4 чемодана" parse
+// correctly regardless of order or extra words.
+function parseBooking(raw) {
+  let t = ' ' + String(raw || '').replace(/\s+/g, ' ') + ' ';
+  const cut = (s) => { if (s) t = t.replace(s, ' '); };
+
+  // Phone: a run with 9+ digits; peel trailing space-separated 1–2 digit groups
+  // (those belong to passengers/luggage, not the number).
+  let phone = '';
+  const pm = t.match(/\+?\d[\d\s()\-]{7,}\d/);
+  if (pm) {
+    let ph = pm[0].trim();
+    let m2;
+    while ((m2 = ph.match(/^(.*\d)\s+\d{1,2}$/)) && m2[1].replace(/\D/g, '').length >= 9) ph = m2[1].trim();
+    if (ph.replace(/\D/g, '').length >= 9) { phone = ph.replace(/\s{2,}/g, ' '); cut(ph); }
+  }
+
+  // Flight: "рейс <code>" or a standalone code (FR257, VY1234, W6 2345, U2 1234).
+  let flight = '';
+  let fm = t.match(/рейс[а-яё]*\s*[:№-]?\s*([A-Za-z]{1,3}\d?\s?\d{1,4}[A-Za-z]?)/i);
+  if (!fm) fm = t.match(/\b([A-Za-z]{2}\s?\d{2,4}[A-Za-z]?)\b/);
+  if (fm) { flight = fm[1].toUpperCase().replace(/\s+/g, ''); cut(fm[0]); }
+  else cut((t.match(/рейс[а-яё]*/i) || [])[0]);
+
+  // Date: dd.mm(.yyyy) / dd/mm / dd-mm.
+  let date = '';
+  const dm = t.match(/\b(\d{1,2}[.\/-]\d{1,2}(?:[.\/-]\d{2,4})?)\b/);
+  if (dm) { date = dm[1]; cut(dm[0]); }
+
+  // Time: HH:MM / HH.MM, or "в HH".
+  let time = '';
+  let tm = t.match(/\b(\d{1,2}[:.]\d{2})\b/);
+  if (!tm) tm = t.match(/\bв\s*(\d{1,2})\b/i);
+  if (tm) { time = tm[1].replace('.', ':'); cut(tm[0]); }
+
+  // Passengers / luggage by keyword.
+  let pax = '';
+  const paxm = t.match(/(\d{1,2})\s*(?:пассажир|пасс|человек|чел|взросл|гост|pax)/i)
+    || t.match(/(?:пассажир|пасс|человек|чел|pax)\D{0,6}(\d{1,2})/i);
+  if (paxm) { pax = paxm[1]; cut(paxm[0]); }
+  let lug = '';
+  const lm = t.match(/(\d{1,2})\s*(?:чемодан|багаж|сумк|мест|вализ|luggage|bag)/i)
+    || t.match(/(?:чемодан|багаж|сумк)\D{0,6}(\d{1,2})/i);
+  if (lm) { lug = lm[1]; cut(lm[0]); }
+
+  // Leftover bare 1–2 digit numbers → passengers, then luggage.
+  const left = t.match(/\b\d{1,2}\b/g) || [];
+  if (!pax && left.length) pax = left.shift();
+  if (!lug && left.length) lug = left.shift();
+
+  return { date, time, flight, phone, pax, lug };
+}
+
 // Build the structured trip request sent to the owner.
 function ownerBooking(r, text, msg) {
-  const parts = String(text || '').split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean);
-  const [date, time, flight, phone, pax, lug] = parts;
+  const f = parseBooking(text);
   return (
     '🆕 НОВАЯ ЗАЯВКА НА ТРАНСФЕР\n' +
     `🛫 Маршрут: Аликанте (ALC) → ${r ? r.ru : '—'}${r ? ` — ${quote(r.price)}€` : ''}\n` +
-    `📅 Дата: ${date || '—'}\n` +
-    `🕐 Время: ${time || '—'}\n` +
-    `✈️ Рейс: ${flight || '—'}\n` +
-    `📞 Телефон: ${phone || '—'}\n` +
-    `👥 Пассажиров: ${pax || '—'}\n` +
-    `🧳 Багаж: ${lug || '—'}\n` +
-    `👤 Клиент: ${whoOf(msg)}`
+    `📅 Дата: ${f.date || '—'}\n` +
+    `🕐 Время: ${f.time || '—'}\n` +
+    `✈️ Рейс: ${f.flight || '—'}\n` +
+    `📞 Телефон: ${f.phone || '—'}\n` +
+    `👥 Пассажиров: ${f.pax || '—'}\n` +
+    `🧳 Багаж: ${f.lug || '—'}\n` +
+    `👤 Клиент: ${whoOf(msg)}\n\n` +
+    `📝 Сообщение клиента: ${String(text || '').trim()}`
   );
 }
 
