@@ -95,7 +95,7 @@ function routeBody(r, seo, siblings, guide) {
     + `</ul>`
     + `<h2>Маршрут от аэропорта Аликанте до ${esc(r.ru)} на карте</h2>`
     + `<iframe title="Маршрут от аэропорта Аликанте (ALC) до ${esc(r.ru)}" src="${mapSrc}" width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
-    + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Заказать в WhatsApp</a> · <a href="https://t.me/MrOleksandr?text=${encodeURIComponent('Здравствуйте! Хочу заказать трансфер.')}">✈ Заказать в Telegram</a> · <a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
+    + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Заказать в WhatsApp</a> · <a href="https://t.me/Apartikibot?start=transfer">✈ Заказать в Telegram</a> ·<a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
     + guideHtml(guide, r.ru)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
@@ -333,6 +333,14 @@ async function main() {
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
     const { INTERCITY_ROUTES } = await vite.ssrLoadModule('/Intercity.data.jsx');
     const { ROUTE_GUIDES } = await vite.ssrLoadModule('/RouteGuide.data.jsx');
+
+    // Price data for the Telegram price bot (read by api/telegram.js). Kept in
+    // sync with the site on every build so the bot always quotes current prices.
+    await fs.writeFile(
+      path.join(ROOT, 'api', 'routes.json'),
+      JSON.stringify(ALL_ROUTES.map((r) => ({ slug: r.slug, ru: r.ru, city: r.city, price: r.price, time: r.time }))) + '\n',
+      'utf8',
+    );
 
     const sections = [
       ['home', null, 'weekly', '1.0'],

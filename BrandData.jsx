@@ -14,15 +14,14 @@ export const BRAND = {
   tel:       '+34651011911',
   email:     'transfers2eu@gmail.com',
   wa:        'https://wa.me/34651011911',
-  telegram:  'MrOleksandr',
+  telegramBot: 'Apartikibot',
   copy:      '© 2026 Transfer2EU',
 };
 
-// Telegram deep link with a pre-filled message. Opens the chat with the owner;
-// most Telegram clients pre-fill the text (some ignore it for user chats).
-export const tgLink = (msg) =>
-  'https://t.me/' + BRAND.telegram + '?text=' +
-  encodeURIComponent(msg || 'Здравствуйте! Хочу заказать трансфер.');
+// Telegram deep link to the interactive price bot. Opens the bot and triggers
+// its /start flow (greeting → asks the route → replies with the price). The
+// bot logic lives in api/telegram.js.
+export const tgLink = () => 'https://t.me/' + BRAND.telegramBot + '?start=transfer';
 
 export const TRUST = [
   { icon: '⭐', text: '5 лет на рынке' },
