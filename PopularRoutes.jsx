@@ -1,5 +1,6 @@
 import React from 'react'
-import { POPULAR, waLink } from './BrandData.jsx'
+import { POPULAR, waLink, tgLink } from './BrandData.jsx'
+import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
 // PopularRoutes v3 — photo cards. Each card: 4:3 photo with dark gradient
 // overlay + city name + emoji badge + time pill, then a clean white body
@@ -204,6 +205,10 @@ function BottomCTA({ onNav }) {
         <a href={waLink('Здравствуйте! Хочу узнать цену трансфера.')}
            target="_blank" rel="noopener noreferrer" style={waBtn}>
           📲 WhatsApp
+        </a>
+        <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')}
+           target="_blank" rel="noopener noreferrer" style={{ ...waBtn, background: '#229ED9', boxShadow: 'none' }}>
+          <TelegramIcon size={16} /> Telegram
         </a>
         <a href={pathOf('routes')} onClick={() => onNav && onNav('routes')} style={altBtn}>Все 40+ маршрутов →</a>
       </div>

@@ -1,5 +1,6 @@
 import React from 'react'
-import { waLink } from './BrandData.jsx'
+import { waLink, tgLink } from './BrandData.jsx'
+import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
 // Header v2 — thin red accent line + clean white nav. Logo with mini icon,
 // nav as bare links (no pill background until hover/active), green WA CTA.
@@ -97,6 +98,10 @@ function Header({ onNav, view }) {
           <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
             📲 WhatsApp
           </a>
+          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+             style={{ ...waBtn, background: '#229ED9', boxShadow: '0 6px 14px rgba(34,158,217,.25)' }}>
+            <TelegramIcon size={15} /> Telegram
+          </a>
         </nav>
 
         <button onClick={() => setOpen(o => !o)} style={burger} className="t2-burger" aria-label="Меню">
@@ -121,6 +126,10 @@ function Header({ onNav, view }) {
           <a href={waLink()} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, marginTop: 16, width: '100%', justifyContent: 'center' }}>
             📲 Заказать в WhatsApp
+          </a>
+          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+             style={{ ...waBtn, background: '#229ED9', boxShadow: '0 6px 14px rgba(34,158,217,.25)', marginTop: 10, width: '100%', justifyContent: 'center' }}>
+            <TelegramIcon size={15} /> Заказать в Telegram
           </a>
         </div>
       )}

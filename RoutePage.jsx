@@ -2,8 +2,9 @@ import React from 'react'
 import BookingForm from './BookingForm.jsx'
 import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
-import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink } from './BrandData.jsx'
+import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink } from './BrandData.jsx'
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
+import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
 // 1) Photo-bg hero with floating stat strip
@@ -206,6 +207,11 @@ function RouteDetailsBand({ r, onNav, guide }) {
               <a href={waLink(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`)}
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
                 📲 Заказать в WhatsApp
+              </a>
+              <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')}
+                 target="_blank" rel="noopener noreferrer"
+                 style={{ ...contactBtn, background: '#229ED9', border: '1px solid #229ED9' }}>
+                <TelegramIcon /> Заказать в Telegram
               </a>
               <a href={'tel:' + BRAND.tel} style={{ ...contactBtn, background: '#cbd5e1', color: 'var(--t2-ink)', border: '1px solid #b3c0cf' }}>📞 {BRAND.phone}</a>
             </div>

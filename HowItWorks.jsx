@@ -1,5 +1,6 @@
 import React from 'react'
-import { waLink } from './BrandData.jsx'
+import { waLink, tgLink } from './BrandData.jsx'
+import TelegramIcon from './TelegramIcon.jsx'
 // How it works v2 — vertical timeline with center spine and alternating
 // left/right step cards. Replaces the row-of-cards layout.
 
@@ -50,7 +51,7 @@ function HowItWorks() {
   const stepText = { fontSize: 14, lineHeight: 1.55, color: 'var(--t2-ink-3)', margin: 0 };
 
   // CTA below timeline
-  const cta = { textAlign: 'center', marginTop: 32 };
+  const cta = { display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 32 };
   const waBtn = { background: '#25d366', color: '#fff', fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 15, padding: '14px 28px', borderRadius: 14, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, boxShadow: '0 12px 24px rgba(34,197,94,.25)' };
 
   return (
@@ -94,6 +95,10 @@ function HowItWorks() {
         <div style={cta}>
           <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
             📲 Заказать в WhatsApp
+          </a>
+          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+             style={{ ...waBtn, background: '#229ED9', boxShadow: '0 12px 24px rgba(34,158,217,.25)' }}>
+            <TelegramIcon size={18} /> Заказать в Telegram
           </a>
         </div>
       </div>
