@@ -145,10 +145,15 @@
   --t2-gutter:    24px;
 }
 
-/* Per-page background override (test): soft brand-blue section tint on the
-   Alicante → Benidorm route page only. Overriding the custom property on the
-   page root recolours every section that uses var(--t2-bg-2) on that page. */
-[data-route="taksi-alikante-benidorm"] { --t2-bg-2: #EEF4FB; }
+/* Per-page colour scheme (test) — Alicante → Benidorm route page only.
+   White base background, light-blue sections, dark-navy headings, near-black
+   body text. Done by scoping the design tokens to the page root, so the hero
+   title (inline white on the photo) stays white. */
+[data-route="taksi-alikante-benidorm"] {
+  --t2-bg-2:  #E8F1FC;   /* light-blue sections */
+  --t2-ink:   #153E75;   /* dark-navy headings & emphasis */
+  --t2-ink-2: #222222;   /* near-black body text */
+}
 
 /* ============================================================
    SEMANTIC TYPE STYLES — apply via class on element.
