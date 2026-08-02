@@ -4,6 +4,8 @@ import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
 import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink } from './BrandData.jsx'
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
+import { getRouteArticle } from './RouteArticles.data.jsx'
+import SeoArticle from './SeoArticle.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
@@ -18,6 +20,7 @@ import { pathOf } from './router.jsx'
 function RoutePage({ slug, onNav, onSelectRoute }) {
   const r = findRoute(slug);
   const guide = r ? getRouteGuide(r.slug) : null;
+  const article = r ? getRouteArticle(r.slug) : null;
 
   if (!r) {
     return (
@@ -41,6 +44,7 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
       <Reveal><VehicleTiers basePrice={r.price} /></Reveal>
       <Reveal><DestinationTeaser r={r} /></Reveal>
       {guide && <Reveal><RouteGuide guide={guide} cityRu={r.ru} /></Reveal>}
+      {article && <Reveal><SeoArticle {...article} /></Reveal>}
       <Reveal><OtherRoutes currentSlug={r.slug} onSelectRoute={onSelectRoute} /></Reveal>
       <Reveal><CTABanner onNav={onNav} /></Reveal>
     </>

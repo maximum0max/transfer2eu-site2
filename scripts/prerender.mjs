@@ -81,7 +81,20 @@ function guideHtml(guide, city) {
   return out;
 }
 
-function routeBody(r, seo, siblings, guide) {
+// Long-form SEO article (RouteArticles.data.jsx) rendered into the static HTML.
+function articleHtml(article) {
+  if (!article || !Array.isArray(article.blocks)) return '';
+  const body = article.blocks.map((b) => {
+    if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
+    if (b.type === 'h3') return `<h3>${esc(b.text)}</h3>`;
+    if (b.type === 'p') return `<p>${esc(b.text)}</p>`;
+    if (b.type === 'ul') return '<ul>' + b.items.map((it) => `<li>${esc(it)}</li>`).join('') + '</ul>';
+    return '';
+  }).join('');
+  return `<h2>${esc(article.title)}</h2>` + body;
+}
+
+function routeBody(r, seo, siblings, guide, article) {
   const mapSrc = (guide && guide.mapSrc)
     || `https://maps.google.com/maps?saddr=${encodeURIComponent('Aeropuerto de Alicante-Elche ALC')}&daddr=${encodeURIComponent(r.city + ', España')}&hl=ru&output=embed`;
   const waText = encodeURIComponent(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`);
@@ -97,6 +110,7 @@ function routeBody(r, seo, siblings, guide) {
     + `<iframe title="Маршрут от аэропорта Аликанте (ALC) до ${esc(r.ru)}" src="${mapSrc}" width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`
     + `<p><a href="https://wa.me/34651011911?text=${waText}">📲 Заказать в WhatsApp</a> · <a href="https://t.me/Apartikibot?start=transfer">✈ Заказать в Telegram</a> ·<a href="tel:+34651011911">📞 +34 651 011 911</a></p>`
     + guideHtml(guide, r.ru)
+    + articleHtml(article)
     + `<h2>Другие направления</h2>`
     + routeLinks(siblings)
     + siteNav(seo.path)
@@ -333,6 +347,7 @@ async function main() {
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
     const { INTERCITY_ROUTES } = await vite.ssrLoadModule('/Intercity.data.jsx');
     const { ROUTE_GUIDES } = await vite.ssrLoadModule('/RouteGuide.data.jsx');
+    const { ROUTE_ARTICLES } = await vite.ssrLoadModule('/RouteArticles.data.jsx');
 
     // Price data for the Telegram price bot (imported by api/telegram.js). A JS
     // module (not JSON) so Vercel's ESM function bundler always inlines it.
@@ -382,7 +397,7 @@ async function main() {
       const seo = getSeo('route', r.slug, null);
       const siblings = ALL_ROUTES.filter((x) => x.slug !== r.slug).slice(0, 8);
       pages.push({
-        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings, ROUTE_GUIDES[r.slug] || null),
+        view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings, ROUTE_GUIDES[r.slug] || null, ROUTE_ARTICLES[r.slug] || null),
         jsonLd: [
           routeLd(r, seo),
           breadcrumbs([HOME, ['Маршруты', '/marshruty'], [r.ru, seo.path]]),
