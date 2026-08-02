@@ -26,15 +26,15 @@
   --t2-red-soft:   #E5F4FF;   /* badge bg, soft fill */
 
   /* Ink (text + dark surfaces) */
-  --t2-ink:        #0F1216;   /* near-black, headlines */
-  --t2-ink-2:      #2B313A;   /* body */
+  --t2-ink:        #153E75;   /* dark-navy headlines & emphasis */
+  --t2-ink-2:      #222222;   /* near-black body */
   --t2-ink-3:      #5A6471;   /* secondary text, captions */
   --t2-ink-4:      #8C95A2;   /* tertiary, placeholder */
   --t2-ink-5:      #B7BEC8;   /* disabled, very subtle */
 
   /* Surfaces (light) */
   --t2-bg:         #FFFFFF;
-  --t2-bg-2:       #F6F7F9;   /* page tint, section break */
+  --t2-bg-2:       #E8F1FC;   /* light-blue page tint, section break */
   --t2-bg-3:       #ECEFF3;   /* card subtle, divider fill */
   --t2-line:       #E2E6EC;   /* default border */
   --t2-line-2:     #CBD2DB;   /* stronger border */
@@ -143,16 +143,6 @@
      -------------------------------------------------------------------- */
   --t2-container: 1200px;
   --t2-gutter:    24px;
-}
-
-/* Per-page colour scheme (test) — Alicante → Benidorm route page only.
-   White base background, light-blue sections, dark-navy headings, near-black
-   body text. Done by scoping the design tokens to the page root, so the hero
-   title (inline white on the photo) stays white. */
-[data-route="taksi-alikante-benidorm"] {
-  --t2-bg-2:  #E8F1FC;   /* light-blue sections */
-  --t2-ink:   #153E75;   /* dark-navy headings & emphasis */
-  --t2-ink-2: #222222;   /* near-black body text */
 }
 
 /* ============================================================
