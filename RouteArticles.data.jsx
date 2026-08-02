@@ -9,6 +9,11 @@
 // «фиксированная цена», «русскоязычный водитель», «расстояние 58 км», «минивэн
 // до 8 человек», «круглосуточно».
 
+// Additional route articles live in RouteArticles.data.json (machine-mergeable
+// so batches of routes can be added without touching this file). Each JSON entry
+// has: { metaTitle, metaDescription, eyebrow, articleTitle, intro?, blocks }.
+import EXTRA from './RouteArticles.data.json';
+
 export const ROUTE_ARTICLES = {
   'taksi-alikante-benidorm': {
     eyebrow: '📖 Всё о трансфере Аликанте → Бенидорм',
@@ -65,4 +70,20 @@ export const ROUTE_ARTICLES = {
   },
 };
 
+// Keyword-optimised meta (title + description) per route with an article.
+export const ROUTE_META = {
+  'taksi-alikante-benidorm': {
+    title: 'Трансфер из аэропорта Аликанте в Бенидорм 60€',
+    description: 'Трансфер и такси из аэропорта Аликанте (ALC) в Бенидорм — фиксированная цена 60€ за автомобиль (до 4 чел.), ~45 мин в пути. Русскоязычный водитель, встреча с табличкой, круглосуточно.',
+  },
+};
+
+// Merge in every article from the JSON data file.
+for (const [slug, a] of Object.entries(EXTRA)) {
+  if (!a || !Array.isArray(a.blocks)) continue;
+  ROUTE_ARTICLES[slug] = { eyebrow: a.eyebrow, title: a.articleTitle, intro: a.intro || 2, blocks: a.blocks };
+  if (a.metaTitle || a.metaDescription) ROUTE_META[slug] = { title: a.metaTitle, description: a.metaDescription };
+}
+
 export const getRouteArticle = (slug) => ROUTE_ARTICLES[slug] || null;
+export const getRouteMeta = (slug) => ROUTE_META[slug] || null;

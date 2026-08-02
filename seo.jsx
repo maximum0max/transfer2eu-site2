@@ -6,6 +6,7 @@
 import { findRoute } from './BrandData.jsx';
 import { NEWS_POSTS } from './News.data.jsx';
 import { findIntercity } from './Intercity.data.jsx';
+import { ROUTE_META } from './RouteArticles.data.jsx';
 import { pathOf } from './router.jsx';
 
 const SITE = 'https://www.transfer2eu.com';
@@ -52,20 +53,11 @@ const clampDesc = (s, max = 160) => {
   return cut.slice(0, cut.lastIndexOf(' ') > 100 ? cut.lastIndexOf(' ') : cut.length).trim() + '…';
 };
 
-// Per-route meta overrides — keyword-optimised title + description for routes
-// that have a dedicated SEO article (see RouteArticles.data.jsx).
-const ROUTE_SEO_OVERRIDES = {
-  'taksi-alikante-benidorm': {
-    title: 'Трансфер из аэропорта Аликанте в Бенидорм 60€',
-    description: 'Трансфер и такси из аэропорта Аликанте (ALC) в Бенидорм — фиксированная цена 60€ за автомобиль (до 4 чел.), ~45 мин в пути. Русскоязычный водитель, встреча с табличкой, круглосуточно.',
-  },
-};
-
 export function getSeo(view, routeSlug, postSlug) {
   if (view === 'route') {
     const r = findRoute(routeSlug);
     if (r) {
-      const ov = ROUTE_SEO_OVERRIDES[r.slug] || {};
+      const ov = ROUTE_META[r.slug] || {};
       return {
         title: withSuffix(ov.title || `Трансфер Аликанте → ${r.ru} ${r.price}€`),
         description: ov.description || `Трансфер из аэропорта Аликанте (ALC) в ${r.ru} — фикс-цена ${r.price}€ за авто, ~${r.time} мин в пути. Русскоязычный водитель, встреча с табличкой, 24/7.`,
