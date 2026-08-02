@@ -63,7 +63,7 @@ export default function App() {
   if (view === 'anketa') return <Anketa />;
 
   return (
-    <div data-screen-label={view} onClick={onRootClick}>
+    <div data-screen-label={view} data-route={routeSlug || undefined} onClick={onRootClick}>
       <Header view={view} onNav={onNav} />
       <main>
         {view === 'home' && (

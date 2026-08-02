@@ -26,7 +26,7 @@ function SeoArticle({ eyebrow, title, blocks, intro = 2 }) {
   const fade = {
     display: open || !collapsible ? 'none' : 'block',
     position: 'absolute', left: 0, right: 0, bottom: 0, height: 120,
-    background: 'linear-gradient(180deg, rgba(238,244,251,0) 0%, var(--t2-bg-2) 86%)',
+    background: 'linear-gradient(180deg, rgba(246,247,249,0) 0%, var(--t2-bg-2) 86%)',
     pointerEvents: 'none',
   };
 

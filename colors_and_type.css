@@ -34,7 +34,7 @@
 
   /* Surfaces (light) */
   --t2-bg:         #FFFFFF;
-  --t2-bg-2:       #EEF4FB;   /* page tint, section break — soft brand blue */
+  --t2-bg-2:       #F6F7F9;   /* page tint, section break */
   --t2-bg-3:       #ECEFF3;   /* card subtle, divider fill */
   --t2-line:       #E2E6EC;   /* default border */
   --t2-line-2:     #CBD2DB;   /* stronger border */
@@ -144,6 +144,11 @@
   --t2-container: 1200px;
   --t2-gutter:    24px;
 }
+
+/* Per-page background override (test): soft brand-blue section tint on the
+   Alicante → Benidorm route page only. Overriding the custom property on the
+   page root recolours every section that uses var(--t2-bg-2) on that page. */
+[data-route="taksi-alikante-benidorm"] { --t2-bg-2: #EEF4FB; }
 
 /* ============================================================
    SEMANTIC TYPE STYLES — apply via class on element.
