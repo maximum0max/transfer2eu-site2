@@ -84,11 +84,13 @@ function guideHtml(guide, city) {
 // Long-form SEO article (RouteArticles.data.jsx) rendered into the static HTML.
 function articleHtml(article) {
   if (!article || !Array.isArray(article.blocks)) return '';
+  // Link every "WhatsApp" mention to our number (same as the WhatsApp button).
+  const wa = (s) => esc(s).replace(/WhatsApp/g, '<a href="https://wa.me/34651011911">WhatsApp</a>');
   const body = article.blocks.map((b) => {
     if (b.type === 'h2') return `<h2>${esc(b.text)}</h2>`;
     if (b.type === 'h3') return `<h3>${esc(b.text)}</h3>`;
-    if (b.type === 'p') return `<p>${esc(b.text)}</p>`;
-    if (b.type === 'ul') return '<ul>' + b.items.map((it) => `<li>${esc(it)}</li>`).join('') + '</ul>';
+    if (b.type === 'p') return `<p>${wa(b.text)}</p>`;
+    if (b.type === 'ul') return '<ul>' + b.items.map((it) => `<li>${wa(it)}</li>`).join('') + '</ul>';
     return '';
   }).join('');
   return `<h2>${esc(article.title)}</h2>` + body;

@@ -1,4 +1,5 @@
 import React from 'react'
+import { waLink } from './BrandData.jsx'
 // SeoArticle — compact, collapsible SEO body for the Routes / Prices catalog
 // pages. The full text is always rendered in the DOM (crawlers + AI engines
 // read it); the collapse only clips it visually so the page stays compact.
@@ -34,12 +35,20 @@ function SeoArticle({ eyebrow, title, blocks, intro = 2 }) {
   const blockP = { fontFamily: "'Inter',system-ui", fontSize: 14.5, lineHeight: 1.7, color: 'var(--t2-ink-2)', margin: '0 0 12px' };
   const blockUl = { fontFamily: "'Inter',system-ui", fontSize: 14.5, lineHeight: 1.7, color: 'var(--t2-ink-2)', margin: '0 0 12px', paddingLeft: 20 };
 
+  // Turn each mention of "WhatsApp" in the copy into a link to our number.
+  const waStyle = { color: 'var(--t2-red)', fontWeight: 700, textDecoration: 'none' };
+  const linkifyWa = (text) => String(text).split(/(WhatsApp)/g).map((part, j) => (
+    part === 'WhatsApp'
+      ? <a key={j} href={waLink()} target="_blank" rel="noopener noreferrer" style={waStyle}>WhatsApp</a>
+      : part
+  ));
+
   const renderBlock = (b, i) => {
     switch (b.type) {
       case 'h2': return <h2 key={i} style={blockH2}>{b.text}</h2>;
       case 'h3': return <h3 key={i} style={blockH3}>{b.text}</h3>;
-      case 'p':  return <p  key={i} style={blockP}>{b.text}</p>;
-      case 'ul': return <ul key={i} style={blockUl}>{b.items.map((it, j) => <li key={j} style={{ marginBottom: 5 }}>{it}</li>)}</ul>;
+      case 'p':  return <p  key={i} style={blockP}>{linkifyWa(b.text)}</p>;
+      case 'ul': return <ul key={i} style={blockUl}>{b.items.map((it, j) => <li key={j} style={{ marginBottom: 5 }}>{linkifyWa(it)}</li>)}</ul>;
       default:   return null;
     }
   };
