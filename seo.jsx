@@ -53,6 +53,18 @@ const clampDesc = (s, max = 160) => {
   return cut.slice(0, cut.lastIndexOf(' ') > 100 ? cut.lastIndexOf(' ') : cut.length).trim() + '…';
 };
 
+// News headlines from the bot can run 100+ chars, which Google truncates mid-
+// word in the SERP. Trim to Google's ~60-char title budget at a word boundary
+// so the front-loaded keyword survives and the cut is clean. A post may override
+// this with its own `seoTitle` (bot-generated or hand-written, ≤60, keyword-first).
+const clampTitle = (s, max = 60) => {
+  s = String(s || '').trim();
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max - 1);
+  const sp = cut.lastIndexOf(' ');
+  return (sp > 40 ? cut.slice(0, sp) : cut).trim() + '…';
+};
+
 export function getSeo(view, routeSlug, postSlug) {
   if (view === 'route') {
     const r = findRoute(routeSlug);
@@ -76,7 +88,7 @@ export function getSeo(view, routeSlug, postSlug) {
   if (view === 'news-post') {
     const post = (NEWS_POSTS || []).find((p) => p.slug === postSlug);
     if (post) return {
-      title: withSuffix(post.title),
+      title: withSuffix(post.seoTitle || clampTitle(post.title)),
       description: clampDesc(post.excerpt || 'Материал Transfer2EU — новости и гайды о жизни в Испании и трансферах по Costa Blanca.'),
       path: pathOf('news-post', post.slug),
     };

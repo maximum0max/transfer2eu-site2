@@ -65,7 +65,7 @@ function guideHtml(guide, city) {
   if (!guide) return '';
   const ul = (items, fmt) => '<ul>' + items.map(fmt).join('') + '</ul>';
   let out = '';
-  const pic = (it) => it.img ? `<img src="${it.img}" alt="${esc(it.name)} — ${esc(city)}" width="360" loading="lazy" style="max-width:100%;height:auto;border-radius:10px;display:block;margin:6px 0"> ` : '';
+  const pic = (it) => it.img ? `<img src="${it.img}" alt="${esc(it.name)} — ${esc(city)}" width="360" height="225" loading="lazy" style="width:360px;max-width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px;display:block;margin:6px 0"> ` : '';
   if (guide.beaches) {
     out += `<h2>Пляжи ${esc(city)} и рядом</h2>`
       + ul(guide.beaches, (b) => `<li>${pic(b)}<strong>${esc(b.name)}</strong> (${esc(b.dist)}) — ${esc(b.text)}</li>`);
@@ -137,7 +137,7 @@ function newsBody(post, seo, related, routes) {
   const img = post.image || '/assets/og-image.jpg';
   return `<main style="${SHELL}">`
     + `<h1>${esc(post.title)}</h1>`
-    + `<img src="${img}" alt="${esc(post.title)}" width="820" style="max-width:100%;height:auto;border-radius:14px;display:block;margin:8px 0 16px" loading="eager">`
+    + `<img src="${img}" alt="${esc(post.title)}" width="820" height="461" style="width:820px;max-width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;display:block;margin:8px 0 16px" loading="eager" fetchpriority="high">`
     + (post.date ? `<p><em>${esc(post.date)}</em></p>` : '')
     + `<p>${esc(post.excerpt || seo.description)}</p>`
     + (first ? `<p>${esc(first.text)}</p>` : '')
@@ -253,6 +253,42 @@ function routeLd(r, seo) {
       availability: 'https://schema.org/InStock',
       url: SITE + seo.path,
     },
+  };
+}
+
+// FAQPage mirrored from the route article's own visible H3 sections + the text
+// underneath each. SeoArticle/articleHtml render these blocks verbatim on the
+// page, so the markup faithfully matches on-page content (Google's rule for FAQ
+// markup). Classic FAQ rich results are now limited to a few site types, but the
+// structured Q&A still feeds answer engines (ChatGPT/Perplexity) and Google's
+// page understanding. Home keeps its own hand-written FAQPage; route pages get
+// this one built from their article.
+function faqLd(article, seo) {
+  if (!article || !Array.isArray(article.blocks)) return null;
+  const qa = [];
+  let cur = null;
+  for (const b of article.blocks) {
+    if (b.type === 'h3') {
+      if (cur && cur.a) qa.push(cur);
+      cur = { q: b.text, a: '' };
+    } else if (cur) {
+      const t = b.type === 'p' ? (b.text || '')
+        : b.type === 'ul' ? (b.items || []).join('. ')
+        : '';
+      if (t) cur.a += (cur.a ? ' ' : '') + t;
+    }
+  }
+  if (cur && cur.a) qa.push(cur);
+  if (qa.length < 2) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': SITE + seo.path + '#faq',
+    mainEntity: qa.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
   };
 }
 
@@ -378,7 +414,7 @@ async function main() {
     const newsLinks = '<ul>' + (NEWS_POSTS || []).map((p) => {
       const im = p.image || '/assets/og-image.jpg';
       return `<li><a href="/novosti/${p.slug}">`
-        + `<img src="${im}" alt="${esc(p.title)}" width="280" loading="lazy" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:6px 0">`
+        + `<img src="${im}" alt="${esc(p.title)}" width="280" height="158" loading="lazy" style="width:280px;max-width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;display:block;margin:6px 0">`
         + `${esc(p.title)}</a></li>`;
     }).join('') + '</ul>';
     // Intercity routes get an in-link from the /marshruty hub so they are part
@@ -403,6 +439,7 @@ async function main() {
         jsonLd: [
           routeLd(r, seo),
           breadcrumbs([HOME, ['Маршруты', '/marshruty'], [r.ru, seo.path]]),
+          ...[faqLd(ROUTE_ARTICLES[r.slug] || null, seo)].filter(Boolean),
         ],
       });
     }

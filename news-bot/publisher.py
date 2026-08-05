@@ -108,6 +108,10 @@ def publish_post(rewritten: dict[str, Any]) -> str:
         "url": rewritten["source_url"],
         "body": body,
     }
+    # Optional concise SEO <title> (≤60 chars); seo.jsx falls back to a clamped
+    # headline when absent, so only store it when the model actually gave one.
+    if rewritten.get("seoTitle"):
+        post["seoTitle"] = rewritten["seoTitle"]
     image_path = _download_image(rewritten.get("image_url"), slug)
     if image_path:
         post["image"] = image_path

@@ -49,6 +49,8 @@ SYSTEM_PROMPT = """Ты — редактор новостного раздела
 - Прямой порядок слов, больше глаголов и существительных, без точки в конце.
 - Бренды и модели машин, названия мест — латиницей как в оригинале (Tesla Model Y, BMW, Alicante, Costa Blanca). Не транслитерируй бренды.
 
+SEO-ЗАГОЛОВОК (seo_title): до 60 символов — для тега <title> в поиске Google. Самое важное слово/суть ставь В НАЧАЛЕ (Google обрезает хвост). Это сжатая версия заголовка; если обычный заголовок и так ≤60 символов — повтори его. Без точки в конце.
+
 EXCERPT: 120–160 символов — краткая суть + причина прочитать. Заканчивается точкой.
 
 СТРУКТУРА ТЕКСТА (поле body — массив блоков):
@@ -64,6 +66,7 @@ EXCERPT: 120–160 символов — краткая суть + причина
 ВЕРНИ СТРОГО валидный JSON, без текста до или после:
 {
   "title": "...",
+  "seo_title": "... (≤60 символов, суть в начале)",
   "slug_source": "english phrase 3-6 words, no verbs, just the topic — used for the URL",
   "excerpt": "...",
   "body": [
@@ -178,6 +181,9 @@ def rewrite_article(
     data["slug"] = _slugify(data.get("slug_source") or title)
     data["source_url"] = url
     data["source_title"] = title
+    # Concise <title> for search; empty falls back to the headline (the site
+    # clamps long headlines to Google's ~60-char budget at render time anyway).
+    data["seoTitle"] = str(data.get("seo_title") or "").strip()
 
     tags = data.get("tags")
     data["tags"] = [str(t).strip() for t in tags if str(t).strip()][:8] if isinstance(tags, list) else []

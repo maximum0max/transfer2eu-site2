@@ -15,6 +15,12 @@
 <link rel="icon" href="/assets/logo-mark.svg">
 <link rel="apple-touch-icon" href="/assets/logo-mark.svg">
 
+<!-- Preload the two above-the-fold fonts (self-hosted, Cyrillic subset): the
+     hero H1 (Onest 800) and body text (Inter 400). Cuts LCP by removing the
+     old render-blocking Google Fonts @import request chain. -->
+<link rel="preload" href="/fonts/onest-800-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Transfer2EU">
