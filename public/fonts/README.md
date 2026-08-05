@@ -1,6 +1,6 @@
 # Fonts
 
-Transfer2EU uses three free, Cyrillic-complete typefaces, currently delivered via the **Google Fonts CDN** (see `@import` at the top of `colors_and_type.css`). No font files are bundled in this folder yet — swap to self-hosted woff2 if/when needed for performance or offline.
+Transfer2EU uses three free, Cyrillic-complete typefaces, **self-hosted as woff2** in this folder and declared via `@font-face` at the top of `colors_and_type.css` (`font-display: swap`). The old Google Fonts `@import` was removed — no third-party font request, faster LCP, and no EU/GDPR font-hotlink concern. The hero (Onest 800) and body (Inter 400) Cyrillic files are `<link rel="preload">`ed in `index.html`.
 
 | Family | Role | Weights used | Cyrillic | License |
 |---|---|---|---|---|
@@ -8,10 +8,17 @@ Transfer2EU uses three free, Cyrillic-complete typefaces, currently delivered vi
 | **Inter** | Body / UI / labels | 400, 500, 600, 700 | ✅ Full | OFL |
 | **JetBrains Mono** | Code, ticket nos., timestamps | 400, 500 | ✅ Full | OFL |
 
-> ⚠️ **Substitution note.** No bespoke brand font was provided. Onest was chosen because it was designed for Cyrillic-first products (good for a Russian-primary site) and pairs cleanly with Inter. If Transfer2EU has a brand font, drop the woff2 files here and update the `@font-face` rules in `colors_and_type.css`.
+Files are named `<family>-<weight>-<subset>.woff2` (e.g. `onest-800-cyrillic.woff2`), one per weight × subset. Subsets bundled: **latin, latin-ext, cyrillic** — enough for Russian copy plus Spanish/English place names. Each `@font-face` keeps Google's original `unicode-range`, so the browser downloads only the subset a page actually needs.
 
-## To self-host (recommended for production)
+> ⚠️ **Substitution note.** No bespoke brand font was provided. Onest was chosen because it was designed for Cyrillic-first products (good for a Russian-primary site) and pairs cleanly with Inter. If Transfer2EU has a brand font, drop its woff2 files here and update the `@font-face` rules in `colors_and_type.css`.
 
-1. Download the families from Google Fonts → "Get embed code" → "Download family".
-2. Drop `Onest-*.woff2`, `Inter-*.woff2`, `JetBrainsMono-*.woff2` into this folder.
-3. Replace the `@import` line in `colors_and_type.css` with `@font-face` blocks pointing at `./fonts/<file>.woff2`.
+## Regenerating the woff2 files
+
+If weights/subsets change, re-fetch from Google Fonts with a modern-browser UA (so you get woff2, not ttf) and download each `url()` it lists:
+
+```
+curl -A "Mozilla/5.0 ... Chrome/120" \
+  "https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+```
+
+Keep only the `latin`, `latin-ext`, `cyrillic` blocks, save each font as `<family>-<weight>-<subset>.woff2` here, and mirror the `@font-face` rules (with `unicode-range`) into `colors_and_type.css`.
