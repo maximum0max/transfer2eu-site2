@@ -20,6 +20,7 @@ import Anketa from './Anketa.jsx'
 import Reveal from './Reveal.jsx'
 import { parsePath, navigate, navigatePath, subscribe } from './router.jsx'
 import { getSeo, applyHead } from './seo.jsx'
+import { LangContext, localizePath, splitLang, switchLangPath, saveLang } from './i18n.jsx'
 
 export default function App() {
   // Current location is derived from the URL, not from a click handler. This is
@@ -34,17 +35,25 @@ export default function App() {
   }, []);
 
   const { view } = route;
+  const lang = route.lang || 'ru';
   const routeSlug = route.routeSlug || null;
   const postSlug = route.postSlug || null;
 
-  // Per-page <head>: title, description, canonical, Open Graph.
-  useEffect(() => { applyHead(getSeo(view, routeSlug, postSlug)); }, [view, routeSlug, postSlug]);
+  // Per-page <head>: title, description, canonical, Open Graph, hreflang.
+  useEffect(() => { applyHead(getSeo(view, routeSlug, postSlug, lang)); }, [view, routeSlug, postSlug, lang]);
 
-  // Same callback signatures the components already use — only the implementation
-  // changed (they now push a real URL instead of flipping local state).
-  const onNav = (v) => navigate(v);
-  const onSelectRoute = (slug) => navigate('route', slug);
-  const onOpenPost = (slug) => navigate('news-post', slug);
+  // Same callback signatures the components already use — navigation now keeps
+  // the active language (RU stays on bare URLs, UK stays under /uk).
+  const onNav = (v) => navigate(v, null, lang);
+  const onSelectRoute = (slug) => navigate('route', slug, lang);
+  const onOpenPost = (slug) => navigate('news-post', slug, lang);
+
+  // Manual language switch: remember the choice and jump to the same page in the
+  // other language.
+  const onSwitchLang = (target) => {
+    saveLang(target);
+    navigatePath(switchLangPath(window.location.pathname, target));
+  };
 
   // Intercept clicks on internal <a href="/..."> so they navigate via the router
   // (no full reload) while remaining real, crawlable links in the HTML.
@@ -56,15 +65,23 @@ export default function App() {
     if (!href || href[0] !== '/') return;        // only same-site absolute paths
     if (a.target === '_blank') return;
     e.preventDefault();
-    navigatePath(href);
+    // Keep the visitor in the current language for internal links that were
+    // built without a language prefix. A link that opts out (the switcher, or a
+    // deliberate cross-language link) carries data-lang and is left untouched.
+    let dest = href;
+    if (lang === 'uk' && !a.hasAttribute('data-lang') && splitLang(href).lang === 'ru') {
+      dest = localizePath(href, 'uk');
+    }
+    navigatePath(dest);
   };
 
   // Unlisted form page: render only the embedded form — no header/footer/chrome.
   if (view === 'anketa') return <Anketa />;
 
   return (
-    <div data-screen-label={view} data-route={routeSlug || undefined} onClick={onRootClick}>
-      <Header view={view} onNav={onNav} />
+    <LangContext.Provider value={lang}>
+    <div data-screen-label={view} data-route={routeSlug || undefined} data-lang={lang} onClick={onRootClick}>
+      <Header view={view} lang={lang} onNav={onNav} onSwitchLang={onSwitchLang} />
       <main>
         {view === 'home' && (
           <>
@@ -89,6 +106,7 @@ export default function App() {
       </main>
       <Footer onNav={onNav} onSelectRoute={onSelectRoute} />
     </div>
+    </LangContext.Provider>
   );
 }
 

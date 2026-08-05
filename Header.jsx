@@ -2,21 +2,34 @@ import React from 'react'
 import { waLink, tgLink } from './BrandData.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
+import { useT, UK_ENABLED } from './i18n.jsx'
 // Header v2 — thin red accent line + clean white nav. Logo with mini icon,
 // nav as bare links (no pill background until hover/active), green WA CTA.
 // Mobile: hamburger collapses nav into a dropdown sheet.
+//
+// Bilingual: UI strings live in the co-located STR bundle (RU default + UK),
+// picked by useT(); nav hrefs carry the active language via pathOf(id,null,lang).
 
-const NAV_ITEMS = [
-  { id: 'home',     label: 'Главная' },
-  { id: 'routes',   label: 'Маршруты' },
-  { id: 'price',    label: 'Цены' },
-  { id: 'news',     label: 'Новости' },
-  { id: 'drivers',  label: 'Водителям' },
-  { id: 'contacts', label: 'Контакты' },
-];
+const STR = {
+  ru: {
+    home: 'Главная', routes: 'Маршруты', price: 'Цены', news: 'Новости',
+    drivers: 'Водителям', contacts: 'Контакты', menu: 'Меню',
+    order_wa: 'Заказать в WhatsApp', order_tg: 'Заказать в Telegram',
+    tg_msg: 'Здравствуйте! Хочу заказать трансфер.',
+  },
+  uk: {
+    home: 'Головна', routes: 'Маршрути', price: 'Ціни', news: 'Новини',
+    drivers: 'Водіям', contacts: 'Контакти', menu: 'Меню',
+    order_wa: 'Замовити у WhatsApp', order_tg: 'Замовити у Telegram',
+    tg_msg: 'Вітаю! Хочу замовити трансфер.',
+  },
+};
 
-function Header({ onNav, view }) {
+const NAV_ORDER = ['home', 'routes', 'price', 'news', 'drivers', 'contacts'];
+
+function Header({ onNav, onSwitchLang, view, lang = 'ru' }) {
   const [open, setOpen] = React.useState(false);
+  const t = useT(STR);
 
   const wrap = {
     position: 'sticky', top: 0, zIndex: 50,
@@ -54,6 +67,22 @@ function Header({ onNav, view }) {
 
   const waBtn = { padding: '10px 18px', borderRadius: 12, background: '#25d366', color: '#fff', fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 13, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, boxShadow: '0 6px 14px rgba(34,197,94,.25)' };
 
+  // Language switch (RU / UA segmented control)
+  const langWrap = { display: 'inline-flex', alignItems: 'center', gap: 2, border: '1px solid var(--t2-line)', borderRadius: 999, padding: 2 };
+  const langBtn = (active) => ({
+    padding: '5px 9px', borderRadius: 999, border: 0, cursor: 'pointer',
+    fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 12, lineHeight: 1,
+    background: active ? 'var(--t2-red)' : 'transparent', color: active ? '#fff' : 'var(--t2-ink-2)',
+  });
+  const LangSwitch = ({ style }) => (
+    <div style={{ ...langWrap, ...style }} role="group" aria-label="Language / Мова">
+      <button type="button" style={langBtn(lang === 'ru')} aria-pressed={lang === 'ru'}
+        onClick={() => onSwitchLang && onSwitchLang('ru')} lang="ru">RU</button>
+      <button type="button" style={langBtn(lang === 'uk')} aria-pressed={lang === 'uk'}
+        onClick={() => onSwitchLang && onSwitchLang('uk')} lang="uk">UA</button>
+    </div>
+  );
+
   // Mobile burger
   const burger = { display: 'none', background: 'transparent', border: 0, cursor: 'pointer', padding: 8, color: 'var(--t2-ink)' };
   const burgerLine = { display: 'block', width: 22, height: 2, background: 'currentColor', margin: '5px 0', borderRadius: 2, transition: 'all 200ms' };
@@ -71,11 +100,15 @@ function Header({ onNav, view }) {
     textDecoration: 'none', borderBottom: '1px solid var(--t2-line)',
   });
 
+  const isActive = (id) => view === id
+    || (id === 'routes' && view === 'route')
+    || (id === 'news' && view === 'news-post');
+
   return (
     <header style={wrap}>
       <div style={stripe} />
       <div style={row}>
-        <a href="/" onClick={() => { onNav('home'); setOpen(false); }} style={logo}>
+        <a href={pathOf('home', null, lang)} onClick={() => { onNav('home'); setOpen(false); }} style={logo}>
           <div style={logoMark}>T2</div>
           <div>
             <div style={wordmark}>Transfer2EU</div>
@@ -84,13 +117,11 @@ function Header({ onNav, view }) {
         </a>
 
         <nav style={navWrap} className="t2-nav-desktop">
-          {NAV_ITEMS.map(it => {
-            const active = view === it.id
-              || (it.id === 'routes' && view === 'route')
-              || (it.id === 'news' && view === 'news-post');
+          {NAV_ORDER.map(id => {
+            const active = isActive(id);
             return (
-              <a key={it.id} href={pathOf(it.id)} onClick={() => onNav(it.id)} style={navLink(active)}>
-                {it.label}
+              <a key={id} href={pathOf(id, null, lang)} onClick={() => onNav(id)} style={navLink(active)}>
+                {t[id]}
                 <span style={navUnderline(active)} />
               </a>
             );
@@ -98,13 +129,14 @@ function Header({ onNav, view }) {
           <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
             📲 WhatsApp
           </a>
-          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+          <a href={tgLink(t.tg_msg)} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, background: '#229ED9', boxShadow: '0 6px 14px rgba(34,158,217,.25)' }}>
             <TelegramIcon size={15} /> Telegram
           </a>
+          {UK_ENABLED && <LangSwitch />}
         </nav>
 
-        <button onClick={() => setOpen(o => !o)} style={burger} className="t2-burger" aria-label="Меню">
+        <button onClick={() => setOpen(o => !o)} style={burger} className="t2-burger" aria-label={t.menu}>
           <span style={burgerLine} />
           <span style={burgerLine} />
           <span style={burgerLine} />
@@ -113,24 +145,23 @@ function Header({ onNav, view }) {
 
       {open && (
         <div style={sheet}>
-          {NAV_ITEMS.map(it => {
-            const active = view === it.id
-              || (it.id === 'routes' && view === 'route')
-              || (it.id === 'news' && view === 'news-post');
+          {NAV_ORDER.map(id => {
+            const active = isActive(id);
             return (
-              <a key={it.id} href={pathOf(it.id)} onClick={() => { onNav(it.id); setOpen(false); }} style={sheetLink(active)}>
-                {it.label}
+              <a key={id} href={pathOf(id, null, lang)} onClick={() => { onNav(id); setOpen(false); }} style={sheetLink(active)}>
+                {t[id]}
               </a>
             );
           })}
           <a href={waLink()} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, marginTop: 16, width: '100%', justifyContent: 'center' }}>
-            📲 Заказать в WhatsApp
+            📲 {t.order_wa}
           </a>
-          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+          <a href={tgLink(t.tg_msg)} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, background: '#229ED9', boxShadow: '0 6px 14px rgba(34,158,217,.25)', marginTop: 10, width: '100%', justifyContent: 'center' }}>
-            <TelegramIcon size={15} /> Заказать в Telegram
+            <TelegramIcon size={15} /> {t.order_tg}
           </a>
+          {UK_ENABLED && <LangSwitch style={{ marginTop: 16 }} />}
         </div>
       )}
 

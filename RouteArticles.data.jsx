@@ -13,6 +13,9 @@
 // so batches of routes can be added without touching this file). Each JSON entry
 // has: { metaTitle, metaDescription, eyebrow, articleTitle, intro?, blocks }.
 import EXTRA from './RouteArticles.data.json';
+// Ukrainian translations of the route articles (same JSON shape, keyed by slug).
+// Filled in batches; any slug missing here falls back to the Russian article.
+import EXTRA_UK from './RouteArticles.uk.json';
 
 export const ROUTE_ARTICLES = {
   'taksi-alikante-benidorm': {
@@ -85,5 +88,17 @@ for (const [slug, a] of Object.entries(EXTRA)) {
   if (a.metaTitle || a.metaDescription) ROUTE_META[slug] = { title: a.metaTitle, description: a.metaDescription };
 }
 
-export const getRouteArticle = (slug) => ROUTE_ARTICLES[slug] || null;
-export const getRouteMeta = (slug) => ROUTE_META[slug] || null;
+// Ukrainian article + meta stores, built from RouteArticles.uk.json the same way.
+export const ROUTE_ARTICLES_UK = {};
+export const ROUTE_META_UK = {};
+for (const [slug, a] of Object.entries(EXTRA_UK)) {
+  if (!a || !Array.isArray(a.blocks)) continue;
+  ROUTE_ARTICLES_UK[slug] = { eyebrow: a.eyebrow, title: a.articleTitle, intro: a.intro || 2, blocks: a.blocks };
+  if (a.metaTitle || a.metaDescription) ROUTE_META_UK[slug] = { title: a.metaTitle, description: a.metaDescription };
+}
+
+// Lang-aware getters: Ukrainian when asked for and available, else Russian.
+export const getRouteArticle = (slug, lang) =>
+  (lang === 'uk' && ROUTE_ARTICLES_UK[slug]) || ROUTE_ARTICLES[slug] || null;
+export const getRouteMeta = (slug, lang) =>
+  (lang === 'uk' && ROUTE_META_UK[slug]) || ROUTE_META[slug] || null;

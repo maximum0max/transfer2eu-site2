@@ -18,6 +18,7 @@
 import { ALL_ROUTES } from './BrandData.jsx';
 import { NEWS_POSTS } from './News.data.jsx';
 import { INTERCITY_SLUGS } from './Intercity.data.jsx';
+import { splitLang, localizePath } from './i18n.jsx';
 
 const ROUTE_SLUGS = new Set(ALL_ROUTES.map((r) => r.slug));
 const NEWS_SLUGS = new Set((NEWS_POSTS || []).map((p) => p.slug));
@@ -33,15 +34,20 @@ const STATIC_PATH = {
   anketa: '/anketa',
 };
 
-export function pathOf(view, slug) {
-  if (view === 'route' || view === 'intercity') return '/' + slug;
-  if (view === 'news-post') return '/novosti/' + slug;
-  return STATIC_PATH[view] || '/';
+// Build a path for a view, then prefix it with /uk for Ukrainian. `lang`
+// defaults to Russian so existing call-sites keep producing the current URLs.
+export function pathOf(view, slug, lang = 'ru') {
+  let base;
+  if (view === 'route' || view === 'intercity') base = '/' + slug;
+  else if (view === 'news-post') base = '/novosti/' + slug;
+  else base = STATIC_PATH[view] || '/';
+  return localizePath(base, lang);
 }
 
-// pathname → { view, routeSlug?, postSlug? }
-export function parsePath(pathname) {
-  let p = pathname || '/';
+// The language-agnostic half of parsePath: pathname (already stripped of any
+// /uk prefix) → { view, routeSlug?, postSlug? }.
+function resolveView(p0) {
+  let p = p0 || '/';
   try { p = decodeURIComponent(p); } catch (_) { /* keep raw */ }
   if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
 
@@ -66,6 +72,13 @@ export function parsePath(pathname) {
   return { view: 'notfound' };
 }
 
+// pathname → { lang, view, routeSlug?, postSlug? }. Language is read off the
+// /uk prefix first, then the rest resolves exactly as before.
+export function parsePath(pathname) {
+  const { lang, path } = splitLang(pathname);
+  return { lang, ...resolveView(path) };
+}
+
 // --- subscription so App re-renders on programmatic navigation ---
 const listeners = new Set();
 function notify() { listeners.forEach((fn) => fn()); }
@@ -79,6 +92,6 @@ export function navigatePath(path) {
   notify();
 }
 
-export function navigate(view, slug) {
-  navigatePath(pathOf(view, slug));
+export function navigate(view, slug, lang = 'ru') {
+  navigatePath(pathOf(view, slug, lang));
 }

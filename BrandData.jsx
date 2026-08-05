@@ -5,6 +5,13 @@
 
 // Author + licence for each route photo, written by scripts/fetch-route-photos.mjs.
 import ROUTE_PHOTO_CREDITS from './RoutePhotos.data.json';
+// Ukrainian city names per route slug (RU names live inline as `ru`).
+import UK_CITIES from './cities.uk.json';
+
+// Localized city name for a route: Ukrainian when lang==='uk' and we have one,
+// otherwise the Russian name (also the fallback for any missing entry).
+export const cityName = (route, lang) =>
+  (lang === 'uk' && route && UK_CITIES[route.slug]) || (route && route.ru) || '';
 
 export const BRAND = {
   name:      'Transfer2EU',
