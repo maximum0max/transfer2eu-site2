@@ -92,6 +92,22 @@ const T = {
 };
 const L = (lang) => T[lang === 'uk' ? 'uk' : 'ru'];
 
+// Ukrainian FAQPage for the /uk home page. index.html ships a Russian FAQPage;
+// for /uk we strip that and inject this one so the structured data matches the
+// (Ukrainian) FAQ block the page actually shows. Mirrors FAQ.jsx STR.uk.
+const UK_HOME_FAQ = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    ['Як відбувається оплата?', 'Карткою онлайн при бронюванні або готівкою водієві на початку поїздки. Ціна не змінюється.'],
+    ['Що якщо рейс затримується?', 'Водій відстежує рейс за номером. Безкоштовне очікування — до 90 хвилин від часу посадки.'],
+    ['Чи можна з дітьми?', 'Так. Дитяче крісло — безкоштовна опція, вкажіть вік і вагу дитини при замовленні.'],
+    ['Скільки багажу можна взяти?', '1 валіза + 1 ручна поклажа на пасажира. Більше — додайте «дод. багаж» у заявці.'],
+    ['Чи можна скасувати бронювання?', 'Безкоштовне скасування за 24 години. Пізніше — утримується 50%, у день поїздки — 100%.'],
+    ['Скільки пасажирів вміщується?', 'Вказані ціни — за седан, до 4 пасажирів. Для компанії 5–8 осіб подаємо мінівен: це окремий тариф, ціну уточнимо у WhatsApp.'],
+  ].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+
 const SHELL = 'max-width:820px;margin:0 auto;padding:48px 24px;font-family:\'Inter\',system-ui;color:var(--t2-ink,#0F1216)';
 
 const a = (href, text) => `<a href="${href}">${esc(text)}</a>`;
@@ -285,7 +301,9 @@ function applyHead(html, seo, opts = {}) {
     sub(/(<meta name="twitter:image" content=")[^"]*(">)/, imgUrl);
   }
 
-  if (opts.view !== 'home') html = stripFaqLd(html);
+  // Strip the template's (Russian) FAQPage on every non-home page, and also on
+  // the Ukrainian home — /uk home re-adds a Ukrainian FAQPage via jsonLd.
+  if (opts.view !== 'home' || seo.lang === 'uk') html = stripFaqLd(html);
 
   const extra = (opts.jsonLd || []).map(ldScript).join('');
   if (extra) html = html.replace('</head>', extra + '</head>');
@@ -523,7 +541,9 @@ async function main() {
 
       for (const [view, , cf, pr] of sections) {
         const seo = getSeo(view, null, null, lang);
-        const jsonLd = view === 'home' ? [] : [breadcrumbs([HOME, [t.h1[view], seo.path]])];
+        const jsonLd = view === 'home'
+          ? (lang === 'uk' ? [UK_HOME_FAQ] : [])
+          : [breadcrumbs([HOME, [t.h1[view], seo.path]])];
         pages.push({ view, seo, cf, pr, jsonLd, body: staticBody(view, seo, CHILDREN[view], lang) });
       }
       for (const r of ALL_ROUTES) {

@@ -29,7 +29,7 @@ const STATIC_SEO = {
       description: 'Все направления трансфера из аэропорта Аликанте (ALC): 40+ маршрутов по Costa Blanca, Мурсии и Валенсии с фиксированной ценой за автомобиль.',
     },
     price: {
-      title: 'Цены на трансфер из аэропорта Аликанте — фикс-цена' + SUFFIX,
+      title: 'Цены на трансфер из аэропорта Аликанте' + SUFFIX,
       description: 'Цены на трансфер из аэропорта Аликанте — фикс-цена за авто: Бенидорм 60€, Кальпе 80€, Торревьеха 60€, Мурсия 75€, Валенсия 150€ и 40+ направлений.',
     },
     contacts: {
@@ -55,7 +55,7 @@ const STATIC_SEO = {
       description: 'Усі напрямки трансферу з аеропорту Аліканте (ALC): 40+ маршрутів по Costa Blanca, Мурсії та Валенсії з фіксованою ціною за автомобіль.',
     },
     price: {
-      title: 'Ціни на трансфер з аеропорту Аліканте — фікс-ціна' + SUFFIX,
+      title: 'Ціни на трансфер з аеропорту Аліканте' + SUFFIX,
       description: 'Ціни на трансфер з аеропорту Аліканте — фіксована ціна за авто: Бенідорм 60€, Кальпе 80€, Торревʼєха 60€, Мурсія 75€, Валенсія 150€ та 40+ напрямків.',
     },
     contacts: {
@@ -129,7 +129,7 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
       return {
         lang: L,
         title: withSuffix(ov.title || dflt.title),
-        description: ov.description || dflt.description,
+        description: clampDesc(ov.description || dflt.description),
         path: localizePath(base, L),
         alternates: alternatesFor(base),
       };
