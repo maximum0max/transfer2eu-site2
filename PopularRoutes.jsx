@@ -1,14 +1,65 @@
 import React from 'react'
-import { POPULAR, waLink, tgLink } from './BrandData.jsx'
+import { POPULAR, waLink, tgLink, cityName } from './BrandData.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // PopularRoutes v3 — photo cards. Each card: 4:3 photo with dark gradient
 // overlay + city name + emoji badge + time pill, then a clean white body
 // with the price row, "what's included" micro-line, and a primary CTA.
 // SEO-friendly: descriptive alt text on every photo, semantic <article>,
 // keyword-rich H3 headings ("Трансфер Аликанте → Бенидорм").
+//
+// Bilingual: UI strings live in the co-located STR bundle (RU default + UK),
+// picked by useT(); city names come from cityName(route, lang) and internal
+// links carry the active language via pathOf(view, slug, lang).
+
+const STR = {
+  ru: {
+    eyebrow: 'Популярные маршруты',
+    h2: 'Самые востребованные направления',
+    lede: 'Фиксированная цена за автомобиль (седан), без доплат. Цена не меняется от пробок и времени суток. Минивэн для группы — отдельный тариф.',
+    heading_prefix: 'Трансфер Аликанте ALC → ',
+    alt_prefix: 'Трансфер из аэропорта Аликанте в ',
+    min: 'мин',
+    sub_label: 'из Аликанте ALC · фиксированная цена',
+    inc_roads: '🅿 Платные дороги',
+    inc_seat: '👶 Кресло',
+    inc_lang: '💬 По-русски',
+    price_label: 'Фикс-цена',
+    per: 'за',
+    vehicle_word: 'автомобиль',
+    choose: 'Выбрать маршрут',
+    cta_title: 'Не нашли свой маршрут?',
+    cta_sub: 'Обслуживаем 40+ направлений Costa Blanca, Мурсии, Валенсии. Уточните цену в WhatsApp.',
+    wa_msg: 'Здравствуйте! Хочу узнать цену трансфера.',
+    tg_msg: 'Здравствуйте! Хочу заказать трансфер.',
+    all_routes: 'Все 40+ маршрутов →',
+  },
+  uk: {
+    eyebrow: 'Популярні маршрути',
+    h2: 'Найзатребуваніші напрямки',
+    lede: 'Фіксована ціна за автомобіль (седан), без доплат. Ціна не змінюється від заторів і часу доби. Мінівен для групи — окремий тариф.',
+    heading_prefix: 'Трансфер Аліканте ALC → ',
+    alt_prefix: 'Трансфер з аеропорту Аліканте в ',
+    min: 'хв',
+    sub_label: 'з Аліканте ALC · фіксована ціна',
+    inc_roads: '🅿 Платні дороги',
+    inc_seat: '👶 Крісло',
+    inc_lang: '💬 Українською',
+    price_label: 'Фікс-ціна',
+    per: 'за',
+    vehicle_word: 'автомобіль',
+    choose: 'Обрати маршрут',
+    cta_title: 'Не знайшли свій маршрут?',
+    cta_sub: 'Обслуговуємо 40+ напрямків Costa Blanca, Мурсії, Валенсії. Уточніть ціну у WhatsApp.',
+    wa_msg: 'Вітаю! Хочу дізнатися ціну трансферу.',
+    tg_msg: 'Вітаю! Хочу замовити трансфер.',
+    all_routes: 'Всі 40+ маршрутів →',
+  },
+};
 
 function PopularRoutes({ onSelectRoute, onNav }) {
+  const t = useT(STR);
   const list = POPULAR || [];
 
   const wrap = { padding: '88px 32px 96px', background: '#fff', position: 'relative', overflow: 'hidden' };
@@ -28,9 +79,9 @@ function PopularRoutes({ onSelectRoute, onNav }) {
     <section style={wrap} aria-labelledby="popular-routes-heading">
       <div style={inner}>
         <div style={top}>
-          <span style={eyebrow}>Популярные маршруты</span>
-          <h2 id="popular-routes-heading" style={h2}>Самые востребованные направления</h2>
-          <p style={lede}>Фиксированная цена за автомобиль (седан), без доплат. Цена не меняется от пробок и времени суток. Минивэн для группы — отдельный тариф.</p>
+          <span style={eyebrow}>{t.eyebrow}</span>
+          <h2 id="popular-routes-heading" style={h2}>{t.h2}</h2>
+          <p style={lede}>{t.lede}</p>
         </div>
 
         <div style={grid}>
@@ -44,6 +95,8 @@ function PopularRoutes({ onSelectRoute, onNav }) {
 }
 
 function RouteCard({ r, onSelectRoute }) {
+  const t = useT(STR);
+  const lang = useLang();
   const [hover, setHover] = React.useState(false);
   const [imgOk, setImgOk] = React.useState(true);
 
@@ -94,7 +147,7 @@ function RouteCard({ r, onSelectRoute }) {
   const cityOverlay = {
     position: 'absolute', left: 22, right: 22, bottom: 18, zIndex: 1,
   };
-  const cityName = {
+  const cityNameStyle = {
     fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 26, letterSpacing: '-.02em',
     color: '#fff', margin: '0 0 4px', lineHeight: 1.1,
     textShadow: '0 2px 12px rgba(0,0,0,.4)',
@@ -125,13 +178,14 @@ function RouteCard({ r, onSelectRoute }) {
     border: 0, cursor: 'pointer', transition: 'background 220ms',
   };
 
-  // Keyword-rich H3 + alt text for SEO
-  const headingText = `Трансфер Аликанте ALC → ${r.ru}`;
-  const altText = r.alt || `Трансфер из аэропорта Аликанте в ${r.ru}`;
+  // Keyword-rich H3 + alt text for SEO, in the active language.
+  const cn = cityName(r, lang);
+  const headingText = `${t.heading_prefix}${cn}`;
+  const altText = `${t.alt_prefix}${cn}`;
 
   return (
     <a
-      href={pathOf('route', r.slug)}
+      href={pathOf('route', r.slug, lang)}
       style={card}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -150,30 +204,30 @@ function RouteCard({ r, onSelectRoute }) {
         )}
         <div style={photoVignette} />
         <div style={emojiBadge}>{r.emoji}</div>
-        <div style={timePill}>🕐 {r.time} мин</div>
+        <div style={timePill}>🕐 {r.time} {t.min}</div>
         <div style={cityOverlay}>
-          <div style={cityName}>{r.ru}</div>
-          <div style={subLabel}>из Аликанте ALC · фиксированная цена</div>
+          <div style={cityNameStyle}>{cn}</div>
+          <div style={subLabel}>{t.sub_label}</div>
         </div>
       </div>
 
       <div style={body}>
         <div style={incRow}>
-          <span style={incItem}>🅿 Платные дороги</span>
-          <span style={incItem}>👶 Кресло</span>
-          <span style={incItem}>💬 По-русски</span>
+          <span style={incItem}>{t.inc_roads}</span>
+          <span style={incItem}>{t.inc_seat}</span>
+          <span style={incItem}>{t.inc_lang}</span>
         </div>
         <div style={priceRow}>
           <div>
-            <div style={priceLabel}>Фикс-цена</div>
+            <div style={priceLabel}>{t.price_label}</div>
             <div style={priceVal}><span style={priceAccent}>{r.price}</span>€</div>
           </div>
           <div style={{ fontSize: 11, color: 'var(--t2-ink-3)', textAlign: 'right', lineHeight: 1.3 }}>
-            за<br/>автомобиль
+            {t.per}<br/>{t.vehicle_word}
           </div>
         </div>
         <span style={btn}>
-          Выбрать маршрут
+          {t.choose}
           <span style={{ fontSize: 16, lineHeight: 1 }}>→</span>
         </span>
       </div>
@@ -182,6 +236,9 @@ function RouteCard({ r, onSelectRoute }) {
 }
 
 function BottomCTA({ onNav }) {
+  const t = useT(STR);
+  const lang = useLang();
+
   const wrap = {
     marginTop: 44, padding: '24px 28px', borderRadius: 18,
     background: 'linear-gradient(135deg, var(--t2-bg-2), #fff)',
@@ -198,19 +255,19 @@ function BottomCTA({ onNav }) {
   return (
     <div style={wrap}>
       <div style={text}>
-        <div style={title}>Не нашли свой маршрут?</div>
-        <div style={sub}>Обслуживаем 40+ направлений Costa Blanca, Мурсии, Валенсии. Уточните цену в WhatsApp.</div>
+        <div style={title}>{t.cta_title}</div>
+        <div style={sub}>{t.cta_sub}</div>
       </div>
       <div style={btns}>
-        <a href={waLink('Здравствуйте! Хочу узнать цену трансфера.')}
+        <a href={waLink(t.wa_msg)}
            target="_blank" rel="noopener noreferrer" style={waBtn}>
           📲 WhatsApp
         </a>
-        <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')}
+        <a href={tgLink(t.tg_msg)}
            target="_blank" rel="noopener noreferrer" style={{ ...waBtn, background: '#229ED9', boxShadow: 'none' }}>
           <TelegramIcon size={16} /> Telegram
         </a>
-        <a href={pathOf('routes')} onClick={() => onNav && onNav('routes')} style={altBtn}>Все 40+ маршрутов →</a>
+        <a href={pathOf('routes', null, lang)} onClick={() => onNav && onNav('routes')} style={altBtn}>{t.all_routes}</a>
       </div>
     </div>
   );

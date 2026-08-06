@@ -2,12 +2,13 @@ import React from 'react'
 import BookingForm from './BookingForm.jsx'
 import CTABanner from './CTABanner.jsx'
 import Reveal from './Reveal.jsx'
-import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink } from './BrandData.jsx'
+import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink, cityName, groupLabel } from './BrandData.jsx'
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
 import { getRouteArticle } from './RouteArticles.data.jsx'
 import SeoArticle from './SeoArticle.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // RoutePage v3 — immersive/visual layout. Sections:
 // 1) Photo-bg hero with floating stat strip
 // 2) Two-column band: trip details on left + BookingForm on right
@@ -17,18 +18,250 @@ import { pathOf } from './router.jsx'
 // 6) Other popular routes
 // 7) CTABanner
 
+// All Russian UI strings live here, co-located, with a Ukrainian twin picked by
+// useT() from the URL-derived language. Route DATA (city names, guide/article
+// bodies) stays in its own modules — cityName()/getRouteArticle() localize it.
+const STR = {
+  ru: {
+    not_found: 'Маршрут не найден',
+    all_routes: 'Все маршруты',
+    alicante: 'Аликанте',
+    min: 'мин',
+    photo: 'Фото',
+    per_car: 'За автомобиль',
+    transfer_alicante_dash: 'Трансфер Аликанте —',
+
+    // hero
+    min_enroute: 'мин в пути',
+    fixed_price_sedan: 'фиксированная цена за автомобиль (седан)',
+    stat_enroute: 'В пути',
+    stat_passengers_num: 'до 4',
+    stat_passengers: 'Пассажиров',
+    stat_dispatch: 'Подача',
+
+    // details band
+    route_on_map: 'Маршрут на карте',
+    road_from_alc: (city) => `Дорога из аэропорта ALC в ${city}`,
+    map_title: (city) => `Маршрут от аэропорта Аликанте (ALC) до ${city} на карте`,
+    map_note: (city, time, price) => `Аэропорт Аликанте (ALC) → ${city} — примерно ${time} минут в пути. Фиксированная цена ${price}€ за автомобиль.`,
+    order_wa: 'Заказать в WhatsApp',
+    order_tg: 'Заказать в Telegram',
+    wa_msg: (city) => `Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${city}.`,
+    tg_msg: 'Здравствуйте! Хочу заказать трансфер.',
+
+    // trip breakdown
+    tb_eyebrow: 'Как проходит трансфер',
+    tb_h2: (city) => `Из ALC в ${city} — шаг за шагом`,
+    step1_t: 'Прилёт в ALC',
+    step1_x: 'Водитель отслеживает рейс. Ждёт у выхода с именной табличкой.',
+    step2_t: 'Багаж в машину',
+    step2_x: 'Помогаем с чемоданами, идём к парковке через 5 минут.',
+    step3_t: 'Дорога',
+    step3_x: 'Платные дороги уже оплачены. Wi-Fi и вода — есть.',
+    step4_t: 'Прибытие в',
+    step4_x: 'Дверь в дверь — отель, апартаменты или ресторан.',
+
+    // vehicle tiers
+    vt_eyebrow: 'Класс автомобиля',
+    vt_h2: 'Выберите комфорт под свою компанию',
+    vt_lede: 'Все три класса с русскоязычным водителем и фиксированной ценой.',
+    vt_popular: 'Популярный',
+    tiers: [
+      { name: 'Стандарт', cap: 'до 4 пассажиров', luggage: '3 чемодана', features: ['Кондиционер', 'Wi-Fi', 'Бутылка воды', 'Детское кресло'] },
+      { name: 'Комфорт',  cap: 'до 4 пассажиров', luggage: '4 чемодана', features: ['Премиум-салон', 'Кожа', 'Wi-Fi', 'Climate control', 'Детское кресло'] },
+      { name: 'Минивэн',  cap: 'до 8 пассажиров', luggage: '8 чемоданов', features: ['Большой багажник', 'Wi-Fi', 'Климат-зона', 'Кресла для детей'] },
+    ],
+
+    // destination teaser
+    dt_eyebrow: 'Что вас ждёт',
+    dt_what_to_see: 'что посмотреть',
+    dt_body: 'Мы знаем побережье как свои пять пальцев. Подскажем, куда сходить вечером, где поесть и какие места не пропустить.',
+    dt_minutes_from_alc: 'минут от ALC',
+    highlights: {
+      'Бенидорм': [
+        { icon: '🏖', title: 'Levante и Poniente', text: 'Два пляжа с золотым песком и набережной 3 км.' },
+        { icon: '🎢', title: 'Terra Mítica',         text: 'Тематический парк на 30 аттракционов.' },
+        { icon: '🌃', title: 'Ночная жизнь',         text: 'Старый город — бары, тапас, live-музыка.' },
+      ],
+      'Кальпе': [
+        { icon: '⛰',  title: 'Penyal d\'Ifac',     text: 'Скала-символ Средиземноморья, высота 332 м.' },
+        { icon: '🐟', title: 'Рыбный рынок',        text: 'Самый аутентичный аукцион улова на побережье.' },
+        { icon: '🛶', title: 'Снорклинг',           text: 'Прозрачная вода вокруг бухты Calalga.' },
+      ],
+      'Торревьеха': [
+        { icon: '🦩', title: 'Розовое озеро',       text: 'Соляное озеро с фламинго — фото-локация номер 1.' },
+        { icon: '🏝', title: 'Длинная пляжная коса', text: 'Кесада, Ла-Мата, Ла-Сения в радиусе 15 минут.' },
+        { icon: '🛒', title: 'Воскресный маркет',   text: 'Огромный рынок на 1000+ прилавков.' },
+      ],
+      'Дения': [
+        { icon: '🏰', title: 'Замок XII века',       text: 'Главная достопримечательность над городом.' },
+        { icon: '⛵', title: 'Марина',                text: 'Один из лучших яхт-портов на Costa Blanca.' },
+        { icon: '🌳', title: 'Парк Montgó',          text: 'Заповедник с панорамами на 360°.' },
+      ],
+      'Мурсия': [
+        { icon: '⛪', title: 'Кафедральный собор',   text: 'Барокко XVIII века в самом центре.' },
+        { icon: '🌹', title: 'Площадь Кардинала',    text: 'Главная площадь со старинными фасадами.' },
+        { icon: '🍴', title: 'Гастрономия',          text: 'Овощи Региона + морепродукты — лучшее меню юга.' },
+      ],
+      'Валенсия': [
+        { icon: '🏛', title: 'Город искусств и наук', text: 'Футуристический комплекс Калатравы.' },
+        { icon: '🥘', title: 'Родина паэльи',         text: 'Лучшее блюдо Испании — здесь и сейчас.' },
+        { icon: '🌳', title: 'Парк Турии',            text: 'Реку превратили в зелёный парк — 9 км пешком.' },
+      ],
+    },
+    highlightsDefault: [
+      { icon: '🏖', title: 'Море и пляжи',      text: 'Чистые пляжи Costa Blanca с золотым песком.' },
+      { icon: '🍽',  title: 'Гастрономия',       text: 'Свежие морепродукты и местная кухня.' },
+      { icon: '🌅', title: 'Виды на закат',     text: 'Лучшие точки для фото на побережье.' },
+    ],
+
+    // other routes
+    or_eyebrow: 'Другие направления',
+    or_transfer_by_region: 'Трансфер по региону',
+    or_popular_from_alc: 'Популярные маршруты из ALC',
+    or_transfer_arrow: 'Трансфер Аликанте →',
+    min_from_alc: 'мин от ALC',
+    or_all_dirs: 'Все 40+ направлений',
+    or_prices: 'Цены на трансфер',
+    or_useful: 'Полезное о Costa Blanca',
+
+    // route guide
+    rg_guide_by: 'Гид по',
+    rg_h2: 'Пляжи, еда и лучшие фото-локации',
+    rg_sub: (city) => `Пока водитель везёт вас из аэропорта — вот всё самое интересное в ${city} и вокруг.`,
+    rg_beaches: (city) => `Пляжи ${city} и рядом`,
+    rg_food: (city) => `Где поесть в ${city} — рекомендации`,
+    rg_photo: (city) => `Что посмотреть и лучшие фото в ${city}`,
+    rg_credits: 'Авторы фотографий (Wikimedia Commons)',
+  },
+  uk: {
+    not_found: 'Маршрут не знайдено',
+    all_routes: 'Усі маршрути',
+    alicante: 'Аліканте',
+    min: 'хв',
+    photo: 'Фото',
+    per_car: 'За автомобіль',
+    transfer_alicante_dash: 'Трансфер Аліканте —',
+
+    // hero
+    min_enroute: 'хв у дорозі',
+    fixed_price_sedan: 'фіксована ціна за автомобіль (седан)',
+    stat_enroute: 'У дорозі',
+    stat_passengers_num: 'до 4',
+    stat_passengers: 'Пасажирів',
+    stat_dispatch: 'Подача',
+
+    // details band
+    route_on_map: 'Маршрут на карті',
+    road_from_alc: (city) => `Дорога з аеропорту ALC в ${city}`,
+    map_title: (city) => `Маршрут від аеропорту Аліканте (ALC) до ${city} на карті`,
+    map_note: (city, time, price) => `Аеропорт Аліканте (ALC) → ${city} — приблизно ${time} хвилин у дорозі. Фіксована ціна ${price}€ за автомобіль.`,
+    order_wa: 'Замовити у WhatsApp',
+    order_tg: 'Замовити у Telegram',
+    wa_msg: (city) => `Вітаю! Хочу замовити трансфер з аеропорту Аліканте (ALC) в ${city}.`,
+    tg_msg: 'Вітаю! Хочу замовити трансфер.',
+
+    // trip breakdown
+    tb_eyebrow: 'Як проходить трансфер',
+    tb_h2: (city) => `З ALC в ${city} — крок за кроком`,
+    step1_t: 'Приліт в ALC',
+    step1_x: 'Водій відстежує рейс. Чекає біля виходу з іменною табличкою.',
+    step2_t: 'Багаж у машину',
+    step2_x: 'Допомагаємо з валізами, йдемо до парковки за 5 хвилин.',
+    step3_t: 'Дорога',
+    step3_x: 'Платні дороги вже оплачені. Wi-Fi і вода — є.',
+    step4_t: 'Прибуття в',
+    step4_x: 'Двері в двері — готель, апартаменти чи ресторан.',
+
+    // vehicle tiers
+    vt_eyebrow: 'Клас автомобіля',
+    vt_h2: 'Оберіть комфорт під свою компанію',
+    vt_lede: 'Усі три класи з україномовним водієм і фіксованою ціною.',
+    vt_popular: 'Популярний',
+    tiers: [
+      { name: 'Стандарт', cap: 'до 4 пасажирів', luggage: '3 валізи', features: ['Кондиціонер', 'Wi-Fi', 'Пляшка води', 'Дитяче крісло'] },
+      { name: 'Комфорт',  cap: 'до 4 пасажирів', luggage: '4 валізи', features: ['Преміум-салон', 'Шкіра', 'Wi-Fi', 'Climate control', 'Дитяче крісло'] },
+      { name: 'Мінівен',  cap: 'до 8 пасажирів', luggage: '8 валіз', features: ['Великий багажник', 'Wi-Fi', 'Клімат-зона', 'Крісла для дітей'] },
+    ],
+
+    // destination teaser
+    dt_eyebrow: 'Що на вас чекає',
+    dt_what_to_see: 'що подивитися',
+    dt_body: 'Ми знаємо узбережжя як свої п’ять пальців. Підкажемо, куди піти ввечері, де поїсти і які місця не пропустити.',
+    dt_minutes_from_alc: 'хвилин від ALC',
+    highlights: {
+      'Бенидорм': [
+        { icon: '🏖', title: 'Levante і Poniente', text: 'Два пляжі із золотим піском і набережною 3 км.' },
+        { icon: '🎢', title: 'Terra Mítica',         text: 'Тематичний парк на 30 атракціонів.' },
+        { icon: '🌃', title: 'Нічне життя',          text: 'Старе місто — бари, тапас, live-музика.' },
+      ],
+      'Кальпе': [
+        { icon: '⛰',  title: 'Penyal d\'Ifac',     text: 'Скеля-символ Середземномор’я, висота 332 м.' },
+        { icon: '🐟', title: 'Рибний ринок',        text: 'Найавтентичніший аукціон улову на узбережжі.' },
+        { icon: '🛶', title: 'Снорклінг',           text: 'Прозора вода навколо бухти Calalga.' },
+      ],
+      'Торревьеха': [
+        { icon: '🦩', title: 'Рожеве озеро',        text: 'Солоне озеро з фламінго — фото-локація номер 1.' },
+        { icon: '🏝', title: 'Довга піщана коса',   text: 'Кесада, Ла-Мата, Ла-Сенія в радіусі 15 хвилин.' },
+        { icon: '🛒', title: 'Недільний маркет',    text: 'Величезний ринок на 1000+ прилавків.' },
+      ],
+      'Дения': [
+        { icon: '🏰', title: 'Замок XII століття',   text: 'Головна визначна пам’ятка над містом.' },
+        { icon: '⛵', title: 'Марина',                text: 'Один із найкращих яхт-портів на Costa Blanca.' },
+        { icon: '🌳', title: 'Парк Montgó',          text: 'Заповідник із панорамами на 360°.' },
+      ],
+      'Мурсия': [
+        { icon: '⛪', title: 'Кафедральний собор',   text: 'Бароко XVIII століття в самому центрі.' },
+        { icon: '🌹', title: 'Площа Кардинала',      text: 'Головна площа зі старовинними фасадами.' },
+        { icon: '🍴', title: 'Гастрономія',          text: 'Овочі Регіону + морепродукти — найкраще меню півдня.' },
+      ],
+      'Валенсия': [
+        { icon: '🏛', title: 'Місто мистецтв і наук', text: 'Футуристичний комплекс Калатрави.' },
+        { icon: '🥘', title: 'Батьківщина паельї',    text: 'Найкраща страва Іспанії — тут і зараз.' },
+        { icon: '🌳', title: 'Парк Турії',            text: 'Річку перетворили на зелений парк — 9 км пішки.' },
+      ],
+    },
+    highlightsDefault: [
+      { icon: '🏖', title: 'Море і пляжі',      text: 'Чисті пляжі Costa Blanca із золотим піском.' },
+      { icon: '🍽',  title: 'Гастрономія',       text: 'Свіжі морепродукти та місцева кухня.' },
+      { icon: '🌅', title: 'Краєвиди на захід сонця', text: 'Найкращі точки для фото на узбережжі.' },
+    ],
+
+    // other routes
+    or_eyebrow: 'Інші напрямки',
+    or_transfer_by_region: 'Трансфер по регіону',
+    or_popular_from_alc: 'Популярні маршрути з ALC',
+    or_transfer_arrow: 'Трансфер Аліканте →',
+    min_from_alc: 'хв від ALC',
+    or_all_dirs: 'Усі 40+ напрямків',
+    or_prices: 'Ціни на трансфер',
+    or_useful: 'Корисне про Costa Blanca',
+
+    // route guide
+    rg_guide_by: 'Гід по',
+    rg_h2: 'Пляжі, їжа та найкращі фото-локації',
+    rg_sub: (city) => `Поки водій везе вас з аеропорту — ось усе найцікавіше в ${city} і навколо.`,
+    rg_beaches: (city) => `Пляжі ${city} і поряд`,
+    rg_food: (city) => `Де поїсти в ${city} — рекомендації`,
+    rg_photo: (city) => `Що подивитися та найкращі фото в ${city}`,
+    rg_credits: 'Автори фотографій (Wikimedia Commons)',
+  },
+};
+
 function RoutePage({ slug, onNav, onSelectRoute }) {
+  const lang = useLang();
+  const t = useT(STR);
   const r = findRoute(slug);
   const guide = r ? getRouteGuide(r.slug) : null;
-  const article = r ? getRouteArticle(r.slug) : null;
+  const article = r ? getRouteArticle(r.slug, lang) : null;
 
   if (!r) {
     return (
       <>
         <section style={{ padding: '64px 24px', textAlign: 'center', background: '#fff' }}>
-          <h1 style={{ fontFamily: "'Onest',sans-serif", fontSize: 32, color: 'var(--t2-ink)' }}>Маршрут не найден</h1>
+          <h1 style={{ fontFamily: "'Onest',sans-serif", fontSize: 32, color: 'var(--t2-ink)' }}>{t.not_found}</h1>
           <button onClick={() => onNav('routes')} style={{ marginTop: 16, padding: '12px 24px', borderRadius: 12, background: 'var(--t2-red)', color: '#fff', border: 0, fontFamily: "'Inter',system-ui", fontWeight: 700, cursor: 'pointer' }}>
-            Все маршруты
+            {t.all_routes}
           </button>
         </section>
         <CTABanner onNav={onNav} />
@@ -43,7 +276,7 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
       <Reveal><TripBreakdown r={r} /></Reveal>
       <Reveal><VehicleTiers basePrice={r.price} /></Reveal>
       <Reveal><DestinationTeaser r={r} /></Reveal>
-      {guide && <Reveal><RouteGuide guide={guide} cityRu={r.ru} /></Reveal>}
+      {guide && <Reveal><RouteGuide guide={guide} cityRu={cityName(r, lang)} /></Reveal>}
       {article && <Reveal><SeoArticle {...article} /></Reveal>}
       <Reveal><OtherRoutes currentSlug={r.slug} onSelectRoute={onSelectRoute} /></Reveal>
       <Reveal><CTABanner onNav={onNav} /></Reveal>
@@ -53,6 +286,8 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
 
 /* ============ 1. Photo-bg hero ============ */
 function RouteHero({ r }) {
+  const t = useT(STR);
+  const lang = useLang();
   // No overflow:hidden here — the stat card below deliberately hangs 36px past
   // the section (marginBottom: -36), and clipping the section cut the card's
   // labels off. Only the photo layer needs clipping, so it does its own.
@@ -132,20 +367,20 @@ function RouteHero({ r }) {
           rel="noopener nofollow"
           title={`${r.credit.file} — ${r.credit.author}, ${r.credit.licence}`}
         >
-          Фото: {r.credit.author} / {r.credit.licence}
+          {t.photo}: {r.credit.author} / {r.credit.licence}
         </a>
       )}
       <div style={content}>
-        <span style={eyebrow}>{r.emoji} Аликанте ALC → {r.ru}</span>
-        <h1 style={h1}>Трансфер Аликанте — {r.ru}</h1>
-        <p style={sub}><b>{r.price}€</b> · {r.time} мин в пути · фиксированная цена за автомобиль (седан)</p>
+        <span style={eyebrow}>{r.emoji} {t.alicante} ALC → {cityName(r, lang)}</span>
+        <h1 style={h1}>{t.transfer_alicante_dash} {cityName(r, lang)}</h1>
+        <p style={sub}><b>{r.price}€</b> · {r.time} {t.min_enroute} · {t.fixed_price_sedan}</p>
       </div>
       <div style={statStrip} className="t2-stat-strip">
         <div style={statCard}>
-          <div style={statCell}><div style={statNumRed}>{r.price}€</div><div style={statLabel}>За автомобиль</div></div>
-          <div style={statCell}><div style={statNum}>{r.time} мин</div><div style={statLabel}>В пути</div></div>
-          <div style={statCell}><div style={statNum}>до 4</div><div style={statLabel}>Пассажиров</div></div>
-          <div style={statCellLast}><div style={statNum}>24/7</div><div style={statLabel}>Подача</div></div>
+          <div style={statCell}><div style={statNumRed}>{r.price}€</div><div style={statLabel}>{t.per_car}</div></div>
+          <div style={statCell}><div style={statNum}>{r.time} {t.min}</div><div style={statLabel}>{t.stat_enroute}</div></div>
+          <div style={statCell}><div style={statNum}>{t.stat_passengers_num}</div><div style={statLabel}>{t.stat_passengers}</div></div>
+          <div style={statCellLast}><div style={statNum}>24/7</div><div style={statLabel}>{t.stat_dispatch}</div></div>
         </div>
       </div>
     </section>
@@ -154,6 +389,8 @@ function RouteHero({ r }) {
 
 /* ============ 2. Two-column band: details + BookingForm ============ */
 function RouteDetailsBand({ r, onNav, guide }) {
+  const t = useT(STR);
+  const lang = useLang();
   const wrap = { padding: '72px 32px 64px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1280, margin: '0 auto' };
   const grid = { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.1fr)', gap: 48, alignItems: 'start' };
@@ -190,9 +427,9 @@ function RouteDetailsBand({ r, onNav, guide }) {
   const gMap = guide || {};
   const mapSrc = gMap.mapSrc
     || `https://maps.google.com/maps?saddr=${encodeURIComponent('Aeropuerto de Alicante-Elche ALC')}&daddr=${encodeURIComponent(r.city + ', España')}&hl=ru&output=embed`;
-  const mapTitle = gMap.mapTitle || `Маршрут от аэропорта Аликанте (ALC) до ${r.ru} на карте`;
+  const mapTitle = gMap.mapTitle || t.map_title(cityName(r, lang));
   const mapNoteText = gMap.mapNote
-    || `Аэропорт Аликанте (ALC) → ${r.ru} — примерно ${r.time} минут в пути. Фиксированная цена ${r.price}€ за автомобиль.`;
+    || t.map_note(cityName(r, lang), r.time, r.price);
 
   return (
     <section style={wrap}>

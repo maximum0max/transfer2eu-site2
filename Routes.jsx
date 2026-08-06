@@ -4,21 +4,64 @@ import CTABanner from './CTABanner.jsx'
 import BookingForm from './BookingForm.jsx'
 import SeoArticle from './SeoArticle.jsx'
 import Reveal from './Reveal.jsx'
-import { ROUTE_GROUPS, ALL_ROUTES } from './BrandData.jsx'
+import { ROUTE_GROUPS, ALL_ROUTES, cityName, groupLabel } from './BrandData.jsx'
 import { ROUTES_SEO } from './Seo.data.jsx'
 import { INTERCITY_ROUTES } from './Intercity.data.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // Routes page v4 — two-step booking form at the top, then a redesigned
 // destinations catalog with "boarding-pass" style cards grouped by region,
 // followed by a verbatim SEO article (collapsible) for search engines.
+//
+// Bilingual: UI strings live in the co-located STR bundle (RU default + UK),
+// picked by useT(); city names via cityName(), region labels via groupLabel(),
+// and internal links carry the active language through pathOf(view, slug, lang).
+
+const STR = {
+  ru: {
+    hero_eyebrow: '🚖 Маршруты',
+    hero_title: 'Куда вас отвезти?',
+    hero_sub: 'Выберите направление — увидите финальную цену сразу. Без скрытых доплат, цена за автомобиль (седан). Минивэн для группы — отдельный тариф.',
+    cat_eyebrow: '📍 Каталог направлений',
+    cat_h2: 'городов в формате «трансфер от двери до двери»',
+    cat_sub: 'Сгруппированы по региону. Кликните по карточке — увидите детали и забронируете.',
+    intercity: 'Междугородние трансферы',
+    routes_count: 'направлений',
+    hour: 'ч',
+    min: 'мин',
+    km: 'км',
+    aria_transfer: 'Трансфер Аликанте →',
+    alicante: 'Аликанте',
+    sedan: 'Седан',
+    choose: 'Выбрать маршрут',
+  },
+  uk: {
+    hero_eyebrow: '🚖 Маршрути',
+    hero_title: 'Куди вас відвезти?',
+    hero_sub: 'Оберіть напрямок — одразу побачите фінальну ціну. Без прихованих доплат, ціна за автомобіль (седан). Мінівен для групи — окремий тариф.',
+    cat_eyebrow: '📍 Каталог напрямків',
+    cat_h2: 'міст у форматі «трансфер від дверей до дверей»',
+    cat_sub: 'Згруповані за регіоном. Натисніть на картку — побачите деталі та забронюєте.',
+    intercity: 'Міжміські трансфери',
+    routes_count: 'напрямків',
+    hour: 'год',
+    min: 'хв',
+    km: 'км',
+    aria_transfer: 'Трансфер Аліканте →',
+    alicante: 'Аліканте',
+    sedan: 'Седан',
+    choose: 'Обрати маршрут',
+  },
+};
 
 function RoutesPage({ onNav, onSelectRoute }) {
+  const t = useT(STR);
   return (
     <>
       <PageHero
-        eyebrow="🚖 Маршруты"
-        title="Куда вас отвезти?"
-        subtitle="Выберите направление — увидите финальную цену сразу. Без скрытых доплат, цена за автомобиль (седан). Минивэн для группы — отдельный тариф." />
+        eyebrow={t.hero_eyebrow}
+        title={t.hero_title}
+        subtitle={t.hero_sub} />
 
       <BookingBand />
       <DestinationsCatalog onSelectRoute={onSelectRoute} />
@@ -43,6 +86,7 @@ function BookingBand() {
 
 /* ============ Destinations catalog — ticket-style cards ============ */
 function DestinationsCatalog({ onSelectRoute }) {
+  const t = useT(STR);
   const groups = ROUTE_GROUPS || [];
   const allCount = (ALL_ROUTES || []).length;
 
@@ -68,9 +112,9 @@ function DestinationsCatalog({ onSelectRoute }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <span style={eyebrow}>📍 Каталог направлений</span>
-          <h2 style={h2}>{allCount} городов в формате «трансфер от двери до двери»</h2>
-          <p style={sub}>Сгруппированы по региону. Кликните по карточке — увидите детали и забронируете.</p>
+          <span style={eyebrow}>{t.cat_eyebrow}</span>
+          <h2 style={h2}>{allCount} {t.cat_h2}</h2>
+          <p style={sub}>{t.cat_sub}</p>
         </div>
 
         {groups.map((g, gi) => (
@@ -87,6 +131,8 @@ function DestinationsCatalog({ onSelectRoute }) {
 
 /* ============ Intercity (non-airport) routes ============ */
 function IntercityBlock() {
+  const t = useT(STR);
+  const lang = useLang();
   const block = { marginTop: 8 };
   const header = { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18, paddingBottom: 12, borderBottom: '2px solid var(--t2-line)' };
   const dotEmoji = { width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg,#0ea5e9,#0369a1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: '#fff' };
@@ -101,14 +147,14 @@ function IntercityBlock() {
     <div style={block}>
       <div style={header}>
         <div style={dotEmoji}>🛣</div>
-        <div style={label}>Междугородние трансферы</div>
+        <div style={label}>{t.intercity}</div>
       </div>
       <div style={grid}>
         {INTERCITY_ROUTES.map(r => (
-          <a key={r.slug} href={pathOf('intercity', r.slug)} style={card}>
+          <a key={r.slug} href={pathOf('intercity', r.slug, lang)} style={card}>
             <div>
               <div style={name}>{r.emoji} {r.from} → {r.to}</div>
-              <div style={sub}>~{Math.floor(r.time / 60)} ч {r.time % 60} мин · {r.distance} км</div>
+              <div style={sub}>~{Math.floor(r.time / 60)} {t.hour} {r.time % 60} {t.min} · {r.distance} {t.km}</div>
             </div>
             <div style={price}>{r.price}€</div>
           </a>
@@ -119,6 +165,8 @@ function IntercityBlock() {
 }
 
 function RegionBlock({ group, accent, onSelectRoute }) {
+  const t = useT(STR);
+  const lang = useLang();
   const block = { marginBottom: 48 };
   const header = { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18, paddingBottom: 12, borderBottom: '2px solid var(--t2-line)' };
   const dotEmoji = {
@@ -135,8 +183,8 @@ function RegionBlock({ group, accent, onSelectRoute }) {
     <div style={block}>
       <div style={header}>
         <div style={dotEmoji}>{group.emoji}</div>
-        <div style={label}>{group.label}</div>
-        <div style={count}>{group.routes.length} направлений</div>
+        <div style={label}>{groupLabel(group, lang)}</div>
+        <div style={count}>{group.routes.length} {t.routes_count}</div>
       </div>
       <div style={grid}>
         {group.routes.map(r => <TicketCard key={r.slug} r={r} accent={accent} onSelectRoute={onSelectRoute} />)}
@@ -148,6 +196,8 @@ function RegionBlock({ group, accent, onSelectRoute }) {
 /* ============ Boarding-pass style card ============ */
 function TicketCard({ r, accent, onSelectRoute }) {
   const [hover, setHover] = React.useState(false);
+  const t = useT(STR);
+  const lang = useLang();
 
   const card = {
     position: 'relative',
@@ -213,12 +263,12 @@ function TicketCard({ r, accent, onSelectRoute }) {
 
   return (
     <a
-      href={pathOf('route', r.slug)}
+      href={pathOf('route', r.slug, lang)}
       style={card}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={() => onSelectRoute(r.slug)}
-      aria-label={`Трансфер Аликанте → ${r.ru} ${r.price}€`}
+      aria-label={`${t.aria_transfer} ${cityName(r, lang)} ${r.price}€`}
     >
       <div style={accentStripe} />
 
@@ -230,14 +280,14 @@ function TicketCard({ r, accent, onSelectRoute }) {
       <div style={route}>
         <div style={airport}>
           <div style={airportCode}>ALC</div>
-          <div style={airportLabel}>Аликанте</div>
+          <div style={airportLabel}>{t.alicante}</div>
         </div>
         <div style={lineWrap}>
           <div style={line} />
           <div style={plane}>✈</div>
         </div>
         <div style={dest}>
-          <div style={destName}>{r.ru}</div>
+          <div style={destName}>{cityName(r, lang)}</div>
           <div style={airportLabel}>{r.city}</div>
         </div>
       </div>
@@ -248,12 +298,12 @@ function TicketCard({ r, accent, onSelectRoute }) {
       </div>
 
       <div style={stats}>
-        <span style={stat}>🕐 {r.time} мин</span>
-        <span style={stat}>🚗 Седан</span>
+        <span style={stat}>🕐 {r.time} {t.min}</span>
+        <span style={stat}>🚗 {t.sedan}</span>
       </div>
 
       <span style={cta}>
-        Выбрать маршрут
+        {t.choose}
         <span style={{ fontSize: 14 }}>→</span>
       </span>
     </a>

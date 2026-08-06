@@ -2,20 +2,57 @@ import React from 'react'
 import PageHero from './PageHero.jsx'
 import CTABanner from './CTABanner.jsx'
 import { BRAND, waLink } from './BrandData.jsx'
+import { useT } from './i18n.jsx'
+// Bilingual (RU default + UK): visible strings live in the co-located STR
+// bundle picked by useT(). Phone numbers, e-mail and brand names are never
+// translated.
 
-const CHANNELS = [
-  { icon: '📲', title: 'WhatsApp',  value: '+34 651 011 911', href: () => waLink(), label: 'Открыть чат',     color: '#25d366' },
-  { icon: '📞', title: 'Телефон',   value: '+34 651 011 911', href: () => 'tel:' + BRAND.tel, label: 'Позвонить',    color: 'var(--t2-red)' },
-  { icon: '📩', title: 'E-mail',    value: 'transfers2eu@gmail.com', href: () => 'mailto:' + BRAND.email, label: 'Написать письмо', color: 'var(--t2-deep)' },
-];
-
-const HOURS = [
-  { day: 'Пн – Пт', time: '08:00 – 23:00' },
-  { day: 'Сб – Вс', time: '08:00 – 23:00' },
-  { day: 'Срочный заказ', time: '24/7 в WhatsApp' },
-];
+const STR = {
+  ru: {
+    eyebrow: '📲 На связи',
+    title: 'Свяжитесь с нами',
+    subtitle: 'Ответим в WhatsApp за 15 минут. Подскажем цену, подберём авто, забронируем поездку.',
+    hours_title: 'Время приема заявок',
+    phone: 'Телефон',
+    open_chat: 'Открыть чат',
+    call: 'Позвонить',
+    write: 'Написать письмо',
+    day_week: 'Пн – Пт',
+    day_weekend: 'Сб – Вс',
+    urgent: 'Срочный заказ',
+    urgent_time: '24/7 в WhatsApp',
+  },
+  uk: {
+    eyebrow: '📲 На зв\'язку',
+    title: 'Зв\'яжіться з нами',
+    subtitle: 'Відповімо у WhatsApp за 15 хвилин. Підкажемо ціну, підберемо авто, забронюємо поїздку.',
+    hours_title: 'Час прийому заявок',
+    phone: 'Телефон',
+    open_chat: 'Відкрити чат',
+    call: 'Зателефонувати',
+    write: 'Написати листа',
+    day_week: 'Пн – Пт',
+    day_weekend: 'Сб – Нд',
+    urgent: 'Термінове замовлення',
+    urgent_time: '24/7 у WhatsApp',
+  },
+};
 
 function ContactsPage({ onNav }) {
+  const t = useT(STR);
+
+  const CHANNELS = [
+    { icon: '📲', title: 'WhatsApp',  value: '+34 651 011 911', href: () => waLink(), label: t.open_chat, color: '#25d366' },
+    { icon: '📞', title: t.phone,     value: '+34 651 011 911', href: () => 'tel:' + BRAND.tel, label: t.call, color: 'var(--t2-red)' },
+    { icon: '📩', title: 'E-mail',    value: 'transfers2eu@gmail.com', href: () => 'mailto:' + BRAND.email, label: t.write, color: 'var(--t2-deep)' },
+  ];
+
+  const HOURS = [
+    { day: t.day_week, time: '08:00 – 23:00' },
+    { day: t.day_weekend, time: '08:00 – 23:00' },
+    { day: t.urgent, time: t.urgent_time },
+  ];
+
   const wrap = { background: '#fff' };
   const inner = { maxWidth: 1100, margin: '0 auto', padding: '64px 24px' };
   const grid = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 };
@@ -41,9 +78,9 @@ function ContactsPage({ onNav }) {
   return (
     <>
       <PageHero
-        eyebrow="📲 На связи"
-        title="Свяжитесь с нами"
-        subtitle="Ответим в WhatsApp за 15 минут. Подскажем цену, подберём авто, забронируем поездку." />
+        eyebrow={t.eyebrow}
+        title={t.title}
+        subtitle={t.subtitle} />
 
       <div style={wrap}>
         <div style={inner}>
@@ -64,7 +101,7 @@ function ContactsPage({ onNav }) {
 
       <div style={block}>
         <div style={blockInner}>
-          <h2 style={blockH2}>Время приема заявок</h2>
+          <h2 style={blockH2}>{t.hours_title}</h2>
           <div style={hoursBox}>
             {HOURS.map((h, i) => (
               <div key={i} style={{ ...hourRow, ...(i === HOURS.length - 1 ? { borderBottom: 0 } : null) }}>

@@ -1,29 +1,38 @@
 import React from 'react'
+import { useT } from './i18n.jsx'
 // Testimonial v2 — 3-card review grid with avatar + name + route badge.
 // Replaces the single centered quote.
 
-const REVIEWS = [
-  {
-    init: 'АН', name: 'Анна Н.',  trip: 'ALC → Бенидорм',
-    bg: 'linear-gradient(135deg,#c9a980,#7a5a3a)',
-    text: 'С двумя детьми и горой багажа. Водитель встретил с табличкой, детские кресла стояли. Без пробок и языкового барьера.',
-    rating: 5,
+const STR = {
+  ru: {
+    eyebrow: 'Отзывы пассажиров', h2: 'Что говорят гости Costa Blanca',
+    lede: '4.9 / 5 средняя оценка · 2 800+ туристов',
+    reviews: [
+      { init: 'АН', name: 'Анна Н.', trip: 'ALC → Бенидорм', bg: 'linear-gradient(135deg,#c9a980,#7a5a3a)', rating: 5,
+        text: 'С двумя детьми и горой багажа. Водитель встретил с табличкой, детские кресла стояли. Без пробок и языкового барьера.' },
+      { init: 'ОК', name: 'Олег К.', trip: 'ALC → Кальпе', bg: 'linear-gradient(135deg,#7c3aed,#4338ca)', rating: 5,
+        text: 'Заказывал по WhatsApp за час до посадки. Подача вовремя, цена ровно как сказали. В этом году повторю.' },
+      { init: 'МС', name: 'Мария С.', trip: 'ALC → Торревьеха', bg: 'linear-gradient(135deg,#0ea5e9,#0369a1)', rating: 5,
+        text: 'Прилёт задержали на час, водитель ждал спокойно. Дочка уснула в кресле — приехали как в такси к дому. Спасибо!' },
+    ],
   },
-  {
-    init: 'ОК', name: 'Олег К.',   trip: 'ALC → Кальпе',
-    bg: 'linear-gradient(135deg,#7c3aed,#4338ca)',
-    text: 'Заказывал по WhatsApp за час до посадки. Подача вовремя, цена ровно как сказали. В этом году повторю.',
-    rating: 5,
+  uk: {
+    eyebrow: 'Відгуки пасажирів', h2: 'Що кажуть гості Costa Blanca',
+    lede: '4.9 / 5 середня оцінка · 2 800+ туристів',
+    reviews: [
+      { init: 'АН', name: 'Анна Н.', trip: 'ALC → Бенідорм', bg: 'linear-gradient(135deg,#c9a980,#7a5a3a)', rating: 5,
+        text: 'З двома дітьми і горою багажу. Водій зустрів з табличкою, дитячі крісла стояли. Без заторів і мовного барʼєру.' },
+      { init: 'ОК', name: 'Олег К.', trip: 'ALC → Кальпе', bg: 'linear-gradient(135deg,#7c3aed,#4338ca)', rating: 5,
+        text: 'Замовляв у WhatsApp за годину до посадки. Подача вчасно, ціна рівно як казали. Цього року повторю.' },
+      { init: 'МС', name: 'Марія С.', trip: 'ALC → Торревʼєха', bg: 'linear-gradient(135deg,#0ea5e9,#0369a1)', rating: 5,
+        text: 'Приліт затримали на годину, водій чекав спокійно. Донька заснула в кріслі — приїхали як таксі до дому. Дякую!' },
+    ],
   },
-  {
-    init: 'МС', name: 'Мария С.',  trip: 'ALC → Торревьеха',
-    bg: 'linear-gradient(135deg,#0ea5e9,#0369a1)',
-    text: 'Прилёт задержали на час, водитель ждал спокойно. Дочка уснула в кресле — приехали как в такси к дому. Спасибо!',
-    rating: 5,
-  },
-];
+};
 
 function Testimonial() {
+  const t = useT(STR);
+  const REVIEWS = t.reviews;
   const wrap = { padding: '88px 32px', background: '#fff' };
   const inner = { maxWidth: 1200, margin: '0 auto' };
 
@@ -54,9 +63,9 @@ function Testimonial() {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Отзывы пассажиров</div>
-          <h2 style={h2}>Что говорят гости Costa Blanca</h2>
-          <p style={lede}>4.9 / 5 средняя оценка · 2 800+ туристов</p>
+          <div style={eyebrow}>{t.eyebrow}</div>
+          <h2 style={h2}>{t.h2}</h2>
+          <p style={lede}>{t.lede}</p>
         </div>
 
         <div style={grid}>

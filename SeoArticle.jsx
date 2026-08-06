@@ -1,11 +1,19 @@
 import React from 'react'
 import { waLink } from './BrandData.jsx'
+import { useT } from './i18n.jsx'
 // SeoArticle — compact, collapsible SEO body for the Routes / Prices catalog
 // pages. The full text is always rendered in the DOM (crawlers + AI engines
 // read it); the collapse only clips it visually so the page stays compact.
 // Content shape matches RouteData / News.data: typed blocks h2 / h3 / p / ul.
 
+// Only the collapse toggle is UI copy here; eyebrow/title/blocks come from data.
+const STR = {
+  ru: { more: 'Читать далее', less: 'Свернуть' },
+  uk: { more: 'Читати далі', less: 'Згорнути' },
+};
+
 function SeoArticle({ eyebrow, title, blocks, intro = 2 }) {
+  const t = useT(STR);
   const [open, setOpen] = React.useState(false);
 
   // How many leading blocks stay visible while collapsed.
@@ -74,7 +82,7 @@ function SeoArticle({ eyebrow, title, blocks, intro = 2 }) {
         </div>
         {collapsible && (
           <button style={toggle} onClick={() => setOpen(o => !o)} aria-expanded={open}>
-            {open ? 'Свернуть' : 'Читать далее'}
+            {open ? t.less : t.more}
             <span style={{ fontSize: 11 }}>{open ? '▲' : '▼'}</span>
           </button>
         )}

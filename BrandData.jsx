@@ -113,6 +113,23 @@ export const ROUTE_GROUPS = [
 
 export const ALL_ROUTES = ROUTE_GROUPS.flatMap(g => g.routes);
 
+// Ukrainian versions of the shared UI strings. Components read these through the
+// getters below so BrandData stays the single source of truth for both languages.
+const TRUST_UK = ['5 років на ринку', '3 000+ поїздок', 'Україномовний водій', 'Фіксована ціна'];
+export const getTrust = (lang) =>
+  lang === 'uk' ? TRUST.map((t, i) => ({ icon: t.icon, text: TRUST_UK[i] || t.text })) : TRUST;
+
+const GROUP_LABELS_UK = {
+  'Близкие направления': 'Близькі напрямки',
+  'Коста-Бланка': 'Коста-Бланка',
+  'Южное побережье': 'Південне узбережжя',
+  'Мурсия и юг': 'Мурсія і південь',
+  'Север': 'Північ',
+  'Крупные города': 'Великі міста',
+};
+export const groupLabel = (g, lang) =>
+  (lang === 'uk' && GROUP_LABELS_UK[g.label]) || g.label;
+
 // Image + gradient fallback per destination — used by PopularRoutes cards and
 // route hero banners. The gradient renders behind the <img> so the card still
 // looks intentional while the photo loads.

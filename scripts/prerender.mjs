@@ -369,12 +369,14 @@ function faqLd(article, seo) {
 // Intercity route product: origin is NOT the airport, so areaServed names the
 // destination city and the Service is a plain city-to-city transfer.
 function intercityLd(r, seo, lang) {
+  const from = (lang === 'uk' && r.from_uk) || r.from;
+  const to = (lang === 'uk' && r.to_uk) || r.to;
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': SITE + seo.path + '#service',
     serviceType: lang === 'uk' ? 'Міжміський трансфер' : 'Междугородний трансфер',
-    name: `${lang === 'uk' ? 'Таксі' : 'Такси'} ${r.from} → ${r.to}`,
+    name: `${lang === 'uk' ? 'Таксі' : 'Такси'} ${from} → ${to}`,
     description: seo.description,
     url: SITE + seo.path,
     provider: { '@id': SITE + '/#org' },
@@ -514,7 +516,7 @@ async function main() {
       }).join('') + '</ul>';
       const intercityHubLinks = (INTERCITY_ROUTES || []).length
         ? `<h2>${esc(t.icHub)}</h2><ul>`
-          + INTERCITY_ROUTES.map((r) => `<li>${a(localizePath('/' + r.slug, lang), t.icLink(r.from, r.to, r.price))}</li>`).join('')
+          + INTERCITY_ROUTES.map((r) => `<li>${a(localizePath('/' + r.slug, lang), t.icLink((lang === 'uk' && r.from_uk) || r.from, (lang === 'uk' && r.to_uk) || r.to, r.price))}</li>`).join('')
           + '</ul>'
         : '';
       const CHILDREN = { home: allRouteLinks, routes: allRouteLinks + intercityHubLinks, news: newsLinks };
@@ -547,7 +549,7 @@ async function main() {
           body: intercityBody(r, seo, popRoutes, lang),
           jsonLd: [
             intercityLd(r, seo, lang),
-            breadcrumbs([HOME, [t.bcRoutes, localizePath('/marshruty', lang)], [`${r.from} → ${r.to}`, seo.path]]),
+            breadcrumbs([HOME, [t.bcRoutes, localizePath('/marshruty', lang)], [`${(lang === 'uk' && r.from_uk) || r.from} → ${(lang === 'uk' && r.to_uk) || r.to}`, seo.path]]),
           ],
         });
       }

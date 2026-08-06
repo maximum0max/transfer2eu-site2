@@ -1,5 +1,53 @@
 import React from 'react'
-import { ALL_ROUTES, waLink } from './BrandData.jsx'
+import { ALL_ROUTES, waLink, cityName } from './BrandData.jsx'
+import { useT, useLang } from './i18n.jsx'
+
+const STR = {
+  ru: {
+    airport_full: 'Аэропорт Аликанте (ALC)', city_alicante: 'Город Аликанте', alc_short: 'Аликанте ALC', alicante: 'Аликанте',
+    done: 'Готово', done_h: 'Заявка отправлена в WhatsApp',
+    done_p: 'Мы открыли чат с заполненными данными. Нажмите «Отправить» — ответим за 15 минут.',
+    done_again: 'Заказать ещё одну поездку',
+    head_title: 'Бронирование трансфера', head_s1: 'Шаг 1 — выберите маршрут', head_s2: 'Шаг 2 — ваши контакты',
+    from: 'Откуда', seg_airport: 'Аэропорт', seg_city: 'Город', seg_other: 'Другой', seg_city_s: 'Аликанте', seg_other_s: 'город',
+    from_ph: 'Введите город отправления...', from_hint: 'Цена для городов вне списка обсуждается в чате',
+    to: 'Куда', to_ph: 'Введите город...',
+    cost: 'Стоимость трансфера', price_req: 'Цена по запросу', go: 'Перейти к бронированию',
+    pick_from: 'Выберите город отправления', pick_to: 'Выберите город назначения', by_request: 'по запросу', back: 'Назад',
+    name: 'Имя', phone: 'Телефон', optional: '(необязательно)', date: 'Дата',
+    flight: 'Номер рейса', flight_hint: 'Отслеживаем рейс — встретим, даже если он задержан',
+    pax: 'Пассажиров', pax_hint: '5–8 чел. → минивэн (отдельный тариф) · детские кресла бесплатно',
+    luggage: 'Багаж', luggage_s: '(чемоданов)', notes: 'Примечания',
+    notes_ph: 'Детское кресло, адрес отеля, доп. остановки...', required: 'Обязательные поля',
+    t_arrival: 'Время прилёта', t_departure: 'Время отправления', t_time: 'Время',
+    send: 'Отправить в WhatsApp', fill: 'Заполните обязательные поля',
+    wa_hi: 'Здравствуйте! Хочу забронировать трансфер.', wa_route: 'Маршрут', wa_cost: 'Стоимость', wa_cost_chat: 'уточним в чате',
+    wa_name: 'Имя', wa_phone: 'Телефон', wa_date: 'Дата', wa_flight: 'Номер рейса', wa_pax: 'Пассажиров', wa_lug: 'Багаж', wa_notes: 'Примечания',
+    trust: ['✅ Без предоплаты', '🌙 Ночью та же цена', '👶 Детское кресло', '⏱ Ответ 15 мин'],
+  },
+  uk: {
+    airport_full: 'Аеропорт Аліканте (ALC)', city_alicante: 'Місто Аліканте', alc_short: 'Аліканте ALC', alicante: 'Аліканте',
+    done: 'Готово', done_h: 'Заявку надіслано у WhatsApp',
+    done_p: 'Ми відкрили чат із заповненими даними. Натисніть «Надіслати» — відповімо за 15 хвилин.',
+    done_again: 'Замовити ще одну поїздку',
+    head_title: 'Бронювання трансферу', head_s1: 'Крок 1 — оберіть маршрут', head_s2: 'Крок 2 — ваші контакти',
+    from: 'Звідки', seg_airport: 'Аеропорт', seg_city: 'Місто', seg_other: 'Інший', seg_city_s: 'Аліканте', seg_other_s: 'місто',
+    from_ph: 'Введіть місто відправлення...', from_hint: 'Ціна для міст поза списком обговорюється в чаті',
+    to: 'Куди', to_ph: 'Введіть місто...',
+    cost: 'Вартість трансферу', price_req: 'Ціна на запит', go: 'Перейти до бронювання',
+    pick_from: 'Оберіть місто відправлення', pick_to: 'Оберіть місто призначення', by_request: 'на запит', back: 'Назад',
+    name: 'Імʼя', phone: 'Телефон', optional: '(необовʼязково)', date: 'Дата',
+    flight: 'Номер рейсу', flight_hint: 'Відстежуємо рейс — зустрінемо, навіть якщо він затримався',
+    pax: 'Пасажирів', pax_hint: '5–8 осіб → мінівен (окремий тариф) · дитячі крісла безкоштовно',
+    luggage: 'Багаж', luggage_s: '(валіз)', notes: 'Примітки',
+    notes_ph: 'Дитяче крісло, адреса готелю, дод. зупинки...', required: 'Обовʼязкові поля',
+    t_arrival: 'Час прильоту', t_departure: 'Час відправлення', t_time: 'Час',
+    send: 'Надіслати у WhatsApp', fill: 'Заповніть обовʼязкові поля',
+    wa_hi: 'Вітаю! Хочу забронювати трансфер.', wa_route: 'Маршрут', wa_cost: 'Вартість', wa_cost_chat: 'уточнимо в чаті',
+    wa_name: 'Імʼя', wa_phone: 'Телефон', wa_date: 'Дата', wa_flight: 'Номер рейсу', wa_pax: 'Пасажирів', wa_lug: 'Багаж', wa_notes: 'Примітки',
+    trust: ['✅ Без передоплати', '🌙 Вночі та сама ціна', '👶 Дитяче крісло', '⏱ Відповідь 15 хв'],
+  },
+};
 // BookingForm v6 — the alicante-transfers 2-step booking flow, rebuilt with a
 // new "header-band" design: a navy gradient header carries the title + step
 // dots, the origin is a segmented control, and the live price is a gradient
@@ -13,6 +61,10 @@ import { ALL_ROUTES, waLink } from './BrandData.jsx'
 function BookingForm({ initialSlug = '', lockDestination = false }) {
   const { useState, useRef, useEffect } = React;
   const all = ALL_ROUTES || [];
+  const lang = useLang();
+  const t = useT(STR);
+  // Localized display name for a route (synthetic airport → the airport label).
+  const disp = (r) => !r ? '' : (r.slug === '__airport__' || r.city === 'Airport') ? t.airport_full : cityName(r, lang);
 
   // Synthetic "Airport" destination — used when the origin is a city
   const airportDestination = { slug: '__airport__', city: 'Airport', ru: 'Аэропорт Аликанте (ALC)', price: 25, emoji: '✈️', time: 15 };
@@ -41,7 +93,7 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
     if (r) {
       setFromMode('airport');
       setSelected(r);
-      setQuery(r.ru);
+      setQuery(disp(r));
       setOpen(false);
       if (lockDestination) setStep(2);
     }
@@ -77,9 +129,9 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
         r.city.toLowerCase().includes(fromQuery.toLowerCase()))
     : fromCandidates;
 
-  const select = (r) => { setSelected(r); setQuery(r.ru); setOpen(false); };
+  const select = (r) => { setSelected(r); setQuery(disp(r)); setOpen(false); };
   const selectFrom = (r) => {
-    setFromCity(r); setFromQuery(r.ru); setFromOpen(false);
+    setFromCity(r); setFromQuery(disp(r)); setFromOpen(false);
     setSelected(null); setQuery('');
   };
   const reset = () => {
@@ -101,29 +153,29 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
     && (!airportInvolved || form.flight.trim()));
 
   const fromLabel = fromMode === 'airport'
-    ? 'Аэропорт Аликанте (ALC)'
-    : fromMode === 'city' ? 'Город Аликанте' : (fromCity ? fromCity.ru : '');
-  const toLabel = selected ? (selected.city === 'Airport' ? 'Аэропорт Аликанте (ALC)' : selected.ru) : '';
+    ? t.airport_full
+    : fromMode === 'city' ? t.city_alicante : (fromCity ? disp(fromCity) : '');
+  const toLabel = selected ? disp(selected) : '';
   const timeLabel = fromMode === 'airport'
-    ? 'Время прилёта'
-    : (selected && selected.city === 'Airport') ? 'Время отправления' : 'Время';
+    ? t.t_arrival
+    : (selected && selected.city === 'Airport') ? t.t_departure : t.t_time;
 
   const buildWaUrl = () => {
     const lines = [
-      'Здравствуйте! Хочу забронировать трансфер.',
+      t.wa_hi,
       '',
-      `🚗 Маршрут: ${fromLabel} → ${toLabel}`,
-      fromMode === 'other' ? '💶 Стоимость: уточним в чате' : `💶 Стоимость: ${selected.price}€`,
+      `🚗 ${t.wa_route}: ${fromLabel} → ${toLabel}`,
+      fromMode === 'other' ? `💶 ${t.wa_cost}: ${t.wa_cost_chat}` : `💶 ${t.wa_cost}: ${selected.price}€`,
       '',
-      `👤 Имя: ${form.name}`,
-      `📞 Телефон: ${form.phone}`,
+      `👤 ${t.wa_name}: ${form.name}`,
+      `📞 ${t.wa_phone}: ${form.phone}`,
       form.email ? `📧 Email: ${form.email}` : null,
-      `📅 Дата: ${form.date}`,
+      `📅 ${t.wa_date}: ${form.date}`,
       `🕐 ${timeLabel}: ${form.time}`,
-      form.flight ? `✈️ Номер рейса: ${form.flight}` : null,
-      `👥 Пассажиров: ${form.passengers}`,
-      `🧳 Багаж: ${form.luggage}`,
-      form.notes ? `📝 Примечания: ${form.notes}` : null,
+      form.flight ? `✈️ ${t.wa_flight}: ${form.flight}` : null,
+      `👥 ${t.wa_pax}: ${form.passengers}`,
+      `🧳 ${t.wa_lug}: ${form.luggage}`,
+      form.notes ? `📝 ${t.wa_notes}: ${form.notes}` : null,
     ].filter(Boolean).join('\n');
     return waLink(lines);
   };
@@ -209,18 +261,18 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
     return (
       <div className="t2-booking">
         <div style={card}>
-          <div style={headBand}><div style={headGlow} /><div style={headTitle}>Готово</div></div>
+          <div style={headBand}><div style={headGlow} /><div style={headTitle}>{t.done}</div></div>
           <div style={{ ...body, textAlign: 'center', padding: '36px 28px' }}>
             <div style={{ fontSize: 52, marginBottom: 12 }}>✅</div>
             <h3 style={{ fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 21, color: 'var(--t2-ink)', margin: '0 0 8px' }}>
-              Заявка отправлена в WhatsApp
+              {t.done_h}
             </h3>
             <p style={{ fontSize: 14, color: 'var(--t2-ink-3)', margin: '0 0 20px' }}>
-              Мы открыли чат с заполненными данными. Нажмите «Отправить» — ответим за 15 минут.
+              {t.done_p}
             </p>
             <button onClick={() => { setDone(false); setStep(1); }}
               style={{ padding: '12px 24px', borderRadius: 12, background: 'var(--t2-ink)', color: '#fff', fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 14, border: 0, cursor: 'pointer' }}>
-              Заказать ещё одну поездку
+              {t.done_again}
             </button>
           </div>
         </div>
@@ -233,8 +285,8 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
     <div style={headBand}>
       <div style={headGlow} />
       <div>
-        <div style={headTitle}>Бронирование трансфера</div>
-        <div style={headSub}>{step === 1 ? 'Шаг 1 — выберите маршрут' : 'Шаг 2 — ваши контакты'}</div>
+        <div style={headTitle}>{t.head_title}</div>
+        <div style={headSub}>{step === 1 ? t.head_s1 : t.head_s2}</div>
       </div>
       <div style={stepDots}>
         <div style={stepDot(step === 1, step > 1)}>{step > 1 ? '✓' : '1'}</div>
@@ -248,19 +300,19 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
   if (step === 1) {
     const ready = !!selected && (fromMode !== 'other' || !!fromCity);
     const notReadyLabel = !selected
-      ? (fromMode === 'other' && !fromCity ? 'Выберите город отправления' : 'Выберите город назначения')
+      ? (fromMode === 'other' && !fromCity ? t.pick_from : t.pick_to)
       : null;
     return (
       <div className="t2-booking">
         <div style={card}>
           <Header />
           <div style={body}>
-            <label style={label}>Откуда</label>
+            <label style={label}>{t.from}</label>
             <div style={seg}>
               {[
-                { m: 'airport', icon: '✈️', t: 'Аэропорт', s: 'ALC' },
-                { m: 'city',    icon: '🏙', t: 'Город',    s: 'Аликанте' },
-                { m: 'other',   icon: '📍', t: 'Другой',   s: 'город' },
+                { m: 'airport', icon: '✈️', t: t.seg_airport, s: 'ALC' },
+                { m: 'city',    icon: '🏙', t: t.seg_city,    s: t.seg_city_s },
+                { m: 'other',   icon: '📍', t: t.seg_other,   s: t.seg_other_s },
               ].map(o => (
                 <button key={o.m} type="button" onClick={() => switchFromMode(o.m)} style={segBtn(fromMode === o.m)}>
                   <span style={{ fontSize: 16 }}>{o.icon}</span>
@@ -278,7 +330,7 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
                   value={fromQuery}
                   onChange={e => { setFromQuery(e.target.value); setFromOpen(true); if (fromCity) setFromCity(null); }}
                   onFocus={() => setFromOpen(true)}
-                  placeholder="Введите город отправления..."
+                  placeholder={t.from_ph}
                   style={field}
                 />
                 {fromOpen && fromFiltered.length > 0 && (
@@ -292,24 +344,24 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
                         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
                         style={{ ...dropItem, justifyContent: 'flex-start', gap: 11, color: 'var(--t2-ink)', animation: 't2-fade-up .26s var(--t2-ease-out) both', animationDelay: `${Math.min(i, 8) * 26}ms` }}>
                         <span style={{ fontSize: 18 }}>{r.emoji}</span>
-                        <span style={{ fontSize: 15, fontWeight: 500 }}>{r.ru}</span>
+                        <span style={{ fontSize: 15, fontWeight: 500 }}>{disp(r)}</span>
                       </button>
                     ))}
                   </div>
                 )}
-                <p style={hint}>Цена для городов вне списка обсуждается в чате</p>
+                <p style={hint}>{t.from_hint}</p>
               </div>
             )}
 
             <div style={{ marginTop: 16, marginBottom: 4, position: 'relative' }} ref={dropRef}>
-              <label style={label}>Куда</label>
+              <label style={label}>{t.to}</label>
               <input
                 ref={inputRef}
                 type="text" inputMode="search"
                 value={query}
                 onChange={e => { setQuery(e.target.value); setOpen(true); if (selected) setSelected(null); }}
                 onFocus={() => setOpen(true)}
-                placeholder="Введите город..."
+                placeholder={t.to_ph}
                 style={field}
               />
               {open && filtered.length > 0 && (
@@ -324,7 +376,7 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
                       style={{ ...dropItem, color: 'var(--t2-ink)', animation: 't2-fade-up .26s var(--t2-ease-out) both', animationDelay: `${Math.min(i, 8) * 26}ms` }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
                         <span style={{ fontSize: 18 }}>{r.emoji}</span>
-                        <span style={{ fontSize: 15, fontWeight: 500 }}>{r.ru}</span>
+                        <span style={{ fontSize: 15, fontWeight: 500 }}>{disp(r)}</span>
                       </span>
                       <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--t2-red)', flexShrink: 0, marginLeft: 8 }}>{r.price}€</span>
                     </button>
@@ -336,9 +388,9 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
             {selected && fromMode !== 'other' && (
               <div className="t2-anim-pop" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 18px', borderRadius: 14, marginTop: 16, background: 'linear-gradient(135deg, var(--t2-red), #c01928)', color: '#fff', boxShadow: '0 14px 30px rgba(238,46,61,.25)' }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', opacity: .8 }}>Стоимость трансфера</div>
+                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', opacity: .8 }}>{t.cost}</div>
                   <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 13, marginTop: 2 }}>
-                    {fromMode === 'airport' ? 'Аликанте ALC' : 'Город Аликанте'} → {toLabel}
+                    {fromMode === 'airport' ? t.alc_short : t.city_alicante} → {toLabel}
                   </div>
                 </div>
                 <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 34, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
@@ -351,14 +403,14 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
               <div className="t2-anim-pop" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 14, marginTop: 16, background: 'var(--t2-bg-2)', border: '1px solid var(--t2-line)' }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, background: 'var(--t2-red-soft)' }}>💬</div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--t2-red)' }}>Цена по запросу</div>
-                  <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--t2-ink)', marginTop: 2 }}>{fromCity.ru} → {toLabel}</div>
+                  <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--t2-red)' }}>{t.price_req}</div>
+                  <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--t2-ink)', marginTop: 2 }}>{disp(fromCity)} → {toLabel}</div>
                 </div>
               </div>
             )}
 
             <button type="button" disabled={!ready} onClick={() => setStep(2)} style={primaryBtn(ready)}>
-              {ready ? <>Перейти к бронированию <span>→</span></> : notReadyLabel}
+              {ready ? <>{t.go} <span>→</span></> : notReadyLabel}
             </button>
           </div>
         </div>
@@ -382,17 +434,17 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
               <span style={{ fontSize: 18 }}>{selected ? selected.emoji : '🚖'}</span>
               <span style={{ fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--t2-ink)' }}>
-                {fromMode === 'airport' ? 'ALC' : fromMode === 'city' ? 'Аликанте' : (fromCity ? fromCity.ru : '')} → {toLabel}
+                {fromMode === 'airport' ? 'ALC' : fromMode === 'city' ? t.alicante : (fromCity ? disp(fromCity) : '')} → {toLabel}
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, marginLeft: 8 }}>
               {fromMode === 'other'
-                ? <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--t2-red)' }}>по запросу</span>
+                ? <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', color: 'var(--t2-red)' }}>{t.by_request}</span>
                 : <span style={{ fontFamily: "'Onest',sans-serif", fontSize: 16, fontWeight: 800, color: 'var(--t2-red)' }}>{selected.price}€</span>}
               {!lockDestination && (
                 <button type="button" onClick={() => setStep(1)}
                   style={{ fontSize: 12, padding: '5px 10px', borderRadius: 8, border: '1px solid var(--t2-line)', background: '#fff', cursor: 'pointer', fontWeight: 600, color: 'var(--t2-ink-2)' }}>
-                  ← Назад
+                  ← {t.back}
                 </button>
               )}
             </div>
@@ -400,20 +452,20 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
-              <label style={label}>Имя <span style={{ color: 'var(--t2-red)' }}>*</span></label>
+              <label style={label}>{t.name} <span style={{ color: 'var(--t2-red)' }}>*</span></label>
               <input type="text" value={form.name} onChange={e => setField('name', e.target.value)} placeholder="Jason Statham" autoComplete="name" style={field} />
             </div>
             <div>
-              <label style={label}>Телефон <span style={{ color: 'var(--t2-red)' }}>*</span></label>
+              <label style={label}>{t.phone} <span style={{ color: 'var(--t2-red)' }}>*</span></label>
               <input type="tel" value={form.phone} onChange={e => setField('phone', e.target.value)} placeholder="+34 000 00 00 00" autoComplete="tel" inputMode="tel" style={field} />
             </div>
             <div>
-              <label style={label}>Email <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(необязательно)</span></label>
+              <label style={label}>Email <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.optional}</span></label>
               <input type="email" value={form.email} onChange={e => setField('email', e.target.value)} placeholder="example@gmail.com" autoComplete="email" inputMode="email" style={field} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <div>
-                <label style={label}>Дата <span style={{ color: 'var(--t2-red)' }}>*</span></label>
+                <label style={label}>{t.date} <span style={{ color: 'var(--t2-red)' }}>*</span></label>
                 <input type="date" value={form.date} onChange={e => setField('date', e.target.value)} min={new Date().toISOString().split('T')[0]} style={field} />
               </div>
               <div>
@@ -423,26 +475,26 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
             </div>
             <div>
               <label style={label}>
-                Номер рейса {airportInvolved
+                {t.flight} {airportInvolved
                   ? <span style={{ color: 'var(--t2-red)' }}>*</span>
-                  : <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(необязательно)</span>}
+                  : <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.optional}</span>}
               </label>
               <input type="text" value={form.flight} onChange={e => setField('flight', e.target.value)}
                 placeholder="напр. FR2643" autoComplete="off"
                 style={{ ...field, textTransform: 'uppercase' }} />
-              <p style={hint}>Отслеживаем рейс — встретим, даже если он задержан</p>
+              <p style={hint}>{t.flight_hint}</p>
             </div>
             <div>
-              <label style={label}>Пассажиров</label>
+              <label style={label}>{t.pax}</label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                 {['1','2','3','4','5','6','7','8'].map(n => (
                   <button key={n} type="button" onClick={() => setField('passengers', n)} style={gridBtn(form.passengers === n)}>{n}</button>
                 ))}
               </div>
-              <p style={hint}>5–8 чел. → минивэн (отдельный тариф) · детские кресла бесплатно</p>
+              <p style={hint}>{t.pax_hint}</p>
             </div>
             <div>
-              <label style={label}>Багаж <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(чемоданов)</span></label>
+              <label style={label}>{t.luggage} <span style={{ color: 'var(--t2-ink-3)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.luggage_s}</span></label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                 {['0','1','2','3','4','5','6','7+'].map(n => (
                   <button key={n} type="button" onClick={() => setField('luggage', n)} style={gridBtn(form.luggage === n)}>{n}</button>
@@ -450,15 +502,15 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
               </div>
             </div>
             <div>
-              <label style={label}>Примечания</label>
+              <label style={label}>{t.notes}</label>
               <textarea value={form.notes} onChange={e => setField('notes', e.target.value)}
-                placeholder="Детское кресло, адрес отеля, доп. остановки..." rows={3}
+                placeholder={t.notes_ph} rows={3}
                 style={{ ...field, resize: 'none', lineHeight: 1.6 }} />
             </div>
           </div>
 
           <p style={{ fontSize: 11, margin: '12px 0 14px', color: 'var(--t2-ink-3)' }}>
-            <span style={{ color: 'var(--t2-red)' }}>*</span> Обязательные поля
+            <span style={{ color: 'var(--t2-red)' }}>*</span> {t.required}
           </p>
 
           <a
@@ -481,8 +533,8 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
               <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.86L0 24l6.316-1.508A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.214-3.727.89.916-3.622-.235-.372A9.818 9.818 0 1112 21.818z"/>
             </svg>
             <span>{formValid
-              ? `Отправить в WhatsApp${fromMode !== 'other' ? ` — ${selected.price}€` : ''}`
-              : 'Заполните обязательные поля'}</span>
+              ? `${t.send}${fromMode !== 'other' ? ` — ${selected.price}€` : ''}`
+              : t.fill}</span>
           </a>
         </div>
       </div>
@@ -492,11 +544,12 @@ function BookingForm({ initialSlug = '', lockDestination = false }) {
 }
 
 function TrustRow() {
+  const t = useT(STR);
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 14 }}>
-      {['✅ Без предоплаты', '🌙 Ночью та же цена', '👶 Детское кресло', '⏱ Ответ 15 мин'].map((t, i) => (
+      {t.trust.map((label, i) => (
         <span key={i} style={{ fontSize: 12, padding: '6px 12px', borderRadius: 999, fontWeight: 600, background: '#fff', color: 'var(--t2-ink-2)', border: '1px solid var(--t2-line)', boxShadow: 'var(--t2-sh-1)' }}>
-          {t}
+          {label}
         </span>
       ))}
     </div>

@@ -1,10 +1,39 @@
 import React from 'react'
 import { BRAND, waLink, tgLink } from './BrandData.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
+import { useT } from './i18n.jsx'
 // CTA banner v2 — diagonal split: deep red panel left with action, ink panel
 // right with phone. Replaces the dark stars band.
+//
+// Bilingual: RU default + UK strings in the co-located STR bundle, picked by useT().
+
+const STR = {
+  ru: {
+    tag: '📲 Готовы ехать',
+    h2a: 'Закажите трансфер', h2b: 'прямо сейчас',
+    sub: 'Ответ в WhatsApp за 15 минут. Цена фиксированная, оплата по факту приезда.',
+    order_wa: 'Заказать в WhatsApp',
+    order_tg: 'Заказать в Telegram',
+    tg_msg: 'Здравствуйте! Хочу заказать трансфер.',
+    or_call: 'Или позвоните',
+    phone_sub: 'Бесплатный звонок из Испании. Говорим по-русски.',
+    chat: 'Чат', call: 'Звонок',
+  },
+  uk: {
+    tag: '📲 Готові їхати',
+    h2a: 'Замовте трансфер', h2b: 'прямо зараз',
+    sub: 'Відповідь у WhatsApp за 15 хвилин. Ціна фіксована, оплата за фактом приїзду.',
+    order_wa: 'Замовити у WhatsApp',
+    order_tg: 'Замовити у Telegram',
+    tg_msg: 'Вітаю! Хочу замовити трансфер.',
+    or_call: 'Або зателефонуйте',
+    phone_sub: 'Безкоштовний дзвінок з Іспанії. Розмовляємо українською.',
+    chat: 'Чат', call: 'Дзвінок',
+  },
+};
 
 function CTABanner({ onNav }) {
+  const t = useT(STR);
   const wrap = { padding: '32px', background: '#fff' };
   const card = {
     position: 'relative', overflow: 'hidden',
@@ -49,36 +78,36 @@ function CTABanner({ onNav }) {
       <div style={card} className="t2-cta-card">
         <div style={left} className="t2-cta-left">
           <div style={leftBlob} />
-          <span style={tag}>📲 Готовы ехать</span>
-          <h2 style={h2}>Закажите трансфер<br/>прямо сейчас</h2>
-          <p style={sub}>Ответ в WhatsApp за 15 минут. Цена фиксированная, оплата по факту приезда.</p>
+          <span style={tag}>{t.tag}</span>
+          <h2 style={h2}>{t.h2a}<br/>{t.h2b}</h2>
+          <p style={sub}>{t.sub}</p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
             <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366" aria-hidden="true">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                 <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.86L0 24l6.316-1.508A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.372l-.36-.214-3.727.89.916-3.622-.235-.372A9.818 9.818 0 1112 21.818z"/>
               </svg>
-              Заказать в WhatsApp
+              {t.order_wa}
             </a>
-            <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+            <a href={tgLink(t.tg_msg)} target="_blank" rel="noopener noreferrer"
                style={{ ...waBtn, background: '#229ED9', color: '#fff' }}>
-              <TelegramIcon size={18} /> Заказать в Telegram
+              <TelegramIcon size={18} /> {t.order_tg}
             </a>
           </div>
         </div>
 
         <div style={right} className="t2-cta-right">
           <div style={rightBlob} />
-          <div style={phoneEyebrow}>Или позвоните</div>
+          <div style={phoneEyebrow}>{t.or_call}</div>
           <a href={'tel:' + BRAND.tel} style={phone}>{BRAND.phone}</a>
-          <div style={phoneSub}>Бесплатный звонок из Испании. Говорим по-русски.</div>
+          <div style={phoneSub}>{t.phone_sub}</div>
           <div style={hours}>
             <div style={hourCell}>
-              <div style={hourLabel}>Чат</div>
+              <div style={hourLabel}>{t.chat}</div>
               <div style={hourValue}>24 / 7</div>
             </div>
             <div style={hourCell}>
-              <div style={hourLabel}>Звонок</div>
+              <div style={hourLabel}>{t.call}</div>
               <div style={hourValue}>08:00 — 23:00</div>
             </div>
           </div>

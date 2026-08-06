@@ -1,9 +1,56 @@
 import React from 'react'
+import { useT } from './i18n.jsx'
 // Why us v2 — bento grid: 4 cards of different sizes, one big "story" card
 // stretching across two columns + two rows, three small feature cards filling
 // the rest. Replaces the old 2-col stats + 4 cards layout.
+//
+// Bilingual: all copy lives in the co-located STR bundle (RU default + UK),
+// picked by useT().
+
+const STR = {
+  ru: {
+    eyebrow: 'Почему мы',
+    h2: 'Поездка без сюрпризов в цене',
+    lede: 'Аликанте, Бенидорм, Кальпе, Торревьеха, Валенсия и 40+ адресов Costa Blanca.',
+    story_eyebrow: 'Наша история',
+    story_title: 'В Costa Blanca с 2021. Каждая поездка — фикс-цена и встреча с табличкой.',
+    story_text: 'Запустили сервис из аэропорта Аликанте, сегодня закрываем 40+ направлений по Испании. Растём только на «сарафане» — поэтому каждая поездка важна.',
+    stat_years: 'лет',
+    stat_trips: 'поездок',
+    stat_rating: 'рейтинг',
+    c1_title: 'Цена не меняется',
+    c1_text: 'Фиксируется при бронировании. Платные дороги — включены.',
+    c2_title: 'Лицензированные авто',
+    c2_text: 'EU-лицензия и страховка пассажиров на каждой поездке.',
+    c3_title: 'Следим за рейсом',
+    c3_text: 'Рейс задержали — ждём бесплатно, без лимита по времени.',
+    c4_title: 'Поддержка по-русски',
+    c4_text: 'WhatsApp 8:00–23:00, ответ за 3–5 минут.',
+  },
+  uk: {
+    eyebrow: 'Чому ми',
+    h2: 'Поїздка без сюрпризів у ціні',
+    lede: 'Аліканте, Бенідорм, Кальпе, Торев’єха, Валенсія і 40+ адрес Costa Blanca.',
+    story_eyebrow: 'Наша історія',
+    story_title: 'У Costa Blanca з 2021. Кожна поїздка — фікс-ціна і зустріч з табличкою.',
+    story_text: 'Запустили сервіс з аеропорту Аліканте, сьогодні закриваємо 40+ напрямків по Іспанії. Зростаємо тільки на «сарафанному радіо» — тому кожна поїздка важлива.',
+    stat_years: 'років',
+    stat_trips: 'поїздок',
+    stat_rating: 'рейтинг',
+    c1_title: 'Ціна не змінюється',
+    c1_text: 'Фіксується при бронюванні. Платні дороги — включені.',
+    c2_title: 'Ліцензовані авто',
+    c2_text: 'EU-ліцензія і страховка пасажирів на кожній поїздці.',
+    c3_title: 'Стежимо за рейсом',
+    c3_text: 'Рейс затримали — чекаємо безкоштовно, без ліміту за часом.',
+    c4_title: 'Підтримка українською',
+    c4_text: 'WhatsApp 8:00–23:00, відповідь за 3–5 хвилин.',
+  },
+};
 
 function WhyUs() {
+  const t = useT(STR);
+
   const wrap = { padding: '88px 32px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1200, margin: '0 auto' };
 
@@ -56,56 +103,56 @@ function WhyUs() {
       <div style={inner}>
         <div style={head}>
           <div style={headLeft}>
-            <div style={eyebrow}>Почему мы</div>
-            <h2 style={h2}>Поездка без сюрпризов в цене</h2>
+            <div style={eyebrow}>{t.eyebrow}</div>
+            <h2 style={h2}>{t.h2}</h2>
           </div>
-          <p style={lede}>Аликанте, Бенидорм, Кальпе, Торревьеха, Валенсия и 40+ адресов Costa Blanca.</p>
+          <p style={lede}>{t.lede}</p>
         </div>
 
         <div style={grid} className="t2-bento">
           <div style={big}>
             <div style={bigGloss} />
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={bigEyebrow}>Наша история</div>
-              <h3 style={bigTitle}>В Costa Blanca с 2021. Каждая поездка — фикс-цена и встреча с табличкой.</h3>
-              <p style={bigText}>Запустили сервис из аэропорта Аликанте, сегодня закрываем 40+ направлений по Испании. Растём только на «сарафане» — поэтому каждая поездка важна.</p>
+              <div style={bigEyebrow}>{t.story_eyebrow}</div>
+              <h3 style={bigTitle}>{t.story_title}</h3>
+              <p style={bigText}>{t.story_text}</p>
             </div>
             <div style={bigStats}>
-              <div><div style={bigStatNum}>5</div><div style={bigStatLabel}>лет</div></div>
-              <div><div style={bigStatNum}>3 000+</div><div style={bigStatLabel}>поездок</div></div>
-              <div><div style={bigStatNum}>4.9 ★</div><div style={bigStatLabel}>рейтинг</div></div>
+              <div><div style={bigStatNum}>5</div><div style={bigStatLabel}>{t.stat_years}</div></div>
+              <div><div style={bigStatNum}>3 000+</div><div style={bigStatLabel}>{t.stat_trips}</div></div>
+              <div><div style={bigStatNum}>4.9 ★</div><div style={bigStatLabel}>{t.stat_rating}</div></div>
             </div>
           </div>
 
           <div style={small}>
             <div style={smallEmoji}>💳</div>
             <div>
-              <h3 style={smallTitle}>Цена не меняется</h3>
-              <p style={smallText}>Фиксируется при бронировании. Платные дороги — включены.</p>
+              <h3 style={smallTitle}>{t.c1_title}</h3>
+              <p style={smallText}>{t.c1_text}</p>
             </div>
           </div>
 
           <div style={redCard}>
             <div style={smallEmoji}>🛡</div>
             <div>
-              <h3 style={redTitle}>Лицензированные авто</h3>
-              <p style={redText}>EU-лицензия и страховка пассажиров на каждой поездке.</p>
+              <h3 style={redTitle}>{t.c2_title}</h3>
+              <p style={redText}>{t.c2_text}</p>
             </div>
           </div>
 
           <div style={small}>
             <div style={smallEmoji}>✈</div>
             <div>
-              <h3 style={smallTitle}>Следим за рейсом</h3>
-              <p style={smallText}>Рейс задержали — ждём бесплатно, без лимита по времени.</p>
+              <h3 style={smallTitle}>{t.c3_title}</h3>
+              <p style={smallText}>{t.c3_text}</p>
             </div>
           </div>
 
           <div style={small}>
             <div style={smallEmoji}>💬</div>
             <div>
-              <h3 style={smallTitle}>Поддержка по-русски</h3>
-              <p style={smallText}>WhatsApp 8:00–23:00, ответ за 3–5 минут.</p>
+              <h3 style={smallTitle}>{t.c4_title}</h3>
+              <p style={smallText}>{t.c4_text}</p>
             </div>
           </div>
         </div>

@@ -1,10 +1,27 @@
 import React from 'react'
 import BookingForm from './BookingForm.jsx'
-import { TRUST, BRAND } from './BrandData.jsx'
+import { getTrust, BRAND } from './BrandData.jsx'
+import { useT, useLang } from './i18n.jsx'
 // Hero v4 — two-column: headline + subheadline + trust badges on the LEFT,
 // the 2-step BookingForm on the RIGHT. Stacks on mobile.
 
+const STR = {
+  ru: {
+    status: 'Доступен сейчас · Работаем 24/7',
+    h1a: 'Трансфер из аэропорта Аликанте по ',
+    sub: 'Частный автомобиль с русскоязычным водителем. Встречаем с табличкой, цена не меняется, оплата по факту приезда.',
+  },
+  uk: {
+    status: 'Доступний зараз · Працюємо 24/7',
+    h1a: 'Трансфер з аеропорту Аліканте по ',
+    sub: 'Приватний автомобіль з україномовним водієм. Зустрічаємо з табличкою, ціна не змінюється, оплата за фактом приїзду.',
+  },
+};
+
 function Hero({ onBook }) {
+  const lang = useLang();
+  const t = useT(STR);
+  const trust = getTrust(lang);
   const wrap = {
     position: 'relative', overflow: 'hidden',
     background: 'linear-gradient(160deg, #fff 0%, #fef5f5 50%, #fff 100%)',
@@ -36,13 +53,12 @@ function Hero({ onBook }) {
         <div style={grid} className="t2-hero-grid">
           {/* LEFT — headline + subheadline */}
           <div>
-            <span style={chip} className="t2-anim-up"><span style={dot} />Доступен сейчас · Работаем 24/7</span>
+            <span style={chip} className="t2-anim-up"><span style={dot} />{t.status}</span>
             <h1 style={{ ...h1, animationDelay: '.07s' }} className="t2-anim-up">
-              Трансфер из аэропорта Аликанте по <span style={accent}>Costa Blanca</span>
+              {t.h1a}<span style={accent}>Costa Blanca</span>
             </h1>
             <p style={{ ...p, animationDelay: '.14s' }} className="t2-anim-up">
-              Частный автомобиль с русскоязычным водителем. Встречаем с табличкой,
-              цена не меняется, оплата по факту приезда.
+              {t.sub}
             </p>
 
             <div style={{ ...ctaRow, animationDelay: '.2s' }} className="t2-anim-up">
@@ -50,10 +66,10 @@ function Hero({ onBook }) {
             </div>
 
             <div style={{ ...trustRow, animationDelay: '.26s' }} className="t2-anim-up">
-              {(TRUST || []).map((t, i) => (
+              {(trust || []).map((item, i) => (
                 <div key={i} style={trustBadge}>
-                  <span style={{ fontSize: 18 }}>{t.icon}</span>
-                  <span>{t.text}</span>
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span>{item.text}</span>
                 </div>
               ))}
             </div>

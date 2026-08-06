@@ -1,13 +1,43 @@
 import React from 'react'
 import PageHero from './PageHero.jsx'
 import CTABanner from './CTABanner.jsx'
-import { NEWS_POSTS } from './News.data.jsx'
-import { POPULAR } from './BrandData.jsx'
+import { NEWS_POSTS, newsField } from './News.data.jsx'
+import { POPULAR, cityName } from './BrandData.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // News list — marketing-style layout. Currently empty state; renders posts
 // from window.NEWS_POSTS when populated.
+//
+// Bilingual: RU default + UK UI strings picked by useT(); post fields (title,
+// excerpt) come through newsField() so UK posts show their parallel *_uk copy.
+const STR = {
+  ru: {
+    eyebrow: '📰 Полезное',
+    title: 'Новости и гайды',
+    subtitle: 'Жизнь в Испании, маршруты Costa Blanca, советы для туристов и эмигрантов.',
+    empty: 'Раздел временно пустой — материалы скоро появятся.',
+    services: 'Наши услуги:',
+    all_routes: '🚖 Все маршруты трансфера',
+    prices: '💶 Цены',
+    alicante_to: 'Аликанте →',
+    contacts: '📞 Контакты',
+  },
+  uk: {
+    eyebrow: '📰 Корисне',
+    title: 'Новини та гайди',
+    subtitle: 'Життя в Іспанії, маршрути Costa Blanca, поради для туристів та емігрантів.',
+    empty: 'Розділ тимчасово порожній — матеріали скоро з’являться.',
+    services: 'Наші послуги:',
+    all_routes: '🚖 Усі маршрути трансферу',
+    prices: '💶 Ціни',
+    alicante_to: 'Аліканте →',
+    contacts: '📞 Контакти',
+  },
+};
 
 function NewsList({ onOpenPost, onNav }) {
+  const t = useT(STR);
+  const lang = useLang();
   const posts = (NEWS_POSTS || []);
 
   const wrap = { background: '#fff' };
@@ -29,41 +59,45 @@ function NewsList({ onOpenPost, onNav }) {
   return (
     <>
       <PageHero
-        eyebrow="📰 Полезное"
-        title="Новости и гайды"
-        subtitle="Жизнь в Испании, маршруты Costa Blanca, советы для туристов и эмигрантов." />
+        eyebrow={t.eyebrow}
+        title={t.title}
+        subtitle={t.subtitle} />
 
       <div style={wrap}>
         <div style={inner}>
           {posts.length === 0 ? (
-            <div style={empty}>Раздел временно пустой — материалы скоро появятся.</div>
+            <div style={empty}>{t.empty}</div>
           ) : (
             <div style={grid}>
-              {posts.map(p => (
-                <a key={p.slug} style={card} href={pathOf('news-post', p.slug)}
-                   onClick={() => onOpenPost(p.slug)}
-                   onMouseEnter={lift} onMouseLeave={drop}>
-                  <img src={p.image || DEFAULT_IMG} alt={p.title} loading="lazy" decoding="async" style={cardImg} />
-                  <div style={cardBody}>
-                    <div style={meta}>{p.date}</div>
-                    <h2 style={title}>{p.title}</h2>
-                    {p.excerpt && <p style={excerpt}>{p.excerpt}</p>}
-                  </div>
-                </a>
-              ))}
+              {posts.map(p => {
+                const heading = newsField(p, 'title', lang);
+                const ex = newsField(p, 'excerpt', lang);
+                return (
+                  <a key={p.slug} style={card} href={pathOf('news-post', p.slug, lang)}
+                     onClick={() => onOpenPost(p.slug)}
+                     onMouseEnter={lift} onMouseLeave={drop}>
+                    <img src={p.image || DEFAULT_IMG} alt={heading} loading="lazy" decoding="async" style={cardImg} />
+                    <div style={cardBody}>
+                      <div style={meta}>{p.date}</div>
+                      <h2 style={title}>{heading}</h2>
+                      {ex && <p style={excerpt}>{ex}</p>}
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           )}
 
           {/* Cross-links to service pages — keeps the news hub connected to the
               money pages and passes crawl equity to the routes/prices. */}
           <div style={{ marginTop: 40, paddingTop: 28, borderTop: '1px solid var(--t2-line)', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t2-ink-3)', marginRight: 4 }}>Наши услуги:</span>
-            <a href={pathOf('routes')} style={pill}>🚖 Все маршруты трансфера</a>
-            <a href={pathOf('price')} style={pill}>💶 Цены</a>
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--t2-ink-3)', marginRight: 4 }}>{t.services}</span>
+            <a href={pathOf('routes', null, lang)} style={pill}>{t.all_routes}</a>
+            <a href={pathOf('price', null, lang)} style={pill}>{t.prices}</a>
             {(POPULAR || []).slice(0, 4).map(r => (
-              <a key={r.slug} href={pathOf('route', r.slug)} style={pill}>Аликанте → {r.ru}</a>
+              <a key={r.slug} href={pathOf('route', r.slug, lang)} style={pill}>{t.alicante_to} {cityName(r, lang)}</a>
             ))}
-            <a href={pathOf('contacts')} style={pill}>📞 Контакты</a>
+            <a href={pathOf('contacts', null, lang)} style={pill}>{t.contacts}</a>
           </div>
         </div>
       </div>

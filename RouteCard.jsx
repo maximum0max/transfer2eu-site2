@@ -1,5 +1,17 @@
-/* global React, Button, Icon */
+import React from 'react'
+import { useT } from './i18n.jsx'
+/* global Button, Icon */
+// Bilingual: the only UI copy on this card is the CTA label — the rest
+// (from/to/duration/price) is data passed in via props. Strings live in the
+// co-located STR bundle (RU default + UK), picked by useT().
+
+const STR = {
+  ru: { book: 'Забронировать' },
+  uk: { book: 'Забронювати' },
+};
+
 function RouteCard({ from, to, duration, vehicle, price, badge, gradient, img, onClick }) {
+  const t = useT(STR);
   const [hover, setHover] = React.useState(false);
   return (
     <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} onClick={onClick}
@@ -30,7 +42,7 @@ function RouteCard({ from, to, duration, vehicle, price, badge, gradient, img, o
         <div style={{ display: 'flex', gap: 16, color: 'var(--t2-ink-3)', fontSize: 13 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="clock" size={14} color="var(--t2-ink-3)" />{duration}</span>
         </div>
-        <Button variant="primaryDark" size="sm" style={{ alignSelf: 'flex-start', marginTop: 4, background: '#000' }}>Забронировать</Button>
+        <Button variant="primaryDark" size="sm" style={{ alignSelf: 'flex-start', marginTop: 4, background: '#000' }}>{t.book}</Button>
       </div>
     </div>
   );

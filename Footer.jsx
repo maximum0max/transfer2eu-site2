@@ -1,10 +1,34 @@
 import React from 'react'
-import { BRAND, POPULAR, waLink } from './BrandData.jsx'
+import { BRAND, POPULAR, waLink, cityName } from './BrandData.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // Footer v2 — light 3-column layout: brand on the left, nav columns in the
 // middle, contact card on the right. Replaces the dark SEO-link footer.
+//
+// Bilingual (RU default + UK): visible strings live in the co-located STR
+// bundle picked by useT(); nav hrefs and the popular-route names carry the
+// active language via pathOf(view, slug, lang) / cityName(route, lang).
+
+const STR = {
+  ru: {
+    tagline: 'Частный трансфер из аэропорта Аликанте по 40+ направлениям Costa Blanca, Мурсии и Валенсии. Фиксированная цена, русскоязычный водитель.',
+    col_site: 'Сайт', col_popular: 'Популярные маршруты', col_contact: 'Связь 24/7',
+    home: 'Главная', routes: 'Маршруты', price: 'Цены', drivers: 'Водителям', contacts: 'Контакты',
+    from_alicante: 'Аликанте →', l_phone: 'Телефон',
+    b_contacts: 'Контакты', b_partners: 'Партнёрам', b_all: 'Все направления',
+  },
+  uk: {
+    tagline: 'Приватний трансфер з аеропорту Аліканте за 40+ напрямками Costa Blanca, Мурсії та Валенсії. Фіксована ціна, україномовний водій.',
+    col_site: 'Сайт', col_popular: 'Популярні маршрути', col_contact: 'Зв\'язок 24/7',
+    home: 'Головна', routes: 'Маршрути', price: 'Ціни', drivers: 'Водіям', contacts: 'Контакти',
+    from_alicante: 'Аліканте →', l_phone: 'Телефон',
+    b_contacts: 'Контакти', b_partners: 'Партнерам', b_all: 'Усі напрямки',
+  },
+};
 
 function Footer({ onNav, onSelectRoute }) {
+  const t = useT(STR);
+  const lang = useLang();
   const popular = (POPULAR || []).slice(0, 5);
 
   const wrap = { background: 'var(--t2-bg-2)', borderTop: '1px solid var(--t2-line)' };
@@ -50,41 +74,41 @@ function Footer({ onNav, onSelectRoute }) {
       <div style={inner}>
         <div style={grid} className="t2-footer-grid">
           <div>
-            <a href="/" onClick={() => onNav('home')} style={logo}>
+            <a href={pathOf('home', null, lang)} onClick={() => onNav('home')} style={logo}>
               <div style={logoMark}>T2</div>
               <div>
                 <div style={wordmark}>Transfer2EU</div>
                 <div style={wordmarkSub}>Alicante · 24/7</div>
               </div>
             </a>
-            <p style={tagline}>Частный трансфер из аэропорта Аликанте по 40+ направлениям Costa Blanca, Мурсии и Валенсии. Фиксированная цена, русскоязычный водитель.</p>
+            <p style={tagline}>{t.tagline}</p>
           </div>
 
           <div>
-            <div style={colTitle}>Сайт</div>
-            <a style={colLink} href={pathOf('home')} onClick={() => onNav('home')}>Главная</a>
-            <a style={colLink} href={pathOf('routes')} onClick={() => onNav('routes')}>Маршруты</a>
-            <a style={colLink} href={pathOf('price')} onClick={() => onNav('price')}>Цены</a>
-            <a style={colLink} href={pathOf('drivers')} onClick={() => onNav('drivers')}>Водителям</a>
-            <a style={colLink} href={pathOf('contacts')} onClick={() => onNav('contacts')}>Контакты</a>
+            <div style={colTitle}>{t.col_site}</div>
+            <a style={colLink} href={pathOf('home', null, lang)} onClick={() => onNav('home')}>{t.home}</a>
+            <a style={colLink} href={pathOf('routes', null, lang)} onClick={() => onNav('routes')}>{t.routes}</a>
+            <a style={colLink} href={pathOf('price', null, lang)} onClick={() => onNav('price')}>{t.price}</a>
+            <a style={colLink} href={pathOf('drivers', null, lang)} onClick={() => onNav('drivers')}>{t.drivers}</a>
+            <a style={colLink} href={pathOf('contacts', null, lang)} onClick={() => onNav('contacts')}>{t.contacts}</a>
           </div>
 
           <div>
-            <div style={colTitle}>Популярные маршруты</div>
+            <div style={colTitle}>{t.col_popular}</div>
             {popular.map(r => (
-              <a key={r.slug} style={colRouteLink} href={pathOf('route', r.slug)} onClick={() => onSelectRoute && onSelectRoute(r.slug)}>
-                <span>Аликанте → {r.ru}</span>
+              <a key={r.slug} style={colRouteLink} href={pathOf('route', r.slug, lang)} onClick={() => onSelectRoute && onSelectRoute(r.slug)}>
+                <span>{t.from_alicante} {cityName(r, lang)}</span>
                 <span style={routeAmount}>{r.price}€</span>
               </a>
             ))}
           </div>
 
           <div style={contactCard}>
-            <div style={contactTitle}>Связь 24/7</div>
+            <div style={contactTitle}>{t.col_contact}</div>
             <a href={'tel:' + BRAND.tel} style={{ ...contactRow, textDecoration: 'none' }}>
               <div style={contactIcon}>📞</div>
               <div style={{ flex: 1 }}>
-                <div style={contactLabel}>Телефон</div>
+                <div style={contactLabel}>{t.l_phone}</div>
                 <span style={contactValue}>{BRAND.phone}</span>
               </div>
             </a>
@@ -108,9 +132,9 @@ function Footer({ onNav, onSelectRoute }) {
         <div style={bottom}>
           <div>{BRAND.copy || '© 2026 Transfer2EU'}</div>
           <div style={bottomLinks}>
-            <a style={bottomLink} href={pathOf('contacts')} onClick={() => onNav('contacts')}>Контакты</a>
-            <a style={bottomLink} href={pathOf('drivers')} onClick={() => onNav('drivers')}>Партнёрам</a>
-            <a style={bottomLink} href={pathOf('routes')} onClick={() => onNav('routes')}>Все направления</a>
+            <a style={bottomLink} href={pathOf('contacts', null, lang)} onClick={() => onNav('contacts')}>{t.b_contacts}</a>
+            <a style={bottomLink} href={pathOf('drivers', null, lang)} onClick={() => onNav('drivers')}>{t.b_partners}</a>
+            <a style={bottomLink} href={pathOf('routes', null, lang)} onClick={() => onNav('routes')}>{t.b_all}</a>
           </div>
         </div>
       </div>

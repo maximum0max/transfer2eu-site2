@@ -1,17 +1,40 @@
 import React from 'react'
 import { waLink, tgLink } from './BrandData.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
+import { useT } from './i18n.jsx'
 // How it works v2 — vertical timeline with center spine and alternating
 // left/right step cards. Replaces the row-of-cards layout.
 
-const STEPS = [
-  { n: '01', icon: '💬', title: 'Напишите в WhatsApp',   text: 'Укажите дату, время вылета, маршрут и количество пассажиров.' },
-  { n: '02', icon: '✅', title: 'Получите подтверждение', text: 'Подтвердим заявку и пришлём данные водителя за сутки.' },
-  { n: '03', icon: '🙋', title: 'Водитель встречает вас', text: 'Водитель с именной табличкой ждёт в зале прилётов.' },
-  { n: '04', icon: '🏨', title: 'Комфортная поездка',     text: 'Чистое авто, климат-контроль, помощь с чемоданами.' },
-];
+const STR = {
+  ru: {
+    eyebrow: 'Просто и быстро', h2: 'Как заказать трансфер',
+    lede: 'Четыре шага. От первого сообщения до встречи у выхода из аэропорта.',
+    order_wa: 'Заказать в WhatsApp', order_tg: 'Заказать в Telegram',
+    tg_msg: 'Здравствуйте! Хочу заказать трансфер.',
+    steps: [
+      { n: '01', icon: '💬', title: 'Напишите в WhatsApp',   text: 'Укажите дату, время вылета, маршрут и количество пассажиров.' },
+      { n: '02', icon: '✅', title: 'Получите подтверждение', text: 'Подтвердим заявку и пришлём данные водителя за сутки.' },
+      { n: '03', icon: '🙋', title: 'Водитель встречает вас', text: 'Водитель с именной табличкой ждёт в зале прилётов.' },
+      { n: '04', icon: '🏨', title: 'Комфортная поездка',     text: 'Чистое авто, климат-контроль, помощь с чемоданами.' },
+    ],
+  },
+  uk: {
+    eyebrow: 'Просто і швидко', h2: 'Як замовити трансфер',
+    lede: 'Чотири кроки. Від першого повідомлення до зустрічі біля виходу з аеропорту.',
+    order_wa: 'Замовити у WhatsApp', order_tg: 'Замовити у Telegram',
+    tg_msg: 'Вітаю! Хочу замовити трансфер.',
+    steps: [
+      { n: '01', icon: '💬', title: 'Напишіть у WhatsApp',   text: 'Вкажіть дату, час вильоту, маршрут і кількість пасажирів.' },
+      { n: '02', icon: '✅', title: 'Отримайте підтвердження', text: 'Підтвердимо заявку і надішлемо дані водія за добу.' },
+      { n: '03', icon: '🙋', title: 'Водій зустрічає вас', text: 'Водій з іменною табличкою чекає в залі прильоту.' },
+      { n: '04', icon: '🏨', title: 'Комфортна поїздка',     text: 'Чисте авто, клімат-контроль, допомога з валізами.' },
+    ],
+  },
+};
 
 function HowItWorks() {
+  const t = useT(STR);
+  const STEPS = t.steps;
   const wrap = { padding: '96px 32px 88px', background: '#fff', position: 'relative', overflow: 'hidden' };
   const inner = { maxWidth: 980, margin: '0 auto', position: 'relative' };
 
@@ -58,9 +81,9 @@ function HowItWorks() {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Просто и быстро</div>
-          <h2 style={h2}>Как заказать трансфер</h2>
-          <p style={lede}>Четыре шага. От первого сообщения до встречи у выхода из аэропорта.</p>
+          <div style={eyebrow}>{t.eyebrow}</div>
+          <h2 style={h2}>{t.h2}</h2>
+          <p style={lede}>{t.lede}</p>
         </div>
 
         <div style={spineWrap} className="t2-timeline">
@@ -94,11 +117,11 @@ function HowItWorks() {
 
         <div style={cta}>
           <a href={waLink()} target="_blank" rel="noopener noreferrer" style={waBtn}>
-            📲 Заказать в WhatsApp
+            📲 {t.order_wa}
           </a>
-          <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')} target="_blank" rel="noopener noreferrer"
+          <a href={tgLink(t.tg_msg)} target="_blank" rel="noopener noreferrer"
              style={{ ...waBtn, background: '#229ED9', boxShadow: '0 12px 24px rgba(34,158,217,.25)' }}>
-            <TelegramIcon size={18} /> Заказать в Telegram
+            <TelegramIcon size={18} /> {t.order_tg}
           </a>
         </div>
       </div>

@@ -20,7 +20,7 @@ import Anketa from './Anketa.jsx'
 import Reveal from './Reveal.jsx'
 import { parsePath, navigate, navigatePath, subscribe } from './router.jsx'
 import { getSeo, applyHead } from './seo.jsx'
-import { LangContext, localizePath, splitLang, switchLangPath, saveLang } from './i18n.jsx'
+import { LangContext, useLang, localizePath, splitLang, switchLangPath, saveLang } from './i18n.jsx'
 
 export default function App() {
   // Current location is derived from the URL, not from a click handler. This is
@@ -111,17 +111,21 @@ export default function App() {
 }
 
 function NotFound() {
+  const lang = useLang();
+  const t = lang === 'uk'
+    ? { h: 'Сторінку не знайдено', p: 'Можливо, посилання застаріле. Поверніться на головну або до списку маршрутів.', btn: 'На головну' }
+    : { h: 'Страница не найдена', p: 'Возможно, ссылка устарела. Вернитесь на главную или к списку маршрутов.', btn: 'На главную' };
   return (
     <section style={{ padding: '96px 24px', textAlign: 'center', background: '#fff' }}>
       <div style={{ fontSize: 48, marginBottom: 8 }}>🧭</div>
       <h1 style={{ fontFamily: "'Onest',sans-serif", fontSize: 30, color: 'var(--t2-ink)', margin: '0 0 8px' }}>
-        Страница не найдена
+        {t.h}
       </h1>
       <p style={{ color: 'var(--t2-ink-3)', margin: '0 0 24px' }}>
-        Возможно, ссылка устарела. Вернитесь на главную или к списку маршрутов.
+        {t.p}
       </p>
-      <a href="/" style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 12, background: 'var(--t2-red)', color: '#fff', textDecoration: 'none', fontFamily: "'Inter',system-ui", fontWeight: 700 }}>
-        На главную
+      <a href={localizePath('/', lang)} style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 12, background: 'var(--t2-red)', color: '#fff', textDecoration: 'none', fontFamily: "'Inter',system-ui", fontWeight: 700 }}>
+        {t.btn}
       </a>
     </section>
   );

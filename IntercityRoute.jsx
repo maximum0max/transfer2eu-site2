@@ -2,14 +2,36 @@ import React from 'react'
 import PageHero from './PageHero.jsx'
 import CTABanner from './CTABanner.jsx'
 import { findIntercity } from './Intercity.data.jsx'
-import { BRAND, POPULAR, waLink } from './BrandData.jsx'
+import { BRAND, POPULAR, waLink, cityName } from './BrandData.jsx'
 import { pathOf } from './router.jsx'
+import { useT, useLang } from './i18n.jsx'
 // Standalone page for a non-airport (intercity) transfer, e.g. Valencia →
 // Benidorm. Kept separate from RoutePage.jsx so the Alicante-airport catalog
 // stays clean, while this URL is still a real, indexable, internally-linked page.
 
+const STR = {
+  ru: {
+    nf_eyebrow: '🚖 Трансфер', nf_title: 'Маршрут не найден', nf_sub: 'Попробуйте выбрать направление из каталога.', all_routes: '← Все маршруты',
+    ic: 'Междугородний трансфер', fix: 'Фикс-цена за автомобиль',
+    order_wa: '📲 Заказать в WhatsApp', see_also: 'Смотрите также',
+    all_routes2: '🚖 Все маршруты трансфера', prices: '💶 Цены', contacts: '📞 Контакты 24/7',
+    alc: 'Аликанте →', hh: 'ч', mm: 'мин',
+    wa_msg: (from, to, p) => `Здравствуйте! Хочу заказать такси ${from} → ${to} (${p}€).`,
+  },
+  uk: {
+    nf_eyebrow: '🚖 Трансфер', nf_title: 'Маршрут не знайдено', nf_sub: 'Спробуйте обрати напрямок із каталогу.', all_routes: '← Усі маршрути',
+    ic: 'Міжміський трансфер', fix: 'Фікс-ціна за автомобіль',
+    order_wa: '📲 Замовити у WhatsApp', see_also: 'Дивіться також',
+    all_routes2: '🚖 Усі маршрути трансферу', prices: '💶 Ціни', contacts: '📞 Контакти 24/7',
+    alc: 'Аліканте →', hh: 'год', mm: 'хв',
+    wa_msg: (from, to, p) => `Вітаю! Хочу замовити таксі ${from} → ${to} (${p}€).`,
+  },
+};
+
 function IntercityRoute({ slug, onNav }) {
   const r = findIntercity(slug);
+  const t = useT(STR);
+  const lang = useLang();
 
   const wrap = { background: '#fff' };
   const inner = { maxWidth: 820, margin: '0 auto', padding: '56px 24px' };
@@ -21,8 +43,8 @@ function IntercityRoute({ slug, onNav }) {
   if (!r) {
     return (
       <>
-        <PageHero eyebrow="🚖 Трансфер" title="Маршрут не найден" subtitle="Попробуйте выбрать направление из каталога." />
-        <div style={inner}><a style={pill} href={pathOf('routes')}>← Все маршруты</a></div>
+        <PageHero eyebrow={t.nf_eyebrow} title={t.nf_title} subtitle={t.nf_sub} />
+        <div style={inner}><a style={pill} href={pathOf('routes', null, lang)}>{t.all_routes}</a></div>
         <CTABanner onNav={onNav} />
       </>
     );
@@ -37,7 +59,9 @@ function IntercityRoute({ slug, onNav }) {
     }
   };
 
-  const waMsg = `Здравствуйте! Хочу заказать такси ${r.from} → ${r.to} (${r.price}€).`;
+  const icFrom = (lang === 'uk' && r.from_uk) || r.from;
+  const icTo = (lang === 'uk' && r.to_uk) || r.to;
+  const waMsg = t.wa_msg(icFrom, icTo, r.price);
 
   // Booking CTA card
   const ctaCard = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', margin: '8px 0 8px', padding: '22px 24px', borderRadius: 18, background: 'linear-gradient(135deg, var(--t2-deep), #0b1e33)', color: '#fff' };
@@ -49,35 +73,35 @@ function IntercityRoute({ slug, onNav }) {
 
   return (
     <>
-      <PageHero eyebrow={`${r.emoji} Междугородний трансфер`} title={r.h1} subtitle={r.intro} />
+      <PageHero eyebrow={`${r.emoji} ${t.ic}`} title={(lang === 'uk' && r.h1_uk) || r.h1} subtitle={(lang === 'uk' && r.intro_uk) || r.intro} />
       <div style={wrap}>
         <div style={inner}>
           <div style={ctaCard}>
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', opacity: .7 }}>Фикс-цена за автомобиль</div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', opacity: .7 }}>{t.fix}</div>
               <div style={priceBig}>{r.price}€</div>
-              <div style={{ fontSize: 13, opacity: .8, marginTop: 4 }}>{r.from} → {r.to} · ~{Math.floor(r.time / 60)} ч {r.time % 60} мин · {r.distance} км</div>
+              <div style={{ fontSize: 13, opacity: .8, marginTop: 4 }}>{icFrom} → {icTo} · ~{Math.floor(r.time / 60)} {t.hh} {r.time % 60} {t.mm} · {r.distance} км</div>
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <a href={waLink(waMsg)} target="_blank" rel="noopener noreferrer" style={waBtn}>📲 Заказать в WhatsApp</a>
+              <a href={waLink(waMsg)} target="_blank" rel="noopener noreferrer" style={waBtn}>{t.order_wa}</a>
               <a href={'tel:' + BRAND.tel} style={phoneBtn}>📞 {BRAND.phone}</a>
             </div>
           </div>
 
-          {r.body.map(renderBlock)}
+          {((lang === 'uk' && r.body_uk) || r.body).map(renderBlock)}
 
           {/* Internal links — related airport routes + service hubs */}
           <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid var(--t2-line)' }}>
             <div style={{ fontFamily: "'Onest',sans-serif", fontWeight: 800, fontSize: 18, color: 'var(--t2-ink)', margin: '0 0 12px' }}>
-              Смотрите также
+              {t.see_also}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-              <a href={pathOf('routes')} style={pill}>🚖 Все маршруты трансфера</a>
-              <a href={pathOf('price')} style={pill}>💶 Цены</a>
+              <a href={pathOf('routes', null, lang)} style={pill}>{t.all_routes2}</a>
+              <a href={pathOf('price', null, lang)} style={pill}>{t.prices}</a>
               {routeLinks.map(x => (
-                <a key={x.slug} href={pathOf('route', x.slug)} style={pill}>📍 Аликанте → {x.ru} · {x.price}€</a>
+                <a key={x.slug} href={pathOf('route', x.slug, lang)} style={pill}>📍 {t.alc} {cityName(x, lang)} · {x.price}€</a>
               ))}
-              <a href={pathOf('contacts')} style={pill}>📞 Контакты 24/7</a>
+              <a href={pathOf('contacts', null, lang)} style={pill}>{t.contacts}</a>
             </div>
           </div>
         </div>
