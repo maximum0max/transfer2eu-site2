@@ -252,7 +252,9 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
   const lang = useLang();
   const t = useT(STR);
   const r = findRoute(slug);
-  const guide = r ? getRouteGuide(r.slug) : null;
+  // Guides aren't translated yet, so only show them on the Russian site (matches
+  // the prerenderer, which omits the guide block on /uk pages).
+  const guide = (r && lang === 'ru') ? getRouteGuide(r.slug) : null;
   const article = r ? getRouteArticle(r.slug, lang) : null;
 
   if (!r) {
@@ -436,8 +438,8 @@ function RouteDetailsBand({ r, onNav, guide }) {
       <div style={inner}>
         <div style={grid} className="t2-route-grid">
           <div style={{ paddingTop: 24 }}>
-            <div style={eyebrow}>Маршрут на карте</div>
-            <h2 style={h2}>Дорога из аэропорта ALC в {r.ru}</h2>
+            <div style={eyebrow}>{t.route_on_map}</div>
+            <h2 style={h2}>{t.road_from_alc(cityName(r, lang))}</h2>
             <div style={mapWrap}>
               <iframe title={mapTitle} src={mapSrc} width="100%" height="100%"
                 style={{ border: 0, display: 'block' }} loading="lazy"
@@ -445,14 +447,14 @@ function RouteDetailsBand({ r, onNav, guide }) {
             </div>
             <p style={{ ...mapNote, textAlign: 'center' }}>{mapNoteText}</p>
             <div style={{ ...phoneRow, justifyContent: 'center' }}>
-              <a href={waLink(`Здравствуйте! Хочу заказать трансфер из аэропорта Аликанте (ALC) в ${r.ru}.`)}
+              <a href={waLink(t.wa_msg(cityName(r, lang)))}
                  target="_blank" rel="noopener noreferrer" style={contactBtn}>
-                📲 Заказать в WhatsApp
+                📲 {t.order_wa}
               </a>
-              <a href={tgLink('Здравствуйте! Хочу заказать трансфер.')}
+              <a href={tgLink(t.tg_msg)}
                  target="_blank" rel="noopener noreferrer"
                  style={{ ...contactBtn, background: '#229ED9', border: '1px solid #229ED9' }}>
-                <TelegramIcon /> Заказать в Telegram
+                <TelegramIcon /> {t.order_tg}
               </a>
               <a href={'tel:' + BRAND.tel} style={{ ...contactBtn, background: '#cbd5e1', color: 'var(--t2-ink)', border: '1px solid #b3c0cf' }}>📞 {BRAND.phone}</a>
             </div>
@@ -480,11 +482,13 @@ function RouteDetailsBand({ r, onNav, guide }) {
 
 /* ============ 3. Trip breakdown — what happens during the trip ============ */
 function TripBreakdown({ r }) {
+  const t = useT(STR);
+  const lang = useLang();
   const STEPS = [
-    { icon: '🛬', title: 'Прилёт в ALC',          text: 'Водитель отслеживает рейс. Ждёт у выхода с именной табличкой.' },
-    { icon: '🧳', title: 'Багаж в машину',        text: 'Помогаем с чемоданами, идём к парковке через 5 минут.' },
-    { icon: '🛣',  title: `Дорога ${r.time} мин`, text: 'Платные дороги уже оплачены. Wi-Fi и вода — есть.' },
-    { icon: '🏨', title: `Прибытие в ${r.ru}`,    text: 'Дверь в дверь — отель, апартаменты или ресторан.' },
+    { icon: '🛬', title: t.step1_t, text: t.step1_x },
+    { icon: '🧳', title: t.step2_t, text: t.step2_x },
+    { icon: '🛣',  title: `${t.step3_t} ${r.time} ${t.min}`, text: t.step3_x },
+    { icon: '🏨', title: `${t.step4_t} ${cityName(r, lang)}`, text: t.step4_x },
   ];
 
   const wrap = { padding: '88px 32px', background: '#fff' };
@@ -514,8 +518,8 @@ function TripBreakdown({ r }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Как проходит трансфер</div>
-          <h2 style={h2}>Из ALC в {r.ru} — шаг за шагом</h2>
+          <div style={eyebrow}>{t.tb_eyebrow}</div>
+          <h2 style={h2}>{t.tb_h2(cityName(r, lang))}</h2>
         </div>
         <div style={flow}>
           {STEPS.map((s, i) => (
@@ -540,29 +544,14 @@ function TripBreakdown({ r }) {
 
 /* ============ 4. Vehicle tiers ============ */
 function VehicleTiers({ basePrice }) {
-  const TIERS = [
-    {
-      key: 'standard', name: 'Стандарт', icon: '🚗',
-      car: 'Skoda Octavia / Seat Leon', cap: 'до 4 пассажиров',
-      luggage: '3 чемодана', delta: 0,
-      features: ['Кондиционер', 'Wi-Fi', 'Бутылка воды', 'Детское кресло'],
-      bg: '#fff', highlight: false,
-    },
-    {
-      key: 'comfort', name: 'Комфорт', icon: '🚘',
-      car: 'Mercedes E-class', cap: 'до 4 пассажиров',
-      luggage: '4 чемодана', delta: 15,
-      features: ['Премиум-салон', 'Кожа', 'Wi-Fi', 'Climate control', 'Детское кресло'],
-      bg: '#fff', highlight: true,
-    },
-    {
-      key: 'minivan', name: 'Минивэн', icon: '🚐',
-      car: 'Mercedes V-class / VW Caravelle', cap: 'до 8 пассажиров',
-      luggage: '8 чемоданов', delta: 30,
-      features: ['Большой багажник', 'Wi-Fi', 'Климат-зона', 'Кресла для детей'],
-      bg: '#fff', highlight: false,
-    },
+  const t = useT(STR);
+  // Structural fields stay here; localized name/cap/luggage/features come from STR.
+  const TIER_META = [
+    { key: 'standard', icon: '🚗', car: 'Skoda Octavia / Seat Leon', delta: 0,  bg: '#fff', highlight: false },
+    { key: 'comfort',  icon: '🚘', car: 'Mercedes E-class',          delta: 15, bg: '#fff', highlight: true },
+    { key: 'minivan',  icon: '🚐', car: 'Mercedes V-class / VW Caravelle', delta: 30, bg: '#fff', highlight: false },
   ];
+  const TIERS = TIER_META.map((m, i) => ({ ...m, ...t.tiers[i] }));
 
   const wrap = { padding: '88px 32px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1280, margin: '0 auto' };
@@ -593,25 +582,25 @@ function VehicleTiers({ basePrice }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Класс автомобиля</div>
-          <h2 style={h2}>Выберите комфорт под свою компанию</h2>
-          <p style={lede}>Все три класса с русскоязычным водителем и фиксированной ценой.</p>
+          <div style={eyebrow}>{t.vt_eyebrow}</div>
+          <h2 style={h2}>{t.vt_h2}</h2>
+          <p style={lede}>{t.vt_lede}</p>
         </div>
         <div style={grid}>
-          {TIERS.map(t => (
-            <div key={t.key} style={card(t.highlight)}>
-              {t.highlight && <span style={ribbon}>Популярный</span>}
-              <div style={carEmoji}>{t.icon}</div>
-              <h3 style={tierName}>{t.name}</h3>
-              <div style={tierCar}>{t.car}</div>
+          {TIERS.map(tier => (
+            <div key={tier.key} style={card(tier.highlight)}>
+              {tier.highlight && <span style={ribbon}>{t.vt_popular}</span>}
+              <div style={carEmoji}>{tier.icon}</div>
+              <h3 style={tierName}>{tier.name}</h3>
+              <div style={tierCar}>{tier.car}</div>
               <div style={meta}>
-                <span>👥 {t.cap}</span>
-                <span>🧳 {t.luggage}</span>
+                <span>👥 {tier.cap}</span>
+                <span>🧳 {tier.luggage}</span>
               </div>
-              <div style={tierPrice}>{basePrice + t.delta}€</div>
-              <div style={tierPriceLabel}>За автомобиль</div>
+              <div style={tierPrice}>{basePrice + tier.delta}€</div>
+              <div style={tierPriceLabel}>{t.per_car}</div>
               <ul style={features}>
-                {t.features.map((f, i) => (
+                {tier.features.map((f, i) => (
                   <li key={i} style={feat}>
                     <span style={{ color: 'var(--t2-red)', fontWeight: 800 }}>✓</span>
                     {f}
@@ -628,6 +617,8 @@ function VehicleTiers({ basePrice }) {
 
 /* ============ 5. Destination teaser ============ */
 function DestinationTeaser({ r }) {
+  const t = useT(STR);
+  const lang = useLang();
   const wrap = { padding: '88px 32px', background: '#fff' };
   const inner = { maxWidth: 1200, margin: '0 auto' };
   const split = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'center' };
@@ -648,53 +639,18 @@ function DestinationTeaser({ r }) {
   const photoTagText = { fontFamily: "'Onest',sans-serif", fontWeight: 700, fontSize: 13, color: 'var(--t2-ink)' };
   const photoTagSub = { fontSize: 11, color: 'var(--t2-ink-3)', marginTop: 2 };
 
-  // Per-destination teasers; defaults work for any city.
-  const HIGHLIGHTS = {
-    Бенидорм: [
-      { icon: '🏖', title: 'Levante и Poniente', text: 'Два пляжа с золотым песком и набережной 3 км.' },
-      { icon: '🎢', title: 'Terra Mítica',         text: 'Тематический парк на 30 аттракционов.' },
-      { icon: '🌃', title: 'Ночная жизнь',         text: 'Старый город — бары, тапас, live-музыка.' },
-    ],
-    Кальпе: [
-      { icon: '⛰',  title: 'Penyal d\'Ifac',     text: 'Скала-символ Средиземноморья, высота 332 м.' },
-      { icon: '🐟', title: 'Рыбный рынок',        text: 'Самый аутентичный аукцион улова на побережье.' },
-      { icon: '🛶', title: 'Снорклинг',           text: 'Прозрачная вода вокруг бухты Calalga.' },
-    ],
-    Торревьеха: [
-      { icon: '🦩', title: 'Розовое озеро',       text: 'Соляное озеро с фламинго — фото-локация номер 1.' },
-      { icon: '🏝', title: 'Длинная пляжная коса', text: 'Кесада, Ла-Мата, Ла-Сения в радиусе 15 минут.' },
-      { icon: '🛒', title: 'Воскресный маркет',   text: 'Огромный рынок на 1000+ прилавков.' },
-    ],
-    Дения: [
-      { icon: '🏰', title: 'Замок XII века',       text: 'Главная достопримечательность над городом.' },
-      { icon: '⛵', title: 'Марина',                text: 'Один из лучших яхт-портов на Costa Blanca.' },
-      { icon: '🌳', title: 'Парк Montgó',          text: 'Заповедник с панорамами на 360°.' },
-    ],
-    Мурсия: [
-      { icon: '⛪', title: 'Кафедральный собор',   text: 'Барокко XVIII века в самом центре.' },
-      { icon: '🌹', title: 'Площадь Кардинала',    text: 'Главная площадь со старинными фасадами.' },
-      { icon: '🍴', title: 'Гастрономия',          text: 'Овощи Региона + морепродукты — лучшее меню юга.' },
-    ],
-    Валенсия: [
-      { icon: '🏛', title: 'Город искусств и наук', text: 'Футуристический комплекс Калатравы.' },
-      { icon: '🥘', title: 'Родина паэльи',         text: 'Лучшее блюдо Испании — здесь и сейчас.' },
-      { icon: '🌳', title: 'Парк Турии',            text: 'Реку превратили в зелёный парк — 9 км пешком.' },
-    ],
-  };
-  const items = HIGHLIGHTS[r.ru] || [
-    { icon: '🏖', title: 'Море и пляжи',      text: 'Чистые пляжи Costa Blanca с золотым песком.' },
-    { icon: '🍽',  title: 'Гастрономия',       text: 'Свежие морепродукты и местная кухня.' },
-    { icon: '🌅', title: 'Виды на закат',     text: 'Лучшие точки для фото на побережье.' },
-  ];
+  // Per-destination teasers (localized, keyed by the Russian city name); the
+  // default set works for any other city.
+  const items = t.highlights[r.ru] || t.highlightsDefault;
 
   return (
     <section style={wrap}>
       <div style={inner}>
         <div style={split} className="t2-dest-split">
           <div>
-            <div style={eyebrow}>Что вас ждёт</div>
-            <h2 style={h2}>{r.ru} — что посмотреть</h2>
-            <p style={body}>Мы знаем побережье как свои пять пальцев. Подскажем, куда сходить вечером, где поесть и какие места не пропустить.</p>
+            <div style={eyebrow}>{t.dt_eyebrow}</div>
+            <h2 style={h2}>{cityName(r, lang)} — {t.dt_what_to_see}</h2>
+            <p style={body}>{t.dt_body}</p>
             <ul style={bullets}>
               {items.map((it, i) => (
                 <li key={i} style={bullet}>
@@ -709,12 +665,12 @@ function DestinationTeaser({ r }) {
           </div>
           <div>
             <div style={photoCard}>
-              {r.img && <img src={r.img} alt={r.alt || r.ru} style={photoImg} />}
+              {r.img && <img src={r.img} alt={r.alt || cityName(r, lang)} style={photoImg} />}
               <div style={photoTag}>
                 <span style={photoTagEmoji}>{r.emoji}</span>
                 <div>
-                  <div style={photoTagText}>{r.ru}, Costa Blanca</div>
-                  <div style={photoTagSub}>~{r.time} минут от ALC</div>
+                  <div style={photoTagText}>{cityName(r, lang)}, Costa Blanca</div>
+                  <div style={photoTagSub}>~{r.time} {t.dt_minutes_from_alc}</div>
                 </div>
               </div>
             </div>
@@ -730,6 +686,8 @@ function DestinationTeaser({ r }) {
 
 /* ============ 6. Other routes ============ */
 function OtherRoutes({ currentSlug, onSelectRoute }) {
+  const t = useT(STR);
+  const lang = useLang();
   // Topical clustering for SEO: show routes in the SAME region first (a tight
   // internal-link neighbourhood), then fill with site-wide popular routes.
   // Every card is a real <a href> so search engines crawl the whole route graph.
@@ -746,7 +704,7 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
   }
   if (!related.length) return null;
 
-  const regionLabel = group ? group.label : null;
+  const regionLabel = group ? groupLabel(group, lang) : null;
 
   const wrap = { padding: '64px 32px 88px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1280, margin: '0 auto' };
@@ -770,29 +728,29 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Другие направления</div>
-          <h2 style={h2}>{regionLabel ? `Трансфер по региону «${regionLabel}»` : 'Популярные маршруты из ALC'}</h2>
+          <div style={eyebrow}>{t.or_eyebrow}</div>
+          <h2 style={h2}>{regionLabel ? `${t.or_transfer_by_region} «${regionLabel}»` : t.or_popular_from_alc}</h2>
         </div>
         <div style={grid}>
           {related.map(r => (
-            <a key={r.slug} style={card} href={pathOf('route', r.slug)}
+            <a key={r.slug} style={card} href={pathOf('route', r.slug, lang)}
                onClick={() => onSelectRoute(r.slug)}
-               aria-label={`Трансфер Аликанте → ${r.ru} ${r.price}€`}
+               aria-label={`${t.or_transfer_arrow} ${cityName(r, lang)} ${r.price}€`}
                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t2-red)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--t2-sh-2)'; }}
                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--t2-line)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-              <div style={thumb}>{r.img && <img src={r.img} alt={`Трансфер Аликанте — ${r.ru}`} loading="lazy" style={thumbImg} />}</div>
+              <div style={thumb}>{r.img && <img src={r.img} alt={`${t.transfer_alicante_dash} ${cityName(r, lang)}`} loading="lazy" style={thumbImg} />}</div>
               <div style={cText}>
-                <div style={cName}>{r.emoji} Аликанте → {r.ru}</div>
-                <div style={cTime}>{r.time} мин от ALC</div>
+                <div style={cName}>{r.emoji} {t.alicante} → {cityName(r, lang)}</div>
+                <div style={cTime}>{r.time} {t.min_from_alc}</div>
               </div>
               <div style={cPrice}>{r.price}€</div>
             </a>
           ))}
         </div>
         <div style={linkRow}>
-          <a style={pill} href={pathOf('routes')}>📍 Все 40+ направлений</a>
-          <a style={pill} href={pathOf('price')}>💶 Цены на трансфер</a>
-          <a style={pill} href={pathOf('news')}>📰 Полезное о Costa Blanca</a>
+          <a style={pill} href={pathOf('routes', null, lang)}>📍 {t.or_all_dirs}</a>
+          <a style={pill} href={pathOf('price', null, lang)}>💶 {t.or_prices}</a>
+          <a style={pill} href={pathOf('news', null, lang)}>📰 {t.or_useful}</a>
         </div>
       </div>
     </section>
@@ -801,6 +759,7 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
 
 /* ============ 5b. City guide — beaches, food, photo spots (with photos) ====== */
 function RouteGuide({ guide, cityRu = 'Аликанте' }) {
+  const t = useT(STR);
   const wrap = { padding: '88px 32px', background: 'var(--t2-bg-2)' };
   const inner = { maxWidth: 1100, margin: '0 auto' };
   const head = { textAlign: 'center', marginBottom: 28 };
@@ -852,21 +811,21 @@ function RouteGuide({ guide, cityRu = 'Аликанте' }) {
     <section style={wrap}>
       <div style={inner}>
         <div style={head}>
-          <div style={eyebrow}>Гид по {cityRu}</div>
-          <h2 style={h2}>Пляжи, еда и лучшие фото-локации</h2>
-          <p style={sub}>Пока водитель везёт вас из аэропорта — вот всё самое интересное в {cityRu} и вокруг.</p>
+          <div style={eyebrow}>{t.rg_guide_by} {cityRu}</div>
+          <h2 style={h2}>{t.rg_h2}</h2>
+          <p style={sub}>{t.rg_sub(cityRu)}</p>
         </div>
 
         {guide.beaches && guide.beaches.length > 0 &&
-          <Section icon="🏖" title={`Пляжи ${cityRu} и рядом`} sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />}
+          <Section icon="🏖" title={t.rg_beaches(cityRu)} sub={guide.beachesIntro} items={guide.beaches} badgeKey="dist" />}
         {guide.food && guide.food.length > 0 &&
-          <Section icon="🍽" title={`Где поесть в ${cityRu} — рекомендации`} sub={guide.foodIntro} items={guide.food} badgeKey="type" />}
+          <Section icon="🍽" title={t.rg_food(cityRu)} sub={guide.foodIntro} items={guide.food} badgeKey="type" />}
         {guide.photoSpots && guide.photoSpots.length > 0 &&
-          <Section icon="📸" title={`Что посмотреть и лучшие фото в ${cityRu}`} sub={guide.photoIntro} items={guide.photoSpots} />}
+          <Section icon="📸" title={t.rg_photo(cityRu)} sub={guide.photoIntro} items={guide.photoSpots} />}
 
         {creditList.length > 0 && (
           <details style={{ marginTop: 40, fontSize: 12, color: 'var(--t2-ink-3)' }}>
-            <summary style={{ cursor: 'pointer' }}>Авторы фотографий (Wikimedia Commons)</summary>
+            <summary style={{ cursor: 'pointer' }}>{t.rg_credits}</summary>
             <ul style={{ margin: '10px 0 0', paddingLeft: 18, lineHeight: 1.7 }}>
               {creditList.map((c, i) => (
                 <li key={i}>
