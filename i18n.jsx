@@ -21,7 +21,7 @@ const STORAGE_KEY = 't2_lang';
 // prerendered, the auto-redirect and the language switcher are inert, and no
 // uk hreflang is advertised. Flipped to true in the final commit once every
 // page has genuine Ukrainian content — then the whole /uk site goes live at once.
-export const UK_ENABLED = false;
+export const UK_ENABLED = true;
 
 // Split a pathname into { lang, path } where `path` is the language-agnostic
 // route (what router.parsePath resolves). "/uk/madrid" -> {uk, "/madrid"};
