@@ -470,7 +470,7 @@ async function main() {
     const { ALL_ROUTES, POPULAR } = await vite.ssrLoadModule('/BrandData.jsx');
     const { NEWS_POSTS } = await vite.ssrLoadModule('/News.data.jsx');
     const { INTERCITY_ROUTES } = await vite.ssrLoadModule('/Intercity.data.jsx');
-    const { ROUTE_GUIDES } = await vite.ssrLoadModule('/RouteGuide.data.jsx');
+    const { ROUTE_GUIDES, getRouteGuide } = await vite.ssrLoadModule('/RouteGuide.data.jsx');
     const { ROUTE_ARTICLES, getRouteArticle } = await vite.ssrLoadModule('/RouteArticles.data.jsx');
     const { cityName } = await vite.ssrLoadModule('/BrandData.jsx');
     const { UK_ENABLED } = await vite.ssrLoadModule('/i18n.jsx');
@@ -531,7 +531,7 @@ async function main() {
         const siblings = ALL_ROUTES.filter((x) => x.slug !== r.slug).slice(0, 8);
         // Guides aren't translated yet, so only attach them on RU pages (avoids
         // Russian guide text leaking onto a /uk page); the article is localized.
-        const guide = lang === 'ru' ? (ROUTE_GUIDES[r.slug] || null) : null;
+        const guide = getRouteGuide(r.slug, lang);
         const article = getRouteArticle(r.slug, lang);
         pages.push({
           view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings, guide, article, lang),

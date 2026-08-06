@@ -8,6 +8,9 @@
 // Commons by scripts/fetch-guide-photos.mjs); credits.json carries author/licence.
 
 import GUIDE_CREDITS from './GuidePhotos.data.json';
+// Ukrainian translations of the guides (same shape, keyed by slug). Filled in
+// batches; any slug missing here falls back to the Russian guide.
+import EXTRA_UK from './RouteGuide.uk.json';
 
 const img = (key) => '/assets/guide/' + key + '.jpg';
 
@@ -629,12 +632,19 @@ ROUTE_GUIDES['taxi-alicante-valencia'] = {
   ],
 };
 
-// Attach resolved image paths to every guide item.
-for (const g of Object.values(ROUTE_GUIDES)) {
-  for (const list of [g.beaches, g.food, g.photoSpots]) {
-    if (!list) continue;
-    for (const item of list) item.img = img(item.key);
+// Ukrainian guide store (same shape); missing slugs fall back to Russian.
+export const ROUTE_GUIDES_UK = EXTRA_UK || {};
+
+// Attach resolved image paths to every guide item (RU + UK share the same keys).
+for (const store of [ROUTE_GUIDES, ROUTE_GUIDES_UK]) {
+  for (const g of Object.values(store)) {
+    for (const list of [g.beaches, g.food, g.photoSpots]) {
+      if (!list) continue;
+      for (const item of list) item.img = img(item.key);
+    }
   }
 }
 
-export const getRouteGuide = (slug) => ROUTE_GUIDES[slug] || null;
+// Lang-aware: Ukrainian guide when available, else Russian.
+export const getRouteGuide = (slug, lang) =>
+  (lang === 'uk' && ROUTE_GUIDES_UK[slug]) || ROUTE_GUIDES[slug] || null;

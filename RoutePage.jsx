@@ -252,9 +252,7 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
   const lang = useLang();
   const t = useT(STR);
   const r = findRoute(slug);
-  // Guides aren't translated yet, so only show them on the Russian site (matches
-  // the prerenderer, which omits the guide block on /uk pages).
-  const guide = (r && lang === 'ru') ? getRouteGuide(r.slug) : null;
+  const guide = r ? getRouteGuide(r.slug, lang) : null;
   const article = r ? getRouteArticle(r.slug, lang) : null;
 
   if (!r) {
