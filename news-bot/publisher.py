@@ -112,6 +112,21 @@ def publish_post(rewritten: dict[str, Any]) -> str:
     # headline when absent, so only store it when the model actually gave one.
     if rewritten.get("seoTitle"):
         post["seoTitle"] = rewritten["seoTitle"]
+
+    # Ukrainian twin fields (bilingual site). Stored only when the model produced
+    # them; newsField() on the front-end falls back to the Russian field per
+    # language, so a missing UK field never breaks the /uk page.
+    if rewritten.get("title_uk"):
+        post["title_uk"] = rewritten["title_uk"]
+    if rewritten.get("excerpt_uk"):
+        post["excerpt_uk"] = rewritten["excerpt_uk"]
+    if rewritten.get("seoTitle_uk"):
+        post["seoTitle_uk"] = rewritten["seoTitle_uk"]
+    if rewritten.get("body_uk"):
+        body_uk = list(rewritten["body_uk"])
+        body_uk.append({"type": "p", "text": f"Джерело: {rewritten['source_title']}"})
+        post["body_uk"] = body_uk
+
     image_path = _download_image(rewritten.get("image_url"), slug)
     if image_path:
         post["image"] = image_path

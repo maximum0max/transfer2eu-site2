@@ -63,18 +63,30 @@ EXCERPT: 120–160 символов — краткая суть + причина
 
 ПУНКТУАЦИЯ (русский): тире «—» (U+2014) между частями предложения; кавычки-«ёлочки»; бренды не склоняй («у Tesla», «купить BMW»). Без двойных пробелов и пробелов перед запятой/точкой.
 
+УКРАИНСКАЯ ВЕРСИЯ (обязательно — сайт двуязычный RU/UK): помимо русских полей верни украинские title_uk, seo_title_uk, excerpt_uk и body_uk. Это КАЧЕСТВЕННЫЙ, живой и грамотный украинский перевод соответствующих русских полей (не дословная калька с русского). body_uk — ТОТ ЖЕ массив блоков с той же структурой (те же type, тот же порядок и количество), только текст на украинском. Бренды, модели машин и латинские названия (Tesla, BMW, Alicante, Costa Blanca) оставляй как есть; кириллические топонимы — по-украински (Аліканте, Іспанія, Мурсія, Валенсія, Бенідорм, Коста-Бланка). seo_title_uk — ≤60 символов.
+
 ВЕРНИ СТРОГО валидный JSON, без текста до или после:
 {
   "title": "...",
+  "title_uk": "... (украинский перевод заголовка)",
   "seo_title": "... (≤60 символов, суть в начале)",
+  "seo_title_uk": "... (≤60 символов, украинский)",
   "slug_source": "english phrase 3-6 words, no verbs, just the topic — used for the URL",
   "excerpt": "...",
+  "excerpt_uk": "... (украинский перевод excerpt)",
   "body": [
     {"type": "p", "text": "лид..."},
     {"type": "h2", "text": "подзаголовок"},
     {"type": "p", "text": "..."},
     {"type": "ul", "items": ["пункт 1", "пункт 2", "пункт 3"]},
     {"type": "p", "text": "вывод"}
+  ],
+  "body_uk": [
+    {"type": "p", "text": "той самий лід українською..."},
+    {"type": "h2", "text": "підзаголовок"},
+    {"type": "p", "text": "..."},
+    {"type": "ul", "items": ["пункт 1", "пункт 2", "пункт 3"]},
+    {"type": "p", "text": "висновок"}
   ],
   "tags": ["тег1", "тег2", "тег3"]
 }"""
@@ -184,6 +196,13 @@ def rewrite_article(
     # Concise <title> for search; empty falls back to the headline (the site
     # clamps long headlines to Google's ~60-char budget at render time anyway).
     data["seoTitle"] = str(data.get("seo_title") or "").strip()
+
+    # Ukrainian twin (the site is bilingual). Missing/invalid UK fields are fine —
+    # the front-end's newsField() falls back to the Russian field per language.
+    data["title_uk"] = str(data.get("title_uk") or "").strip()
+    data["excerpt_uk"] = str(data.get("excerpt_uk") or "").strip()
+    data["seoTitle_uk"] = str(data.get("seo_title_uk") or "").strip()
+    data["body_uk"] = _clean_body(data.get("body_uk")) if data.get("body_uk") else []
 
     tags = data.get("tags")
     data["tags"] = [str(t).strip() for t in tags if str(t).strip()][:8] if isinstance(tags, list) else []
