@@ -104,7 +104,7 @@ export const ROUTE_GROUPS = [
     label: 'Крупные города', emoji: '🏙',
     routes: [
       { slug: 'taxi-alicante-valencia',     city: 'Valencia',  ru: 'Валенсия',  price: 150, emoji: '🏛', time: 90  },
-      { slug: 'madrid',                     city: 'Madrid',    ru: 'Мадрид',    price: 290, emoji: '👑', time: 240 },
+      { slug: 'madrid',                     city: 'Madrid',    ru: 'Мадрид',    price: 350, emoji: '👑', time: 240 },
       { slug: 'barcelona',                  city: 'Barcelona', ru: 'Барселона', price: 310, emoji: '🎨', time: 300 },
       { slug: 'malaga',                     city: 'Malaga',    ru: 'Малага',    price: 310, emoji: '☀️', time: 290 },
     ],
