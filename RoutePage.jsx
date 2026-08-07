@@ -6,6 +6,7 @@ import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink, 
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
 import { getRouteArticle } from './RouteArticles.data.jsx'
 import SeoArticle from './SeoArticle.jsx'
+import GoogleReviews from './GoogleReviews.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
 import { pathOf } from './router.jsx'
 import { useT, useLang } from './i18n.jsx'
@@ -279,6 +280,9 @@ function RoutePage({ slug, onNav, onSelectRoute }) {
       {guide && <Reveal><RouteGuide guide={guide} cityRu={cityName(r, lang)} /></Reveal>}
       {article && <Reveal><SeoArticle {...article} /></Reveal>}
       <Reveal><OtherRoutes currentSlug={r.slug} onSelectRoute={onSelectRoute} /></Reveal>
+      {/* Real Google reviews as social proof right before the final CTA —
+          currently only on the Gran Alacant page (pilot). */}
+      {r.slug === 'gran-alacant' && <Reveal><GoogleReviews /></Reveal>}
       <Reveal><CTABanner onNav={onNav} /></Reveal>
     </>
   );

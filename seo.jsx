@@ -8,10 +8,13 @@
 // URLs; UK lives under /uk. Ukrainian metadata falls back to Russian wherever a
 // translation isn't in place yet.
 
+// NOTE: this module must stay LIGHT. It is imported by App.jsx (eagerly), so any
+// static import here ships in the main bundle on every page load. The heavy data
+// modules (News.data with all post bodies, RouteArticles.data with the 500 KB
+// long-form articles, Intercity.data) are therefore loaded lazily via dynamic
+// import() inside getSeo() — they only load when the corresponding view needs
+// them, and Vite turns them into separately-cached chunks.
 import { findRoute, cityName } from './BrandData.jsx';
-import { NEWS_POSTS, newsField } from './News.data.jsx';
-import { findIntercity } from './Intercity.data.jsx';
-import { getRouteMeta } from './RouteArticles.data.jsx';
 import { pathOf } from './router.jsx';
 import { localizePath, UK_ENABLED } from './i18n.jsx';
 
@@ -107,7 +110,7 @@ function alternatesFor(basePath) {
   };
 }
 
-export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
+export async function getSeo(view, routeSlug, postSlug, lang = 'ru') {
   const L = lang === 'uk' ? 'uk' : 'ru';
   const uk = L === 'uk';
 
@@ -115,6 +118,10 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
     const r = findRoute(routeSlug);
     if (r) {
       const base = pathOf('route', r.slug, 'ru');
+      // Lazy: RouteArticles.data carries 500 KB of long-form SEO articles. It is
+      // only fetched when the user actually opens a route page (RoutePage imports
+      // the same module, so this is never a separate extra network request).
+      const { getRouteMeta } = await import('./RouteArticles.data.jsx');
       const ov = getRouteMeta(r.slug, L) || {};
       const city = cityName(r, L);
       const dflt = uk
@@ -137,6 +144,8 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
   }
 
   if (view === 'intercity') {
+    // Lazy: Intercity.data is only needed for intercity views.
+    const { findIntercity } = await import('./Intercity.data.jsx');
     const r = findIntercity(routeSlug);
     if (r) {
       const base = pathOf('intercity', r.slug, 'ru');
@@ -151,6 +160,9 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
   }
 
   if (view === 'news-post') {
+    // Lazy: News.data carries all post bodies (~365 KB) — only loaded when a
+    // news page is actually visited. NewsList/NewsPost share this chunk.
+    const { NEWS_POSTS, newsField } = await import('./News.data.jsx');
     const post = (NEWS_POSTS || []).find((p) => p.slug === postSlug);
     if (post) {
       const base = pathOf('news-post', post.slug, 'ru');
@@ -166,6 +178,7 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
         description: clampDesc(excerpt || fallbackDesc),
         path: localizePath(base, L),
         alternates: alternatesFor(base),
+        published: isoDate(post.date),
       };
     }
   }
@@ -194,6 +207,19 @@ export function getSeo(view, routeSlug, postSlug, lang = 'ru') {
     path: null,
     noindex: true,
   };
+}
+
+// The news bot writes human dates ("29 июня 2026"); OG/schema need ISO. Tiny
+// mirror of the same helper in scripts/prerender.mjs.
+const RU_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля',
+  'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+function isoDate(human) {
+  const m = String(human || '').match(/(\d{1,2})\s+([а-яё]+)\s+(\d{4})/i);
+  if (!m) return null;
+  const month = RU_MONTHS.indexOf(m[2].toLowerCase());
+  if (month < 0) return null;
+  const d = new Date(Date.UTC(+m[3], month, +m[1]));
+  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
 }
 
 // --- DOM helpers: reuse the tag if it already exists in index.html, else create ---
@@ -236,6 +262,12 @@ export function applyHead(seo) {
   metaProp('og:title').setAttribute('content', seo.title);
   metaProp('og:description').setAttribute('content', seo.description);
   metaProp('og:locale').setAttribute('content', seo.lang === 'uk' ? 'uk_UA' : 'ru_RU');
+
+  // News articles carry publish timestamps (Open Graph "article" type).
+  if (seo.published) {
+    metaProp('article:published_time').setAttribute('content', seo.published);
+    metaProp('article:modified_time').setAttribute('content', seo.published);
+  }
 
   // hreflang: point ru/uk/x-default at their URLs when the UK site is live,
   // otherwise keep the single ru self-reference index.html ships with.

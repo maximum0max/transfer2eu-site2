@@ -1,6 +1,17 @@
 # Transfer2EU — Site UI kit
 
-A click‑through recreation of the Transfer2EU **marketing landing + route page** in one document.
+> Note: this README documents the original prototype. The live site is a
+> prerendered React + Vite SPA (see `scripts/prerender.mjs`).
+
+## Performance / images
+
+- `npm run build` — Vite build + prerender of every page + `sitemap.xml`.
+- `npm run optimize:images` — re-encodes all photos in `public/assets`
+  (guide/news/routes): resizes to their real display size, strips metadata,
+  converts the heavy news PNGs to JPEG and updates `News.data.json`.
+  Idempotent — safe to re-run after new images are fetched.
+
+## Components
 
 - `index.html` is the assembly: it loads React 18 + Babel, mounts the components below, and lets you switch between the home view and a sample route page (`/routes/warsaw-berlin`).
 - All visuals come from `../../colors_and_type.css`.

@@ -46,21 +46,24 @@ export function switchLangPath(pathname, lang) {
   return localizePath(path, lang);
 }
 
-// First-visit language for the auto-switch: a saved manual choice wins; else the
-// device's ordered language preferences decide (uk vs ru — whichever the user
-// lists first). Everything else falls back to Russian. Guarded for SSR.
+// First-visit language for the auto-switch: a saved manual choice wins; else we
+// look at the device's ACTIVE (primary) language only. The rule is deliberately
+// strict: Ukrainian is shown solely to visitors whose phone/computer is actually
+// set to Ukrainian (navigator.language starts with "uk"). Everyone else — even
+// devices that merely list Ukrainian among their fallback languages (e.g.
+// "en-US, uk-UA") — stays on Russian, which is the default. Guarded for SSR.
 export function detectLang() {
   if (typeof window === 'undefined') return DEFAULT_LANG;
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved === 'ru' || saved === 'uk') return saved;
   } catch (_) { /* private mode / disabled storage */ }
-  const nav = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language])) || [];
-  for (const raw of nav) {
-    const s = String(raw || '').toLowerCase();
-    if (s.startsWith('uk')) return 'uk';
-    if (s.startsWith('ru')) return 'ru';
-  }
+  const nav = (typeof navigator !== 'undefined' && navigator) || {};
+  // navigator.language === navigator.languages[0] in every modern browser; it is
+  // the language the OS/browser is actually set to, not a fallback.
+  const primary = String(nav.language || (nav.languages && nav.languages[0]) || '').toLowerCase();
+  if (primary.startsWith('uk')) return 'uk';
+  if (primary.startsWith('ru')) return 'ru';
   return DEFAULT_LANG;
 }
 

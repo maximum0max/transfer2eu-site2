@@ -16,12 +16,10 @@
 //   /<routeSlug>          route page (41 routes from BrandData)
 
 import { ALL_ROUTES } from './BrandData.jsx';
-import { NEWS_POSTS } from './News.data.jsx';
 import { INTERCITY_SLUGS } from './Intercity.data.jsx';
 import { splitLang, localizePath } from './i18n.jsx';
 
 const ROUTE_SLUGS = new Set(ALL_ROUTES.map((r) => r.slug));
-const NEWS_SLUGS = new Set((NEWS_POSTS || []).map((p) => p.slug));
 
 // view → static path (dynamic views handled in pathOf)
 const STATIC_PATH = {
@@ -60,9 +58,11 @@ function resolveView(p0) {
   if (p === '/anketa') return { view: 'anketa' }; // unlisted Google Form page
 
   if (p.startsWith('/novosti/')) {
-    const slug = p.slice('/novosti/'.length);
-    if (NEWS_SLUGS.has(slug)) return { view: 'news-post', postSlug: slug };
-    return { view: 'notfound' };
+    // Any /novosti/<slug> is treated as a news post. The router deliberately
+    // avoids importing the (large) news dataset here so it never ships in the
+    // main bundle; NewsPost renders a proper not-found state for unknown slugs,
+    // and getSeo() emits noindex for posts that don't exist.
+    return { view: 'news-post', postSlug: p.slice('/novosti/'.length) };
   }
 
   const seg = p.slice(1);

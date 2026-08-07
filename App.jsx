@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import Hero from './Hero.jsx'
@@ -8,16 +8,20 @@ import HowItWorks from './HowItWorks.jsx'
 import Testimonial from './Testimonial.jsx'
 import FAQ from './FAQ.jsx'
 import CTABanner from './CTABanner.jsx'
-import RoutesPage from './Routes.jsx'
-import PricesPage from './Prices.jsx'
-import ContactsPage from './Contacts.jsx'
-import DriversPage from './Drivers.jsx'
-import RoutePage from './RoutePage.jsx'
-import IntercityRoute from './IntercityRoute.jsx'
-import NewsList from './NewsList.jsx'
-import NewsPost from './NewsPost.jsx'
-import Anketa from './Anketa.jsx'
 import Reveal from './Reveal.jsx'
+// Route-level code splitting: each view component (and its heavy data — route
+// articles, city guides, the full news dataset) becomes its own lazy chunk,
+// loaded only when the visitor actually opens that page. The home page stays
+// eager so first paint needs a fraction of the JS it used to.
+const RoutesPage = lazy(() => import('./Routes.jsx'))
+const PricesPage = lazy(() => import('./Prices.jsx'))
+const ContactsPage = lazy(() => import('./Contacts.jsx'))
+const DriversPage = lazy(() => import('./Drivers.jsx'))
+const RoutePage = lazy(() => import('./RoutePage.jsx'))
+const IntercityRoute = lazy(() => import('./IntercityRoute.jsx'))
+const NewsList = lazy(() => import('./NewsList.jsx'))
+const NewsPost = lazy(() => import('./NewsPost.jsx'))
+const Anketa = lazy(() => import('./Anketa.jsx'))
 import { parsePath, navigate, navigatePath, subscribe } from './router.jsx'
 import { getSeo, applyHead } from './seo.jsx'
 import { LangContext, useLang, localizePath, splitLang, switchLangPath, saveLang } from './i18n.jsx'
@@ -40,7 +44,15 @@ export default function App() {
   const postSlug = route.postSlug || null;
 
   // Per-page <head>: title, description, canonical, Open Graph, hreflang.
-  useEffect(() => { applyHead(getSeo(view, routeSlug, postSlug, lang)); }, [view, routeSlug, postSlug, lang]);
+  // getSeo is async (it may dynamically import page data); a token guards
+  // against a slow import resolving after the user has navigated elsewhere.
+  const seoTick = useRef(0);
+  useEffect(() => {
+    const tick = ++seoTick.current;
+    getSeo(view, routeSlug, postSlug, lang).then((seo) => {
+      if (seoTick.current === tick) applyHead(seo);
+    }).catch(() => { /* keep previous head on failure */ });
+  }, [view, routeSlug, postSlug, lang]);
 
   // Same callback signatures the components already use — navigation now keeps
   // the active language (RU stays on bare URLs, UK stays under /uk).
@@ -75,14 +87,23 @@ export default function App() {
     navigatePath(dest);
   };
 
+  // Lightweight placeholder while a lazy view chunk downloads — reserves
+  // vertical space (no layout jump) so the header/footer stay put.
+  const Fallback = () => (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }}>
+      <span style={{ width: 34, height: 34, borderRadius: '50%', border: '3px solid var(--t2-line-2)', borderTopColor: 'var(--t2-red)', animation: 't2Spin .8s linear infinite' }} />
+    </div>
+  );
+
   // Unlisted form page: render only the embedded form — no header/footer/chrome.
-  if (view === 'anketa') return <Anketa />;
+  if (view === 'anketa') return <Suspense fallback={<Fallback />}><Anketa /></Suspense>;
 
   return (
     <LangContext.Provider value={lang}>
     <div data-screen-label={view} data-route={routeSlug || undefined} data-lang={lang} onClick={onRootClick}>
       <Header view={view} lang={lang} onNav={onNav} onSwitchLang={onSwitchLang} />
       <main>
+        <Suspense fallback={<Fallback />}>
         {view === 'home' && (
           <>
             <Hero onBook={() => onNav('routes')} />
@@ -103,6 +124,7 @@ export default function App() {
         {view === 'news'      && <NewsList onOpenPost={onOpenPost} onNav={onNav} />}
         {view === 'news-post' && <NewsPost slug={postSlug} onNav={onNav} />}
         {view === 'notfound'  && <NotFound />}
+        </Suspense>
       </main>
       <Footer onNav={onNav} onSelectRoute={onSelectRoute} />
     </div>

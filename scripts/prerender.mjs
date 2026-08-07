@@ -301,6 +301,14 @@ function applyHead(html, seo, opts = {}) {
     sub(/(<meta name="twitter:image" content=")[^"]*(">)/, imgUrl);
   }
 
+  // News articles get article time tags (OG "article" type) — helps the
+  // article/rich-result signals and correct rendering in social/news readers.
+  if (opts.articleTime) {
+    const time = `<meta property="article:published_time" content="${opts.articleTime}">\n` +
+      `    <meta property="article:modified_time" content="${opts.articleTime}">`;
+    html = html.replace('</head>', time + '\n</head>');
+  }
+
   // Strip the template's (Russian) FAQPage on every non-home page, and also on
   // the Ukrainian home — /uk home re-adds a Ukrainian FAQPage via jsonLd.
   if (opts.view !== 'home' || seo.lang === 'uk') html = stripFaqLd(html);
@@ -322,6 +330,26 @@ const breadcrumbs = (trail) => ({
     item: SITE + p,
   })),
 });
+
+// The /marshruty catalog page: an ItemList of every route with its fixed price.
+// Gives Google's entity understanding the full catalog in one block (instead of
+// only the visible grid) and is a natural anchor for the route pages' hreflang
+// cluster. Mirrors the on-page list exactly, so markup matches content.
+function routesLd(routes, lang) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': SITE + localizePath('/marshruty', lang) + '#catalog',
+    name: lang === 'uk' ? 'Маршрути трансферу з Аліканте' : 'Маршруты трансфера из Аликанте',
+    url: SITE + localizePath('/marshruty', lang),
+    itemListElement: routes.map((r, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: `${lang === 'uk' ? 'Трансфер Аліканте → ' : 'Трансфер Аликанте → '}${cityNameFn(r, lang)} — ${r.price}€`,
+      url: SITE + localizePath('/' + r.slug, lang),
+    })),
+  };
+}
 
 // The route page's own product: one named transfer at one fixed price. This is
 // what we actually want Google to attach to /<routeSlug>, rather than the home
@@ -540,14 +568,16 @@ async function main() {
       const CHILDREN = { home: allRouteLinks, routes: allRouteLinks + intercityHubLinks, news: newsLinks };
 
       for (const [view, , cf, pr] of sections) {
-        const seo = getSeo(view, null, null, lang);
+        const seo = await getSeo(view, null, null, lang);
         const jsonLd = view === 'home'
           ? (lang === 'uk' ? [UK_HOME_FAQ] : [])
           : [breadcrumbs([HOME, [t.h1[view], seo.path]])];
+        // The route catalog page also carries the full ItemList of routes.
+        if (view === 'routes') jsonLd.push(routesLd(ALL_ROUTES, lang));
         pages.push({ view, seo, cf, pr, jsonLd, body: staticBody(view, seo, CHILDREN[view], lang) });
       }
       for (const r of ALL_ROUTES) {
-        const seo = getSeo('route', r.slug, null, lang);
+        const seo = await getSeo('route', r.slug, null, lang);
         const siblings = ALL_ROUTES.filter((x) => x.slug !== r.slug).slice(0, 8);
         // Guides aren't translated yet, so only attach them on RU pages (avoids
         // Russian guide text leaking onto a /uk page); the article is localized.
@@ -563,7 +593,7 @@ async function main() {
         });
       }
       for (const r of (INTERCITY_ROUTES || [])) {
-        const seo = getSeo('intercity', r.slug, null, lang);
+        const seo = await getSeo('intercity', r.slug, null, lang);
         pages.push({
           view: 'intercity', seo, cf: 'monthly', pr: '0.6',
           body: intercityBody(r, seo, popRoutes, lang),
@@ -575,7 +605,7 @@ async function main() {
       }
       for (let i = 0; i < allPosts.length; i++) {
         const post = allPosts[i];
-        const seo = getSeo('news-post', null, post.slug, lang);
+        const seo = await getSeo('news-post', null, post.slug, lang);
         // Next 3 posts, cyclically — every post links forward, so the whole news
         // set forms one connected chain no matter where a crawler enters.
         const related = [];
@@ -587,6 +617,7 @@ async function main() {
           ogType: 'article',
           ogImage: post.image || null,
           lastmod: isoDate(post.date),
+          articleTime: isoDate(post.date),
           jsonLd: [
             newsLd(post, seo, lang),
             breadcrumbs([HOME, [t.bcNews, localizePath('/novosti', lang)], [nf(post, 'title', lang), seo.path]]),
@@ -596,10 +627,10 @@ async function main() {
     }
 
     // Unlisted, noindex form page — RU only (embedded external form, no /uk twin).
-    const anketa = getSeo('anketa', null, null, 'ru');
+    const anketa = await getSeo('anketa', null, null, 'ru');
     pages.push({ view: 'anketa', seo: anketa, cf: 'yearly', pr: '0.1', body: staticBody('anketa', anketa, 'ru') });
 
-    nfSeo = getSeo('notfound', null, null, 'ru');
+    nfSeo = await getSeo('notfound', null, null, 'ru');
   } finally {
     await vite.close();
   }
@@ -607,7 +638,9 @@ async function main() {
   const template = await fs.readFile(path.join(DIST, 'index.html'), 'utf8');
 
   for (const pg of pages) {
-    let html = applyHead(template, pg.seo, { view: pg.view, jsonLd: pg.jsonLd, ogType: pg.ogType, ogImage: pg.ogImage });
+    let html = applyHead(template, pg.seo, {
+      view: pg.view, jsonLd: pg.jsonLd, ogType: pg.ogType, ogImage: pg.ogImage, articleTime: pg.articleTime,
+    });
     html = html.replace('<div id="root"></div>', `<div id="root">${pg.body}</div>`);
     const dest = path.join(DIST, outFile(pg.seo.path));
     await fs.mkdir(path.dirname(dest), { recursive: true });
