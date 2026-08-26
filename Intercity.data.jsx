@@ -13,6 +13,10 @@ export const INTERCITY_ROUTES = [
     price: 150,
     time: 90,
     distance: 150,
+    // Airport routes this trip connects to. Used on BOTH sides so the links
+    // are reciprocal: the intercity page links to these cities, and their
+    // route pages link back here.
+    relatedCities: ['Benidorm', 'Valencia', 'Calpe'],
     emoji: '🏖',
     gradient: 'linear-gradient(135deg,#0ea5e9 0%,#0369a1 60%,#0c4a6e 100%)',
     title: 'Такси Валенсия — Бенидорм 150€',

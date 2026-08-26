@@ -69,7 +69,7 @@ function IntercityRoute({ slug, onNav }) {
   const waBtn = { background: '#25d366', color: '#fff', fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 15, padding: '13px 22px', borderRadius: 12, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 10px 22px rgba(34,197,94,.30)' };
   const phoneBtn = { background: 'rgba(255,255,255,.14)', color: '#fff', fontFamily: "'Inter',system-ui", fontWeight: 700, fontSize: 15, padding: '13px 22px', borderRadius: 12, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 };
 
-  const routeLinks = (POPULAR || []).filter(x => ['Benidorm', 'Valencia', 'Calpe'].includes(x.city));
+  const routeLinks = (POPULAR || []).filter(x => (r.relatedCities || []).includes(x.city));
 
   return (
     <>

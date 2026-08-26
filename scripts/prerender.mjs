@@ -165,7 +165,7 @@ function articleHtml(article) {
   return `<h2>${esc(article.title)}</h2>` + body;
 }
 
-function routeBody(r, seo, siblings, guide, article, lang) {
+function routeBody(r, seo, siblings, guide, article, lang, intercity) {
   const t = L(lang);
   const city = cityNameFn(r, lang);
   const mapSrc = (guide && guide.mapSrc)
@@ -186,6 +186,9 @@ function routeBody(r, seo, siblings, guide, article, lang) {
     + articleHtml(article)
     + `<h2>${esc(t.other)}</h2>`
     + routeLinks(siblings, lang)
+    + ((intercity && intercity.length)
+      ? '<ul>' + intercity.map((x) => `<li>${a(localizePath('/' + x.slug, lang), t.icLink((lang === 'uk' && x.from_uk) || x.from, (lang === 'uk' && x.to_uk) || x.to, x.price))}</li>`).join('') + '</ul>'
+      : '')
     + siteNav(seo.path, lang)
     + `</main>`;
 }
@@ -565,7 +568,7 @@ async function main() {
           + INTERCITY_ROUTES.map((r) => `<li>${a(localizePath('/' + r.slug, lang), t.icLink((lang === 'uk' && r.from_uk) || r.from, (lang === 'uk' && r.to_uk) || r.to, r.price))}</li>`).join('')
           + '</ul>'
         : '';
-      const CHILDREN = { home: allRouteLinks, routes: allRouteLinks + intercityHubLinks, news: newsLinks };
+      const CHILDREN = { home: allRouteLinks + intercityHubLinks, routes: allRouteLinks + intercityHubLinks, news: newsLinks };
 
       for (const [view, , cf, pr] of sections) {
         const seo = await getSeo(view, null, null, lang);
@@ -584,7 +587,9 @@ async function main() {
         const guide = getRouteGuide(r.slug, lang);
         const article = getRouteArticle(r.slug, lang);
         pages.push({
-          view: 'route', seo, cf: 'monthly', pr: '0.7', body: routeBody(r, seo, siblings, guide, article, lang),
+          view: 'route', seo, cf: 'monthly', pr: '0.7',
+          body: routeBody(r, seo, siblings, guide, article, lang,
+            (INTERCITY_ROUTES || []).filter((x) => (x.relatedCities || []).includes(r.city))),
           jsonLd: [
             routeLd(r, seo, lang),
             breadcrumbs([HOME, [t.bcRoutes, localizePath('/marshruty', lang)], [cityNameFn(r, lang), seo.path]]),

@@ -5,6 +5,7 @@ import Reveal from './Reveal.jsx'
 import { BRAND, findRoute, POPULAR, ROUTE_GROUPS, ROUTE_IMAGES, waLink, tgLink, cityName, groupLabel } from './BrandData.jsx'
 import { getRouteGuide, GUIDE_CREDITS } from './RouteGuide.data.jsx'
 import { getRouteArticle } from './RouteArticles.data.jsx'
+import { INTERCITY_ROUTES } from './Intercity.data.jsx'
 import SeoArticle from './SeoArticle.jsx'
 import GoogleReviews from './GoogleReviews.jsx'
 import TelegramIcon from './TelegramIcon.jsx'
@@ -706,6 +707,13 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
   }
   if (!related.length) return null;
 
+  // Reciprocal links to intercity routes serving this city. Without them the
+  // intercity pages hang off /marshruty alone and get almost no internal links.
+  const here = findRoute(currentSlug);
+  const intercity = (INTERCITY_ROUTES || []).filter(
+    x => here && (x.relatedCities || []).includes(here.city),
+  );
+
   const regionLabel = group ? groupLabel(group, lang) : null;
 
   const wrap = { padding: '64px 32px 88px', background: 'var(--t2-bg-2)' };
@@ -753,6 +761,11 @@ function OtherRoutes({ currentSlug, onSelectRoute }) {
           <a style={pill} href={pathOf('routes', null, lang)}>📍 {t.or_all_dirs}</a>
           <a style={pill} href={pathOf('price', null, lang)}>💶 {t.or_prices}</a>
           <a style={pill} href={pathOf('news', null, lang)}>📰 {t.or_useful}</a>
+          {intercity.map(x => (
+            <a key={x.slug} style={pill} href={pathOf('intercity', x.slug, lang)}>
+              🚐 {(lang === 'uk' && x.from_uk) || x.from} → {(lang === 'uk' && x.to_uk) || x.to} · {x.price}€
+            </a>
+          ))}
         </div>
       </div>
     </section>
